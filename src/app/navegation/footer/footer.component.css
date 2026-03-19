@@ -7,13 +7,14 @@
   padding: 0 1rem;
   box-sizing: border-box;
   text-align: center;
-  background: transparent;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
 }
 
 .footer p {
   margin: 0;
-  color: var(--dark-blue);
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
-.text-footer { color: var(--dark-blue); }
+.text-footer { color: var(--text-muted); }

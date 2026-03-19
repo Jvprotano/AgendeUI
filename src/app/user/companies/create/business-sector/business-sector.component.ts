@@ -143,7 +143,6 @@ export class BusinessSectorComponent implements OnInit, AfterViewInit, OnDestroy
 
   validateIntervals(dayIndex: number): boolean {
     const intervals = this.getIntervals(dayIndex).value as TimeInterval[];
-    console.log("Validating intervals for day index", dayIndex, intervals);
     if (intervals.length === 0) return true;
     if (intervals.every(interval => interval.start == '' && interval.end == '')) return true;
 
@@ -165,7 +164,6 @@ export class BusinessSectorComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   onChangeTimeRange() {
-    console.log("on submit hours called");
     const scheduleControl = this.form.get('schedule');
     if (scheduleControl) {
       const formValue = scheduleControl.value;
@@ -177,8 +175,6 @@ export class BusinessSectorComponent implements OnInit, AfterViewInit, OnDestroy
           intervals: day.intervals || []
         }))
       };
-
-      console.log("Validating business hours:", businessHours);
 
       if (!this.isValidSchedule(businessHours)) {
         this.scheduleError = 'Schedule contains invalid or overlapping time intervals.';

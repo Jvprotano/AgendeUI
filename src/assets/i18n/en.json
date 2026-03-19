@@ -156,5 +156,27 @@
       "ITEM_5": "Spa",
       "ITEM_6": "Makeup"
     }
+  },
+  "SCHEDULING": {
+    "NO_TIMES_AVAILABLE": "No available time slots for the selected date.",
+    "LOADING": "Loading available times...",
+    "ERROR_LOADING": "Error loading available time slots."
+  },
+  "COMPANY": {
+    "CALENDAR": {
+      "LOADING": "Loading appointments...",
+      "ERROR": "Error loading appointments.",
+      "APPOINTMENT_DETAIL": "Appointment Details",
+      "CUSTOMER": "Customer",
+      "SERVICE": "Service",
+      "PROFESSIONAL": "Professional",
+      "DATE": "Date",
+      "TIME": "Time",
+      "STATUS": "Status",
+      "STATUS_PENDING": "Pending",
+      "STATUS_CONFIRMED": "Confirmed",
+      "STATUS_CANCELLED": "Cancelled",
+      "CLOSE": "Close"
+    }
   }
 }

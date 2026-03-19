@@ -1,24 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { StringUtils } from '../../utils/string-utils';
-import { LocationService } from '../services/location.service';
 import { HttpClientModule } from '@angular/common/http';
+import { LocationService } from '../../../company/services/location.service';
+import { StringUtils } from '../../../utils/string-utils';
 
 @Component({
   selector: 'app-edit',
   standalone: true,
   providers: [LocationService],
-  imports: [FormsModule, NgxSpinnerModule, HttpClientModule, CommonModule, ReactiveFormsModule],
+  imports: [
+    FormsModule,
+    NgxSpinnerModule,
+    HttpClientModule,
+    CommonModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './edit.component.html',
-  styleUrl: './edit.component.css'
+  styleUrl: './edit.component.css',
 })
 export class EditComponent {
-
   editForm: FormGroup;
 
-  locationService = inject(LocationService);
+  locationService: LocationService = inject(LocationService);
 
   constructor(
     private fb: FormBuilder,
@@ -38,9 +49,7 @@ export class EditComponent {
       name: [''],
       email: [''],
     });
-
   }
-
 
   searchCEP(): void {
     var cep = this.editForm.get('cep')?.value;
@@ -58,7 +67,6 @@ export class EditComponent {
   }
 
   onFileChange(event: any) {
-    console.log("entrou file change")
     const reader = new FileReader();
 
     if (event.target.files && event.target.files.length) {
@@ -67,7 +75,7 @@ export class EditComponent {
 
       reader.onload = () => {
         this.editForm.patchValue({
-          image: reader.result as string
+          image: reader.result as string,
         });
       };
     }
@@ -79,7 +87,7 @@ export class EditComponent {
 
   removeImage(): void {
     this.editForm.patchValue({
-      image: ''
+      image: '',
     });
   }
 
@@ -92,8 +100,5 @@ export class EditComponent {
     });
   }
 
-  onSubmit() {
-    console.log(this.editForm);
-  }
-
+  onSubmit() {}
 }

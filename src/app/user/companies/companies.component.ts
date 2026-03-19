@@ -1,19 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule } from '@angular/router';
 import { Company, ScheduleStatus } from '../../company/models/company';
-import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateComponent } from './create/create.component';
 import { CompanyService } from '../../company/services/company.service';
-import { Observable, take } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-companies',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     RouterLink,
     RouterModule,
     CreateComponent,
@@ -24,73 +23,90 @@ import { Observable, take } from 'rxjs';
   styleUrls: ['./companies.component.css'],
 })
 export class CompaniesComponent implements OnInit {
-  constructor(private companyService: CompanyService) {}
+  constructor(
+    private companyService: CompanyService,
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
-    // load companies into an array so template and methods can access them synchronously
     this.companyService
       .getAll()
       .pipe(take(1))
       .subscribe({
         next: (companies) => {
-          this.companies = companies;
+          this.companies = Array.isArray(companies) ? companies : [];
+          this.isLoading = false;
         },
-        error: (err) => {
-          console.error('Error fetching companies:', err);
+        error: () => {
+          this.isLoading = false;
         },
       });
   }
 
-  companyToEdit!: Company;
-  clickedEdit: boolean = false;
-
-  // array used by template and component methods
+  companyToEdit: Company | null = null;
+  clickedEdit = false;
+  isLoading = true;
   companies: Company[] = [];
 
-  scheduleOpen: boolean = true;
-
-  shareLink(item: any) {
-    const link = `http://yourwebsite.com/company/${item.id}`;
-    window.prompt('Copy to clipboard: Ctrl+C, Enter', link);
+  statusStripClass(item: Company): string {
+    if (item.status !== 1) return 'strip-inactive';
+    return item.scheduleStatus === ScheduleStatus.OPEN ? 'strip-active' : 'strip-closed';
   }
 
-  openCloseSchedule(id: string) {
+  statusBadgeClass(item: Company): string {
+    if (item.status !== 1) return 'badge-inactive';
+    return item.scheduleStatus === ScheduleStatus.OPEN ? 'badge-active' : 'badge-closed';
+  }
+
+  statusLabel(item: Company): string {
+    if (item.status !== 1) return 'Inativa';
+    return item.scheduleStatus === ScheduleStatus.OPEN ? 'Aberta' : 'Fechada';
+  }
+
+  copyLink(item: Company): void {
+    const url = `agende.com/${item.schedulingUrl}`;
+    navigator.clipboard.writeText(url).then(() => {
+      this.toastr.success('Link copiado!');
+    });
+  }
+
+  openCloseSchedule(id: string): void {
     const company = this.companies.find((c) => c.id === id);
-    if (company) {
-      company.scheduleStatus =
-        company.scheduleStatus == ScheduleStatus.CLOSED
-          ? ScheduleStatus.OPEN
-          : ScheduleStatus.CLOSED;
-    }
+    if (!company) return;
+
+    const newStatus =
+      company.scheduleStatus === ScheduleStatus.CLOSED
+        ? ScheduleStatus.OPEN
+        : ScheduleStatus.CLOSED;
+
+    this.companyService
+      .updateScheduleStatus(id, newStatus)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          company.scheduleStatus = newStatus;
+        },
+        error: () => {},
+      });
   }
 
-  deleteCompany(id: string) {
+  deleteCompany(id: string): void {
     const company = this.companies.find((c) => c.id === id);
-    if (company) {
-      company.status = 0;
-    }
+    if (company) company.status = 0;
   }
 
-  activeCompany(id: string) {
+  activeCompany(id: string): void {
     const company = this.companies.find((c) => c.id === id);
-    if (company) {
-      company.status = 1;
-    }
+    if (company) company.status = 1;
   }
 
-  editCompany(company: Company | null) {
-    if (company) this.companyToEdit = company;
+  editCompany(company: Company | null): void {
+    this.companyToEdit = company;
     this.clickedEdit = true;
-    this.setTimeout();
-  }
-  createCompany() {
-    this.clickedEdit = true;
-    this.setTimeout();
   }
 
-  setTimeout() {
-    setTimeout(() => {
-      this.clickedEdit = false;
-    }, 1000);
+  onModalClosed(): void {
+    this.clickedEdit = false;
+    this.companyToEdit = null;
   }
 }

@@ -8,7 +8,7 @@ import { UserComponent } from './user/user.component';
 import { CompaniesComponent } from './user/companies/companies.component';
 import { ScheduleComponent } from './company/schedule/schedule.component';
 import { CompanyComponent } from './company/company.component';
-import { authGuard } from './account/services/auth.guard';
+import { authGuard, protectedGuard } from './account/services/auth.guard';
 import { ProfileComponent } from './user/profile/profile.component';
 import { SchedulingComponent } from './scheduling/scheduling.component';
 import { FinantialComponent } from './company/finantial/finantial.component';
@@ -33,19 +33,18 @@ export const routes: Routes = [
     },
     {
         path: 'user', component: UserComponent, children: [
-            { path: 'companies', component: CompaniesComponent },
-            { path: 'profile', component: ProfileComponent }
+            { path: 'companies', component: CompaniesComponent, canActivate: [protectedGuard] },
+            { path: 'profile', component: ProfileComponent, canActivate: [protectedGuard] }
         ]
     },
     {
         path: 'company', component: CompanyComponent, children: [
-            { path: ':id/schedule', component: ScheduleComponent },
-            { path: ':id/finantial', component: FinantialComponent },
-            { path: ':id/dashboard', component: DashboardComponent }
+            { path: ':id/schedule', component: ScheduleComponent, canActivate: [protectedGuard] },
+            { path: ':id/finantial', component: FinantialComponent, canActivate: [protectedGuard] },
+            { path: ':id/dashboard', component: DashboardComponent, canActivate: [protectedGuard] }
         ]
     },
 
-    { path: '**', component: NotFoundComponent },
     { path: 'not-found', component: NotFoundComponent },
+    { path: '**', component: NotFoundComponent },
 ];
-

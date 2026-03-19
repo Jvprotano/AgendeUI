@@ -3,6 +3,7 @@ import { BaseService } from "../../services/base.service";
 import { Observable } from "rxjs";
 import { Scheduling } from "../models/scheduling";
 import { ServiceOffered } from "../models/service_offered";
+import { Appointment } from "../models/appointment";
 
 @Injectable()
 export class SchedulingService extends BaseService {
@@ -17,5 +18,9 @@ export class SchedulingService extends BaseService {
     
     schedule(scheduling: Scheduling): Observable<any> {
         return this.post('scheduling', scheduling);
+    }
+
+    getByCompanyId(companyId: string, startDate: string, endDate: string): Observable<Appointment[]> {
+        return this.get<Appointment[]>(`scheduling/getbycompanyid?companyId=${companyId}&startDate=${startDate}&endDate=${endDate}`);
     }
 }

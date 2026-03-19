@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -25,7 +25,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CompanyService } from '../../../company/services/company.service';
-import { catchError, scheduled, take } from 'rxjs';
+import { take } from 'rxjs';
 import { Router } from '@angular/router';
 import { DaySchedule } from '../../../company/models/business-hours';
 
@@ -57,7 +57,8 @@ import { DaySchedule } from '../../../company/models/business-hours';
 })
 export class CreateComponent {
   createForm!: FormGroup;
-  @Input() companyToEdit!: Company;
+  @Input() companyToEdit: Company | null = null;
+  @Output() closed = new EventEmitter<void>();
 
   @ViewChild('modalContent', { static: true })
   modalContent!: TemplateRef<any>;
@@ -74,15 +75,12 @@ export class CreateComponent {
 
   ngOnInit(): void {
     this.spinner.show();
-
-    this.openModal();
-
     this.initFormValidation(this.companyToEdit);
+    this.openModal();
     this.spinner.hide();
   }
 
   onNextStep(data: any) {
-    console.log('on next step create called');
     this.createForm.patchValue(data);
     this.currentStep++;
   }
@@ -101,7 +99,8 @@ export class CreateComponent {
   }
 
   openModal() {
-    this.modalService.open(this.modalContent, { size: 'lg', centered: true });
+    const ref = this.modalService.open(this.modalContent, { size: 'lg', centered: true });
+    ref.result.finally(() => this.closed.emit());
   }
 
   onSubmit(): void {
@@ -118,23 +117,12 @@ export class CreateComponent {
       });
     });
 
-    console.log('request to submit:');
-    console.log(request);
-
     this.companyService
       .create(request)
-      .pipe(
-        take(1),
-        catchError((error) => {
-          console.error('Error creating company:', error);
-          throw error;
-        })
-      )
+      .pipe(take(1))
       .subscribe((result) => {
-        console.log('Company created successfully:', result);
         this.modalService.dismissAll();
-
-        this.router.navigate(['/companies/@id/schedule', result.id]);
+        this.router.navigate(['/company', result.id, 'schedule']);
       });
   }
 }

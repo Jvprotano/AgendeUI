@@ -156,5 +156,27 @@
       "ITEM_5": "Spa",
       "ITEM_6": "Maquillaje"
     }
+  },
+  "SCHEDULING": {
+    "NO_TIMES_AVAILABLE": "No hay horarios disponibles para la fecha seleccionada.",
+    "LOADING": "Buscando horarios disponibles...",
+    "ERROR_LOADING": "Error al obtener los horarios disponibles."
+  },
+  "COMPANY": {
+    "CALENDAR": {
+      "LOADING": "Cargando citas...",
+      "ERROR": "Error al cargar las citas.",
+      "APPOINTMENT_DETAIL": "Detalles de la Cita",
+      "CUSTOMER": "Cliente",
+      "SERVICE": "Servicio",
+      "PROFESSIONAL": "Profesional",
+      "DATE": "Fecha",
+      "TIME": "Hora",
+      "STATUS": "Estado",
+      "STATUS_PENDING": "Pendiente",
+      "STATUS_CONFIRMED": "Confirmado",
+      "STATUS_CANCELLED": "Cancelado",
+      "CLOSE": "Cerrar"
+    }
   }
 }

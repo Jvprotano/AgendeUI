@@ -1,10 +1,10 @@
 form {
-    max-width: 500px;
-    margin: 20px auto;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-secondary);
+}

@@ -1,37 +1,13 @@
 @use 'app/styles/_colors.scss' as colors;
 
-/* Global styles (SCSS) - imports design tokens from _colors.scss */
-
-/* Fallback :root CSS variables in case SCSS partial isn't available at runtime */
-:root {
-  --primary-green: #3F869C;
-  --dark-blue: #28534A;
-  --light-green: #84DCC6;
-  --light-blue: #F8FAFC;
-  --medium-blue: #ACD7EC;
-  --purple-blue: #8B95C9;
-
-  --gradient: linear-gradient(90deg, var(--dark-blue), var(--primary-green));
-  --gradient-btn: linear-gradient(180deg, rgba(41,105,128,1) 0%, rgba(63,134,156,1) 90%);
-
-  --background-primary: #FFFFFF;
-  --background-secondary: #F8F9FA;
-
-  --text-primary: #111111;
-  --text-secondary: #495057;
-  --text-muted: #6C757D;
-
-  --border-color: #DEE2E6;
-  --success-color: #10B981;
-  --error-color: #F44336;
-}
+/* Global dark theme styles */
 
 /* Animations */
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.cdk-overlay-pane{
+.cdk-overlay-pane {
   position: absolute !important;
 }
 
@@ -39,17 +15,32 @@
   50% { opacity: 0.5; }
 }
 
-/* Standardize inputs and Material labels across the app */
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A2A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00C853;
+}
+
+/* Material labels */
 mat-label,
 label,
 .mat-mdc-form-field-label,
-::ng-deep .mat-mdc-form-field-label,
 .mat-mdc-floating-label {
-  color: var(--text-primary) !important;
+  color: var(--text-secondary) !important;
   font-weight: 500;
 }
 
-/* Input text color and placeholders */
+/* Inputs — dark theme */
 input,
 textarea,
 select,
@@ -57,19 +48,29 @@ select,
 .mat-mdc-text-field-input,
 .mat-input-element {
   color: var(--text-primary) !important;
-  background-color: var(--background-primary) !important;
+  background-color: var(--bg-elevated) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 8px !important;
   padding: 0.5rem 0.75rem !important;
 }
 
-/* Placeholder color */
+input:focus,
+textarea:focus,
+select:focus,
+.form-control:focus {
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.15) !important;
+  outline: none !important;
+}
+
+/* Placeholder */
 ::placeholder,
 ::-webkit-input-placeholder {
   color: var(--text-muted) !important;
+  opacity: 1;
 }
 
-/* Material outline field adjustments */
+/* Material outline field */
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
   border-radius: 8px;
   border-color: var(--border-color);
@@ -77,13 +78,7 @@ select,
 
 ::ng-deep .mat-mdc-form-field-appearance-outline.mat-mdc-focused .mat-mdc-form-field-outline {
   border-color: var(--primary-green) !important;
-  box-shadow: 0 0 0 6px rgba(63,134,156,0.06) !important;
-}
-
-/* Material label small/floating state color */
-::ng-deep .mat-mdc-form-field.mat-mdc-focused .mat-mdc-form-field-label,
-::ng-deep .mat-mdc-form-field .mat-mdc-form-field-label {
-  color: var(--text-secondary) !important;
+  box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.12) !important;
 }
 
 /* Buttons */
@@ -93,50 +88,151 @@ select,
   border: none;
   padding: 0.6rem 1.25rem;
   border-radius: 10px;
+  font-weight: 600;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.btn-gradient:hover { transform: translateY(-2px); }
-.btn-white { background: white; color: var(--dark-blue) !important; border: none; }
-.btn-white:hover { background: var(--light-blue); }
+.btn-gradient:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  border-color: var(--primary-green) !important;
+  color: var(--primary-green) !important;
+  background: transparent !important;
+}
+
+.btn-outline-primary:hover {
+  background: rgba(0, 200, 83, 0.1) !important;
+}
+
+.btn-white {
+  background: var(--bg-elevated);
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.btn-white:hover {
+  background: var(--bg-secondary);
+}
+
 .btn-lg { height: 56px; line-height: 40px; }
 
 /* Layout and typography */
-html { font-size: 14px; position: relative; min-height: 100%; font-family: Poppins, sans-serif; }
-@media (min-width: 768px) { html { font-size: 16px; } }
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+  font-family: Poppins, sans-serif;
+}
 
-.border-top { border-top: 1px solid #e5e5e5; }
-.border-bottom { border-bottom: 1px solid #e5e5e5; }
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+@media (min-width: 768px) {
+  html { font-size: 16px; }
+}
 
 body {
-  background-color: rgba(3,92,79,0.02);
-  margin: 0; padding: 0;
-  display: flex; flex-direction: column; min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Make main content flex so footer stays at fixed size */
+/* Main content flex so footer stays at bottom */
 .app-content {
   flex: 1 1 auto;
   display: block;
 }
 
-input, select, file, textarea { max-width: 400px; }
+/* Card — dark */
+.card {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.18s ease, border-color 0.2s ease;
+}
 
-/* Card */
-.card { border: 1px solid rgba(40,83,74,0.15); border-radius: 8px; padding: 20px; margin-bottom: 20px; transition: transform 0.18s ease; }
-.card:hover { transform: translateY(-4px); }
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 200, 83, 0.3);
+}
 
-/* Bootstrap form-control consistency */
+/* Bootstrap form-control */
 .form-control {
   height: auto;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   color: var(--text-primary);
+  background-color: var(--bg-elevated);
 }
+
+.form-control:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.15);
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* Select dark */
+select.form-control option {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* Borders */
+.border-top { border-top: 1px solid var(--border-color) !important; }
+.border-bottom { border-bottom: 1px solid var(--border-color) !important; }
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, 0.4); }
 
 /* Utilities */
 .required-label::after { content: " *"; color: var(--error-color); }
+.text-success { color: var(--success-color) !important; }
+.text-danger { color: var(--error-color) !important; }
+.text-warning { color: var(--warning-color) !important; }
+.text-muted { color: var(--text-muted) !important; }
 
-/* Bootstrap var fallbacks already provided in _colors.scss :root */
+/* Modal dark */
+.modal-content {
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.modal-backdrop.show {
+  opacity: 0.7;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--border-color) 50%, var(--bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Toast dark overrides */
+.toast-container .ngx-toastr {
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}

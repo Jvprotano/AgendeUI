@@ -8,8 +8,7 @@
     Agende
   </div>
   <ul class="align-items-center d-flex flex-column list-unstyled mt-4">
-    <li ngbTooltip="Dashboard" placement="right" [routerLink]="['/company/0/dashboard']" routerLinkActive="active"
-      class="menu-item">
+    <li ngbTooltip="Dashboard (em breve)" placement="right" class="menu-item menu-item-disabled">
       <i class="bi-bar-chart-line menu-icon fs-3"></i>
     </li>
     <li ngbTooltip="Agenda" placement="right" [routerLink]="['/company/0/schedule']" routerLinkActive="active"
@@ -19,8 +18,7 @@
     <li ngbTooltip="Serviços" placement="right" class="menu-item">
       <i class="bi-tags menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Financeiro" [routerLink]="['/company/0/finantial']" routerLinkActive="active" 
-        placement="right" class="menu-item">
+    <li ngbTooltip="Financeiro (em breve)" placement="right" class="menu-item menu-item-disabled">
       <i class="bi-cash-coin menu-icon fs-3"></i>
     </li>
     <li ngbTooltip="Editar Empresa" (click)="openEditCompany()" placement="right" class="menu-item">
@@ -32,4 +30,4 @@
   </ul>
 </div>
 
-<app-create [companyToEdit]="companyToEdit" *ngIf="clickedEdit" ></app-create>
+<app-create [companyToEdit]="companyToEdit" *ngIf="clickedEdit" (closed)="onEditClosed()"></app-create>

@@ -15,38 +15,34 @@
   border-radius: 8px;
   margin-bottom: 1rem;
   font-size: 14px;
-  background-color: rgba(var(--error-color-rgb), 0.08);
-  border: 1px solid rgba(var(--error-color-rgb), 0.2);
+  background-color: rgba(244, 67, 54, 0.08);
+  border: 1px solid rgba(244, 67, 54, 0.2);
   color: var(--error-color);
 }
 
-.mb-3 {
-  margin-bottom: 1rem;
-}
+.mb-3 { margin-bottom: 1rem; }
 
-/* Use a neutral card background and subtle primary accents */
 .day-schedule-card {
-  background-color: var(--background-primary);
+  background-color: var(--bg-elevated);
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
 .day-schedule {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 1rem;
-  background-color: var(--background-primary);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  background-color: var(--bg-elevated);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.2s ease;
 }
 
 .day-schedule:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(0, 200, 83, 0.2);
 }
 
-.day-header {
-  margin-bottom: 0.75rem;
-}
+.day-header { margin-bottom: 0.75rem; }
 
 .intervals-container {
   padding-left: 1.25rem;
@@ -102,16 +98,8 @@
 
 @media screen and (max-width: 600px) {
   .business-hours-form { padding: 0.75rem; }
-
-  .time-interval {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
+  .time-interval { flex-direction: column; align-items: stretch; gap: 0.5rem; }
   .time-interval mat-form-field { max-width: 100%; }
-
   .remove-interval { align-self: flex-end; }
-
   .intervals-container { padding-left: 0.75rem; }
 }

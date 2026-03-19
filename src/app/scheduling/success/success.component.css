@@ -1,3 +1,11 @@
-.success-page{
-    text-align: center;
+.success-page {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-primary);
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: var(--primary-green);
+  margin-bottom: 1rem;
 }

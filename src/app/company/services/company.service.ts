@@ -1,6 +1,6 @@
 import { Observable, catchError, map } from "rxjs";
 import { BaseService } from "../../services/base.service";
-import { Company } from "../models/company";
+import { Company, ScheduleStatus } from "../models/company";
 import { StringUtils } from "../../utils/string-utils";
 
 export class CompanyService extends BaseService {
@@ -32,6 +32,10 @@ export class CompanyService extends BaseService {
 
     create(company: Company): Observable<Company> {
         return this.post('company', company);
+    }
+
+    updateScheduleStatus(id: string, scheduleStatus: ScheduleStatus): Observable<void> {
+        return this.put(`company/${id}/schedule-status`, { scheduleStatus });
     }
 
     protected extractDataUrlIsValid(response: boolean) {

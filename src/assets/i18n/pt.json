@@ -68,9 +68,8 @@
     "BUTTONS": {
       "CONTINUE": "Continuar",
       "BACK": "Voltar",
-      "REGISTER": "Cadastrar"
-    ,
-    "LOGIN": "Já tem uma conta? Entrar"
+      "REGISTER": "Cadastrar",
+      "LOGIN": "Já tem uma conta? Entrar"
     },
     "ERRORS": {
       "TITLE": "Ops! Algo deu errado:",
@@ -80,9 +79,8 @@
     "SUCCESS": {
       "TITLE": "Bem-vindo!",
       "MESSAGE": "Cadastro realizado com sucesso!"
-    }
-  ,
-  "HAVE_ACCOUNT": "Já tem uma conta?"
+    },
+    "HAVE_ACCOUNT": "Já tem uma conta?"
   },
   "LOGIN": {
     "TITLE": "Entrar",
@@ -107,7 +105,7 @@
     "GUEST_LOGIN": "Continuar como convidado",
     "NO_ACCOUNT": "Não tem uma conta?",
     "REMEMBER_ME": "Lembrar-me",
-  "OR": "ou",
+    "OR": "ou",
     "FORGOT_PASSWORD": "Esqueceu sua senha?",
     "SIGN_IN": "Entrar",
     "REGISTER": "Criar uma conta",
@@ -159,6 +157,28 @@
       "ITEM_4": "Estética",
       "ITEM_5": "Spa",
       "ITEM_6": "Maquiagem"
+    }
+  },
+  "SCHEDULING": {
+    "NO_TIMES_AVAILABLE": "Nenhum horário disponível para a data selecionada.",
+    "LOADING": "Buscando horários...",
+    "ERROR_LOADING": "Erro ao obter os horários disponíveis."
+  },
+  "COMPANY": {
+    "CALENDAR": {
+      "LOADING": "Carregando agendamentos...",
+      "ERROR": "Erro ao carregar agendamentos.",
+      "APPOINTMENT_DETAIL": "Detalhes do Agendamento",
+      "CUSTOMER": "Cliente",
+      "SERVICE": "Serviço",
+      "PROFESSIONAL": "Profissional",
+      "DATE": "Data",
+      "TIME": "Horário",
+      "STATUS": "Status",
+      "STATUS_PENDING": "Pendente",
+      "STATUS_CONFIRMED": "Confirmado",
+      "STATUS_CANCELLED": "Cancelado",
+      "CLOSE": "Fechar"
     }
   }
 }

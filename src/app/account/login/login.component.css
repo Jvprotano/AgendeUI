@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background-color: #f8f9fa;
+  background-color: var(--bg-primary);
   position: relative;
   overflow: hidden;
 }
@@ -41,22 +41,23 @@
 .brand-text {
   font-size: 2rem;
   font-weight: bold;
-  color: var(--dark-blue);
+  color: var(--primary-green);
   margin: 0;
 }
 
 .welcome-text {
   font-size: 1.1rem;
-  color: #6c757d;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 /* Login card */
 .login-card {
-  background: white;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
   padding: 2.5rem;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   width: 100%;
   max-width: 420px;
   position: relative;
@@ -77,21 +78,24 @@
 .input-icon {
   position: absolute;
   left: 1rem;
-  color: #6c757d;
+  color: var(--text-muted);
+  z-index: 2;
 }
 
 .form-control {
   height: 48px;
-  padding-left: 3rem;
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
+  padding-left: 3rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
   font-size: 1rem;
-  transition: all 0.2s;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-control:focus {
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 4px rgba(63, 134, 156, 0.1);
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.15) !important;
 }
 
 .btn-toggle-password {
@@ -99,9 +103,14 @@
   right: 1rem;
   background: none;
   border: none;
-  color: #6c757d;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 0;
+  z-index: 2;
+}
+
+.btn-toggle-password:hover {
+  color: var(--text-secondary);
 }
 
 .options-row {
@@ -112,7 +121,7 @@
 }
 
 .form-check-label {
-  color: #6c757d;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -124,7 +133,7 @@
 }
 
 .forgot-password:hover {
-  color: var(--dark-blue);
+  color: var(--primary-hover);
 }
 
 /* Buttons */
@@ -144,13 +153,13 @@
 
 .btn-gradient:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 83, 74, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
 }
 
 .btn-outline {
-  border: 2px solid #e9ecef;
-  background: white;
-  color: #6c757d;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
   border-radius: 12px;
 }
 
@@ -173,21 +182,16 @@
   top: 50%;
   width: calc(50% - 30px);
   height: 1px;
-  background: #e9ecef;
+  background: var(--border-color);
 }
 
-.divider::before {
-  left: 0;
-}
-
-.divider::after {
-  right: 0;
-}
+.divider::before { left: 0; }
+.divider::after { right: 0; }
 
 .divider span {
-  background: white;
+  background: var(--bg-elevated);
   padding: 0 1rem;
-  color: #6c757d;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -200,7 +204,7 @@
 }
 
 .register-link:hover {
-  color: var(--dark-blue);
+  color: var(--primary-hover);
 }
 
 /* Decorative circles */
@@ -208,52 +212,22 @@
   position: absolute;
   border-radius: 50%;
   background: var(--gradient);
-  opacity: 0.1;
+  opacity: 0.05;
   z-index: 0;
 }
 
-.circle-1 {
-  width: 300px;
-  height: 300px;
-  top: -100px;
-  right: -100px;
-}
+.circle-1 { width: 300px; height: 300px; top: -100px; right: -100px; }
+.circle-2 { width: 200px; height: 200px; bottom: -50px; left: -50px; }
+.circle-3 { width: 150px; height: 150px; top: 40%; right: 15%; }
 
-.circle-2 {
-  width: 200px;
-  height: 200px;
-  bottom: -50px;
-  left: -50px;
-}
-
-.circle-3 {
-  width: 150px;
-  height: 150px;
-  top: 40%;
-  right: 15%;
-}
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 576px) {
-  .login-container {
-    padding: 1rem;
-  }
-
-  .login-card {
-    padding: 1.5rem;
-  }
-
-  .brand-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .brand-text {
-    font-size: 1.5rem;
-  }
+  .login-container { padding: 1rem; }
+  .login-card { padding: 1.5rem; }
+  .brand-icon { width: 40px; height: 40px; }
+  .brand-text { font-size: 1.5rem; }
 }
 
-/* Additional styles */
 .spinner-border {
   width: 18px;
   height: 18px;
@@ -261,7 +235,7 @@
 }
 
 .invalid-feedback {
-  color: #d9534f;
+  color: var(--error-color);
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }

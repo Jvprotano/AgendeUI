@@ -1,6 +1,6 @@
 <div class="scheduling-container container">
     <div class="card bg-white shadow-sm mt-3">
-        <div class="card-header text-white d-flex align-items-center rounded-lg shadow-sm p-3" style="background-color: #00453e;">
+        <div class="card-header text-white d-flex align-items-center rounded-lg shadow-sm p-3" style="background-color: var(--primary-dark);">
             <img class="company-logo mr-3" src="/assets/logo.png" alt="Avatar">
             <h1 class="mb-0">Agendamento - {{companyName}}</h1>
         </div>
@@ -61,8 +61,14 @@
                     </div>
                 </div>
                 <div class="row" *ngIf="hasDateSelected()">
-                    <h2 style="color: var(--primary-green);" *ngIf="!timesAvailable">Desculpe. A agenda na data selecionada já está
-                        cheia ou fechada! :( Altere o filtro de data para obter os horários disponíveis. </h2>
+                    <div *ngIf="isLoadingTimes" class="col-12 text-center py-3">
+                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                        <span class="ms-2 text-muted">Buscando horários...</span>
+                    </div>
+                    <div *ngIf="!isLoadingTimes && timesAvailable.length === 0" class="no-times-message col-12">
+                        <i class="bi bi-calendar-x"></i>
+                        Nenhum horário disponível para a data selecionada.
+                    </div>
                     <div *ngFor="let time of timesAvailable" class="col-md-2">
                         <button class="card-option bg-transparent" href="javascript:void(0);" (click)="selectTime(time)"
                             [disabled]="timeSelected && timeSelected != time">

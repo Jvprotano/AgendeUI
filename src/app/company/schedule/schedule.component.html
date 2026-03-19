@@ -1,84 +1,56 @@
 <div class="h-100 w-100 d-flex">
   <app-sidebar></app-sidebar>
-  <div class="row text-center company-area">
-    <div class="w-25">
-      <div class="border card pt-0 px-0">
-        <div class="card-body">
-          <button class="btn btn-conci w-100">
-            <i class="bi bi-plus me-1"></i>New Event
-          </button>
-          <div class="mt-4">
-            <div class="sub">
-              <ng-container>
-                <h4 class="fw-medium">Services</h4>
-                <div id="external-events" class="mb-3">
-                  <div
-                    class="bg-warning-subtle external-event fc-event mb-2 px-3 py-2 text-start text-warning"
-                    data-class="text-warning bg-warning-subtle border-0"
-                  >
-                    <i class="bi bi-circle-fill me-2 text-warning me-2"></i>
-                    Hair
-                  </div>
-                  <div data-class="text-info bg-info-subtle border-0"
-                    class="bg-info-subtle external-event fc-event mb-2 px-3 py-2 text-start text-info"
-                  >
-                    <i class="bi bi-circle-fill me-2 text-info me-2"></i>
-                    Beard
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-            <div class="upcoming">
-              <h4 class="fw-medium">Upcoming Appointments</h4>
-              <div class="border card mb-3 p-3">
-                <div class="card-body p-0">
-                  <div class="d-flex mb-3">
-                    <div class="flex-grow-1 text-start">
-                      <i class="bi bi-circle-fill me-2 text-warning"></i>
-                      <span class="fw-medium">October 18 </span>
-                    </div>
-                    <div class="flex-shrink-0">
-                      <small
-                        class="badge bg-body-secondary ms-auto text-info-emphasis"
-                        >08:00 - 09:00</small
-                      >
-                    </div>
-                  </div>
-                  <h4 class="card-title fs-6 fw-medium mb-0 text-start">
-                    Appointment
-                  </h4>
-                  <p class="text-muted text-truncate-two-lines mb-0"></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="row company-area" style="width: 100%;">
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="calendar-loading">
+      <div class="spinner-border" style="color: var(--primary-green);" role="status">
+        <span class="visually-hidden">Carregando...</span>
       </div>
+      <span class="text-muted">Carregando agendamentos...</span>
     </div>
-    <div class="w-75" id="calendar"></div>
+
+    <!-- Calendar -->
+    <div *ngIf="!isLoading" id="calendar" class="w-100"></div>
+
   </div>
 </div>
 
-<ng-template #modalContent let-close="close">
+<!-- Appointment detail modal -->
+<ng-template #detailModal let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <h5 class="modal-title" style="color: var(--primary-green);">Detalhes do Agendamento</h5>
+    <button type="button" class="btn-close" style="filter: invert(1);" (click)="close()"></button>
   </div>
-  <div class="modal-body">
-    <!-- <div>
-        Action:
-        <pre>{{ modalData.action }}</pre>
-      </div> -->
-    <div>
-      Event:
-      <pre>{{ eventToEdit }}</pre>
+  <div class="modal-body appointment-detail" *ngIf="selectedAppointment">
+    <div class="detail-row">
+      <span class="detail-label">Cliente</span>
+      <span>{{ selectedAppointment.customerName }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Serviço</span>
+      <span>{{ selectedAppointment.serviceName }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Profissional</span>
+      <span>{{ selectedAppointment.professionalName }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Data</span>
+      <span>{{ selectedAppointment.date | date:'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Horário</span>
+      <span>{{ selectedAppointment.time }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Status</span>
+      <span class="status-badge" [ngClass]="statusClass(selectedAppointment.status)">
+        {{ statusLabel(selectedAppointment.status) }}
+      </span>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">
-      OK
-    </button>
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">Fechar</button>
   </div>
 </ng-template>

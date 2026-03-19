@@ -1,108 +1,375 @@
-.company-card {
-  min-height: 260px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+/* ─── Layout ─── */
+.companies-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.company-logo { padding: 0.25rem; }
-.company-logo-img { max-width: 100%; height: auto; border: 4px solid rgba(0,0,0,0.04); border-radius: 8px; }
+/* ─── Page header ─── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
 
-.add-company-card { border-style: dotted; cursor: pointer; }
-.add-company-card .card-body { min-height: 140px; display:flex; align-items:center; justify-content:center; }
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
 
-.company-card .btn { margin: 0 0.25rem; }
-  h1 {
-    text-align: center;
-    padding: 20px;
-    color: #333;
-  }
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0;
+}
 
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin: 0 auto;
-    padding: 20px;
-  }
+/* ─── New-company button ─── */
+.btn-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary-green);
+  color: #000;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
 
-  @media (max-width: 768px) {
-    .column {
-      flex: 1 0 100%;
-      max-width: 100%;
-    }
-  }
+.btn-new:hover {
+  background: var(--primary-hover);
+}
 
-  .card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    background-color: #fff;
-  }
+/* ─── Grid ─── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
 
-  .card-body {
-    padding: 20px;
-  }
+/* ─── Company card ─── */
+.company-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
 
-  .card-title {
-    margin-bottom: 20px;
-    color: #333;
-  }
+.company-card:hover {
+  border-color: rgba(0, 200, 83, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
 
-  .card-text {
-    color: #666;
-    line-height: 1.6;
-  }
+.card-inactive {
+  opacity: 0.65;
+}
 
-  .btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    margin: 5px;
-  }
+/* ─── Status strip ─── */
+.card-status-strip {
+  height: 3px;
+  width: 100%;
+}
 
-  .options .delete {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: red;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #ff000017;
-  }
+.strip-active  { background: var(--primary-green); }
+.strip-closed  { background: var(--warning-color, #FFC107); }
+.strip-inactive { background: var(--text-muted); }
 
-  .options .more-options {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #0d6efd;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #0d6efd2b;
-  }
+/* ─── Card top row ─── */
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
 
-  .dropdown-toggle::after {
-    content: none;
-  }
+.logo-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
 
-  ::ng-deep.dropdown-menu-end {
-    position: absolute;
-    right: 0px;
-    top: 110%;
-  }
+.company-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  ::ng-deep.dropdown-menu-end hr {
-    margin: 0.3rem 0 !important;
-  }
+.logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-size: 1.5rem;
+}
 
-  .options i {
-    width: 15px;
-    display: inline-block;
-  }
+/* ─── Card actions (badge + menu) ─── */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+.badge-active   { background: rgba(0, 200, 83, 0.15);  color: var(--primary-green); }
+.badge-closed   { background: rgba(255, 193, 7, 0.15); color: #FFC107; }
+.badge-inactive { background: rgba(158, 158, 158, 0.15); color: var(--text-muted); }
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* ─── Dropdown ─── */
+::ng-deep .actions-menu {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 0.25rem 0 !important;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+::ng-deep .actions-menu button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+::ng-deep .actions-menu button:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .actions-menu .item-danger {
+  color: var(--error-color) !important;
+}
+
+::ng-deep .actions-menu .item-danger:hover {
+  background: rgba(244, 67, 54, 0.1) !important;
+}
+
+.menu-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.25rem 0;
+}
+
+/* ─── Card info ─── */
+.card-info {
+  padding: 0.75rem 1rem 0.5rem;
+  flex: 1;
+}
+
+.company-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.company-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.company-url {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ─── Stats row ─── */
+.card-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.stat i { color: var(--text-muted); font-size: 0.85rem; }
+.stat span { font-weight: 600; color: var(--text-primary); }
+.stat small { font-size: 0.7rem; color: var(--text-muted); }
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-color);
+  margin: 0 0.75rem;
+}
+
+/* ─── Card footer ─── */
+.card-footer-actions {
+  padding: 0.75rem 1rem;
+  display: flex;
+}
+
+.btn-primary-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  background: rgba(0, 200, 83, 0.1);
+  color: var(--primary-green);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(0, 200, 83, 0.2);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-primary-action:hover {
+  background: rgba(0, 200, 83, 0.18);
+  border-color: rgba(0, 200, 83, 0.4);
+  color: var(--primary-hover);
+}
+
+.btn-activate {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-activate:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* ─── Skeleton loading ─── */
+.skeleton-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sk-logo  { width: 56px; height: 56px; border-radius: 10px; }
+.sk-title { width: 60%; height: 18px; border-radius: 4px; }
+.sk-text  { width: 85%; height: 13px; border-radius: 4px; }
+.sk-bar   { width: 100%; height: 38px; border-radius: 8px; margin-top: 0.5rem; }
+
+/* ─── Empty state ─── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1rem;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(0, 200, 83, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  max-width: 340px;
+  margin: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .companies-page { padding: 1rem; }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .grid { grid-template-columns: 1fr; }
+}

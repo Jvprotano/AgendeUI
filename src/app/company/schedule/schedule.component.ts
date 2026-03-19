@@ -1,184 +1,175 @@
 import {
   Component,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   ViewChild,
   TemplateRef,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { EventColor } from 'calendar-utils';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
-import { Calendar, CalendarOptions } from '@fullcalendar/core';
+import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import interactionPlugin, { DateClickArg, Draggable } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import allLocales from '@fullcalendar/core/locales-all';
 
-const colors: Record<string, EventColor> = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
-
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { SchedulingService } from '../../scheduling/services/scheduling.service';
+import { Appointment } from '../../scheduling/models/appointment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-schedule',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ReactiveFormsModule,
     CommonModule,
-    FormsModule,
     NgbModalModule,
-    SidebarComponent
+    SidebarComponent,
   ],
-  providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MatNativeDateModule }
-  ],
+  providers: [SchedulingService],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.css'
 })
-export class ScheduleComponent implements OnInit {
+export class ScheduleComponent implements OnInit, OnDestroy {
 
-  @ViewChild('modalContent') content: any;
-  upcomingEvents: any[] = [];
-  events: any[] = [
-    { start: new Date(), end: new Date().setHours(new Date().getHours() + 1), title: 'Agendamento', color: 'yellow' }
-  ];
-  eventTypes: any[] = [];
-  selectedDay = null;
+  @ViewChild('detailModal') detailModal!: TemplateRef<any>;
+
   calendarOptions!: CalendarOptions;
-  eventToEdit: any;
-  subscriptions: Subscription = new Subscription();
-  menuToggle: boolean = false;
-  cal!: Calendar;
-  selectedEvent: any;
-  modalTitle: any;
-  diffDays: number = 0;
-  submitted: boolean = false;
-  eventForm!: FormGroup;
-  isRangeValid = true;
+  isLoading = true;
+  companyId = '';
+  selectedAppointment: Appointment | null = null;
 
-  constructor(private modal: NgbModal) { }
+  private subscriptions = new Subscription();
+
+  constructor(
+    private schedulingService: SchedulingService,
+    private route: ActivatedRoute,
+    private modal: NgbModal,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
+    this.companyId = this.route.snapshot.params['id'];
     this.initCalendar();
+    this.loadAppointments();
   }
 
-  initCalendar() {
-    let draggableEl: any = document.getElementById('external-events');
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    new Draggable(draggableEl, {
-      itemSelector: '.fc-event',
-      eventData: function (eventEl) {
-        console.log(eventEl);
-        return {
-          title: eventEl.innerText
-        };
-      }
-    });
-
+  initCalendar(): void {
     this.calendarOptions = {
       locales: allLocales,
-      locale: 'en-Us',
+      locale: 'pt-br',
       timeZone: 'local',
-      editable: true,
-      droppable: true,
-      selectable: true,
+      editable: false,
+      droppable: false,
+      selectable: false,
       navLinks: true,
       initialView: this.getInitialView(),
-      themeSystem: 'bootstrap',
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        right: 'dayGridMonth,timeGridWeek,listWeek'
       },
       buttonText: {
-        'day': 'Daily',
-        'month': 'Monthly',
-        'today': 'Today',
-        'week': 'Weekly',
-        'list': 'List'
+        day: 'Dia',
+        month: 'Mês',
+        today: 'Hoje',
+        week: 'Semana',
+        list: 'Lista',
       },
       plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
       dayMaxEventRows: 3,
-      dayPopoverFormat: { month: 'long', day: 'numeric', year: 'numeric' },
-      windowResize: (view: any) => {
-        var newView = this.getInitialView();
-        this.cal.changeView(newView);
-      },
-      eventClick: (info: any) => {
-        console.log(info);
-        // this.eventClick(info);
-      },
-      dateClick: (info: any) => {
-
-        let currentTime = info.date.getTime();
-        let start = new Date(currentTime + 8 * 60 * 60 * 1000);
-        let end = new Date(start.getTime() + 1 * 60 * 60 * 1000);
-
-        let newEvent = {
-          id: null,
-          eventType: null,
-          title: null,
-          start: start,
-          end: end,
-          //className: info.event.classNames[0]
-        };
-
-        this.selectedEvent = newEvent;
-        this.addEvent();
-      },
-      events: this.events,
-      // eventColor: 'yellow',
-      eventDrop: (info: any) => {
-        let indexOfSelectedEvent = this.events.findIndex(function (x: any) {
-          return x.id == info.event.id
-        });
-
-        if (this.events[indexOfSelectedEvent]) {
-
-        }
-      }
+      eventClick: (info: EventClickArg) => this.onEventClick(info),
+      events: [],
     };
-    const el = document.getElementById('calendar');
-    this.cal = new Calendar(el!, this.calendarOptions);
-    this.cal.render();
   }
 
-  addEvent() {
-    this.submitted = false;
-    this.initFormValidation(this.selectedEvent);
-    this.modal.open(this.content, { centered: true });
+  loadAppointments(): void {
+    const now = new Date();
+    const startDate = this.getWeekStart(now);
+    const endDate = this.getWeekEnd(now);
+
+    const sub = this.schedulingService
+      .getByCompanyId(this.companyId, startDate, endDate)
+      .subscribe({
+        next: (appointments) => {
+          this.calendarOptions = {
+            ...this.calendarOptions,
+            events: this.mapToCalendarEvents(appointments),
+          };
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
+
+    this.subscriptions.add(sub);
   }
 
-  initFormValidation(event: any) {
-
+  mapToCalendarEvents(appointments: Appointment[]): any[] {
+    return (appointments ?? []).map((apt) => ({
+      id: apt.id,
+      title: `${apt.customerName} — ${apt.serviceName}`,
+      start: `${apt.date}T${apt.time}`,
+      backgroundColor: this.statusColor(apt.status),
+      borderColor: this.statusColor(apt.status),
+      extendedProps: { appointment: apt },
+    }));
   }
 
-  getInitialView() {
-    if (window.innerWidth >= 768 && window.innerWidth < 1200) {
-      return 'timeGridWeek';
-    } else if (window.innerWidth <= 768) {
-      return 'listMonth';
-    } else {
-      return 'dayGridMonth';
+  statusColor(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'confirmed': return '#00C853';
+      case 'cancelled': return '#F44336';
+      default: return '#FFC107';
     }
   }
 
+  onEventClick(info: EventClickArg): void {
+    this.selectedAppointment = info.event.extendedProps['appointment'];
+    this.modal.open(this.detailModal, { centered: true, size: 'sm' });
+  }
+
+  getInitialView(): string {
+    return window.innerWidth <= 768 ? 'listWeek' : 'timeGridWeek';
+  }
+
+  getWeekStart(date: Date): string {
+    const d = new Date(date);
+    d.setDate(d.getDate() - d.getDay());
+    return d.toISOString().split('T')[0];
+  }
+
+  getWeekEnd(date: Date): string {
+    const d = new Date(date);
+    d.setDate(d.getDate() + (6 - d.getDay()));
+    return d.toISOString().split('T')[0];
+  }
+
+  statusLabel(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'confirmed': return 'Confirmado';
+      case 'cancelled': return 'Cancelado';
+      default: return 'Pendente';
+    }
+  }
+
+  statusClass(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'confirmed': return 'status-confirmed';
+      case 'cancelled': return 'status-cancelled';
+      default: return 'status-pending';
+    }
+  }
 }

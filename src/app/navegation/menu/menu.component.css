@@ -1,62 +1,66 @@
 .navbar-brand {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--dark-blue);
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-green);
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
 }
 
 .navbar {
-    background-color: transparent;
-    /* border-radius: 150px;
-    margin: 1%; */
+  background-color: rgba(10, 10, 10, 0.95);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(8px);
 }
 
 .dropdown-toggle {
-    padding: 0;
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
 }
 
 .dropdown-toggle::after {
-    margin-left: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .dropdown-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: var(--text-primary);
 }
 
 .dropdown-menu {
-    min-width: 160px;
+  min-width: 160px;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
 }
 
 .dropdown img {
-    object-fit: cover;
-    border-radius: 2px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .dropdown-item:hover {
-    background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .dropdown-item.active {
-    background-color: var(--dark-blue);
-    color: white;
+  background-color: rgba(0, 200, 83, 0.15);
+  color: var(--primary-green);
 }
 
 .icon-header {
-    width: 40px;
-    height: 40px;
-    background: var(--gradient);
+  width: 40px;
+  height: 40px;
+  background: var(--gradient);
 }
 
 .icon-header svg {
-    width: 22px;
+  width: 22px;
 }

@@ -1,40 +1,41 @@
 .btn-access {
-    text-decoration: none;
-    color: var(--dark-blue);;
-    font-size: 16px;
-    font-weight: 500;
-    padding-left: 30px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 500;
+  padding-left: 30px;
 }
 
-.logout{
-    padding-left: 10px;
-    padding-top: 7px;
+.logout {
+  padding-left: 10px;
+  padding-top: 7px;
 }
 
 .nav-item.access {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .btn-access:hover {
-    color: #398776;
+  color: var(--primary-green);
 }
 
 .dropdown-item:active {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .dropdown-item:hover {
-    background-color: transparent;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 #btnLogout {
-    color: red;
-    font-size: x-large;
+  color: var(--error-color);
+  font-size: x-large;
 }
 
 @media(max-width: 480px) {
-    .btn-access {
-        padding-top: 0px;
-        padding-right: 0px;
-    }
+  .btn-access {
+    padding-top: 0px;
+    padding-right: 0px;
+  }
 }

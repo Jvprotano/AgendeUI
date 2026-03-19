@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchedulingService } from './services/scheduling.service';
 import { Scheduling } from './models/scheduling';
 import { Professional } from './models/professional';
 import { ServiceOffered } from './models/service_offered';
-
 
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { CompanyService } from '../company/services/company.service';
@@ -21,10 +26,16 @@ import { Company } from '../company/models/company';
 @Component({
   selector: 'app-scheduling',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxSpinnerModule, CurrencyFormatPipe],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NgxSpinnerModule,
+    CurrencyFormatPipe,
+  ],
   providers: [SchedulingService, CompanyService],
   templateUrl: './scheduling.component.html',
-  styleUrl: './scheduling.component.css'
+  styleUrl: './scheduling.component.css',
 })
 export class SchedulingComponent implements OnInit {
   serviceSelected?: ServiceOffered;
@@ -35,30 +46,30 @@ export class SchedulingComponent implements OnInit {
 
   schedulingForm!: FormGroup;
   Scheduling!: Scheduling;
-  companyUrl: string = '';
   companyId: string = '';
+  companyUrl: string = '';
   countSteps = 1;
   services: ServiceOffered[] = [];
   professionals: Professional[] = [];
+  isLoadingTimes = false;
 
-  constructor(private fb: FormBuilder, private schedulingService: SchedulingService,
+  constructor(
+    private fb: FormBuilder,
+    private schedulingService: SchedulingService,
     private companyService: CompanyService,
-    private toastr: ToastrService, private router: Router, private route: ActivatedRoute,
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private accountService: AccountService,
     private redirectService: RedirectService,
-    private modalService: NgbModal) {
-  }
+    private modalService: NgbModal,
+  ) {}
 
   ngOnInit(): void {
     if (!this.accountService.isLoggedUser()) {
-      // this.redirectService.setReturnRoute(this.router.url);
-      // this.router.navigate(['/login-scheduling']);
-
-      this.openLoginModal()
+      this.openLoginModal();
     }
-
-    // this.eventService.broadcast('hide-header', true);
 
     this.spinner.show();
 
@@ -66,28 +77,19 @@ export class SchedulingComponent implements OnInit {
 
     this.companyService.getBySchedulingUrl(this.companyUrl).subscribe({
       next: (result) => {
-        this.companyName = result.name
-        this.companyId = result.id
+        this.companyName = result.name;
+        this.companyUrl = result.id;
 
         if (result.id == null) {
           this.router.navigate(['/']).then(() => {
-            this.toastr.error("Empresa não encontrada.")
-          })
-        } else if (result.scheduleStatus != 1) {
-          this.router.navigate(['/']).then(() => {
-            this.toastr.error("Empresa selecionada não se encontra com a agenda aberta")
-          })
+            this.toastr.error('Empresa não encontrada.');
+          });
         }
-        // redirect to home
 
-        this.loadCompanyInformation(result)
-
-      }, error: () => this.toastr.error('Empresa não encontrada!') // redirect to home
-    })
-
-    // Gets ao iniciar
-    // this.services = this.schedulingService.getServices();
-    // this.profissionais = this.schedulingService.getProfessionals();
+        this.loadCompanyInformation(result);
+      },
+      error: () => this.toastr.error('Empresa não encontrada!'),
+    });
 
     this.schedulingForm = this.fb.group({
       name: ['', Validators.required],
@@ -104,60 +106,39 @@ export class SchedulingComponent implements OnInit {
   }
 
   loadCompanyInformation(companyResult: Company) {
-    // this.services = this.companyService.GetServicesOffered(this.companyId);
-    // this.professionals = this.companyService.getProfessionals(this.companyId);
-
-
     this.services = companyResult.servicesOffered;
     this.professionals = companyResult.employeers;
-    // console.log(companyResult)
-
-
-    // this.schedulingForm.patchValue({
-    //   name: company.name,
-    //   email: company.email,
-    //   phone: company.phone,
-    // });
   }
-
 
   openLoginModal(): void {
     this.redirectService.setReturnRoute(this.router.url);
 
-    const modalRef = this.modalService.open(LoginComponent, { centered: true, backdrop: 'static', keyboard: false });
-
-    modalRef.result.then(() => {
-      console.log("entrou 1")
-      // this.eventService.broadcast('hide-header', true);
-
-    }, () => {
-      console.log("entrou 2")
-      // this.eventService.broadcast('hide-header', true);
-
-      if (this.accountService.isLoggedUser()) {
-        console.log("Carregar informações do usuário para preenchimento" +
-          "automático dos dados pessoais e do último agendamento, caso exista.")
-      }
-
-      // Quando clica em login ou convidado ele cai aqui
+    const modalRef = this.modalService.open(LoginComponent, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
     });
+
+    modalRef.result.then(
+      () => {},
+      () => {},
+    );
   }
 
-
-  atualizarProfissionais() {
-  }
+  atualizarProfissionais() {}
 
   checkProfessionalAndServiceAreSelected() {
     if (this.serviceSelected && this.professionalSelected) {
       const continueButton = document.getElementById('continueButton');
       if (continueButton) {
         continueButton.scrollIntoView({ behavior: 'smooth' });
-        this.schedulingForm.get('professionalId')?.setValue(this.professionalSelected.id);
+        this.schedulingForm
+          .get('professionalId')
+          ?.setValue(this.professionalSelected.id);
         this.schedulingForm.get('serviceId')?.setValue(this.serviceSelected.id);
       }
     }
   }
-
 
   selecionarProfissional(professional: Professional) {
     if (this.professionalSelected == professional) {
@@ -168,6 +149,7 @@ export class SchedulingComponent implements OnInit {
     this.professionalSelected = professional;
     this.checkProfessionalAndServiceAreSelected();
   }
+
   selectService(service: ServiceOffered) {
     if (this.serviceSelected == service) {
       this.serviceSelected = undefined;
@@ -176,6 +158,7 @@ export class SchedulingComponent implements OnInit {
     this.serviceSelected = service;
     this.checkProfessionalAndServiceAreSelected();
   }
+
   selectTime(time: string) {
     if (this.timeSelected == time) {
       this.timeSelected = '';
@@ -186,18 +169,11 @@ export class SchedulingComponent implements OnInit {
 
   isStepValid() {
     if (this.countSteps == 1) {
-      if (this.professionalSelected && this.serviceSelected)
-        return true;
-
-      return false;
+      return !!(this.professionalSelected && this.serviceSelected);
     }
     if (this.countSteps == 2) {
-      if (this.hasDateSelected() && this.timeSelected)
-        return true;
-
-      return false;
+      return !!(this.hasDateSelected() && this.timeSelected);
     }
-
     return false;
   }
 
@@ -205,33 +181,34 @@ export class SchedulingComponent implements OnInit {
     const date = this.schedulingForm.get('date')?.value;
     if (!date) return;
 
-    this.schedulingService.getAvailableTimes(
-      date,
-      this.professionalSelected?.id ?? "",
-      this.companyId,
-      this.serviceSelected?.id ?? ""
-    ).subscribe({
-      next: (result) => {
-        if (result.length > 0) {
-          this.timesAvailable = result;
-        } else {
-          // If no times are available from API, use test times
-          this.timesAvailable = this.getTestTimes();
-        }
-      },
-      error: () => {
-        this.toastr.error('Erro ao obter os horários disponíveis');
-        // Fallback to test times on error
-        this.timesAvailable = this.getTestTimes();
-      }
-    });
-  }
+    this.isLoadingTimes = true;
+    this.timesAvailable = [];
 
-  getTestTimes() {
-    return ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00']
+    this.schedulingService
+      .getAvailableTimes(
+        date,
+        this.professionalSelected?.id ?? '',
+        this.companyUrl,
+        this.serviceSelected?.id ?? '',
+      )
+      .subscribe({
+        next: (result) => {
+          this.timesAvailable = Array.isArray(result) ? result : [];
+          this.isLoadingTimes = false;
+        },
+        error: () => {
+          this.toastr.error('Erro ao obter os horários disponíveis');
+          this.timesAvailable = [];
+          this.isLoadingTimes = false;
+        },
+      });
   }
 
   agendar() {
+    if (!this.schedulingForm.valid) {
+      this.toastr.warning('Preencha todos os campos obrigatórios.');
+      return;
+    }
 
     this.schedulingForm.patchValue({
       professionalId: this.professionalSelected?.id,
@@ -242,24 +219,27 @@ export class SchedulingComponent implements OnInit {
     this.Scheduling = Object.assign({}, this.schedulingForm.value);
 
     this.schedulingService.schedule(this.Scheduling).subscribe({
-      next: (result) => {
+      next: () => {
         this.processarSucesso();
-      }, error: err => { this.processarFalha(err) }
-    })
+      },
+      error: (err) => {
+        this.processarFalha(err);
+      },
+    });
   }
 
   processarFalha(response: any) {
-    if (response.error)
-      this.toastr.error(response.error, 'Opa :(');
-    else
-      this.toastr.error('Ocorreu um erro!', 'Opa :(');
+    if (response.error) this.toastr.error(response.error, 'Opa :(');
+    else this.toastr.error('Ocorreu um erro!', 'Opa :(');
   }
 
   processarSucesso() {
-
     this.router.navigate(['scheduling/success']).then(() => {
-      this.toastr.success('Agendamento realizado com sucesso!', 'Você será notificado em breve com informações sobre o agendamento.');
-    })
+      this.toastr.success(
+        'Agendamento realizado com sucesso!',
+        'Você será notificado em breve com informações sobre o agendamento.',
+      );
+    });
   }
 
   goToNextStep() {

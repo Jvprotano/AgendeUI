@@ -10,7 +10,7 @@
   </div>
 
   <mat-progress-bar mode="determinate"
-    value="{{this.currentStep == 0 ? 33 : this.currentStep == 1 ? 66 : 100}}"></mat-progress-bar>
+    value="{{this.currentStep == 0 ? 50 : 100}}"></mat-progress-bar>
 
   <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
     <div class="modal-body company-modal">
@@ -19,7 +19,6 @@
 
       <app-business-sector *ngIf="currentStep == 1" [form]="createForm" (previous)="onPreviousStep()" (next)="onNextStep($event)"></app-business-sector>
 
-      <!-- <app-share-info *ngIf="currentStep == 2" [form]="createForm" (previous)="onPreviousStep()"></app-share-info> -->
 
     </div>
     <div class="float-end justify-content-between modal-footer w-100">

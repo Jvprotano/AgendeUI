@@ -15,9 +15,9 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
 
-  companyToEdit!: Company;
+  companyToEdit: Company | null = null;
   clickedEdit: boolean = false;
-  
+
   constructor(private eventService: EventService) { }
 
   ngOnInit(): void {
@@ -27,12 +27,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.eventService.broadcast('hide-header', false);
   }
+
   openEditCompany() {
     this.clickedEdit = true;
+  }
 
-    setTimeout(() => {
-      this.clickedEdit = false;
-    }, 100);
+  onEditClosed() {
+    this.clickedEdit = false;
+    this.companyToEdit = null;
   }
 
 }

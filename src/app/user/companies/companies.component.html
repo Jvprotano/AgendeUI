@@ -1,77 +1,160 @@
-<div class="container">
-<h1>Minhas empresas</h1>
+<div class="companies-page">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Minhas Empresas</h1>
+      <p class="page-subtitle">Gerencie suas empresas e agendamentos</p>
+    </div>
+    <button class="btn-new" (click)="editCompany(null)">
+      <i class="bi bi-plus-lg"></i>
+      Nova Empresa
+    </button>
+  </div>
 
-<div class="row g-3">
-  <ng-container *ngFor="let item of companies">
-    <div class="col-12 col-sm-6 col-md-4">
-      <article class="card company-card" role="group">
-        <div class="card-body px-3 pt-2 pb-3">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <button type="button" class="btn btn-sm btn-outline-danger"  (click)="deleteCompany(item.id)">
-                <i class="bi bi-trash"></i>
-              </button>
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="grid">
+    <div *ngFor="let _ of [1, 2, 3]" class="skeleton-card">
+      <div class="skeleton sk-logo"></div>
+      <div class="skeleton sk-title"></div>
+      <div class="skeleton sk-text"></div>
+      <div class="skeleton sk-bar"></div>
+    </div>
+  </div>
 
-              <div ngbDropdown class="dropdown">
-                <button class="btn btn-sm btn-outline-secondary" ngbDropdownToggle aria-haspopup="true" aria-expanded="false">
-                  <i class="bi bi-three-dots"></i>
-                </button>
-                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
-                  <button class="dropdown-item" (click)="editCompany(item)"><i class="bi bi-pencil me-2"></i>Editar</button>
-                  <button class="dropdown-item" (click)="shareLink(item)"><i class="bi bi-share me-2"></i>Copiar link</button>
-                  <div class="dropdown-divider"></div>
-                  <button *ngIf="item.scheduleStatus == 1" class="dropdown-item" (click)="openCloseSchedule(item.id)"><i class="bi bi-x me-2"></i>Fechar agenda</button>
-                  <button *ngIf="item.scheduleStatus != 1" class="dropdown-item" (click)="openCloseSchedule(item.id)"><i class="bi bi-check me-2"></i>Abrir agenda</button>
-                </div>
-              </div>
-            </div>
-          </div>
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && companies.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="bi bi-building"></i>
+    </div>
+    <h2 class="empty-title">Nenhuma empresa ainda</h2>
+    <p class="empty-text">
+      Crie sua primeira empresa para começar a gerenciar agendamentos.
+    </p>
+    <button class="btn-new" (click)="editCompany(null)">
+      <i class="bi bi-plus-lg"></i>
+      Criar empresa
+    </button>
+  </div>
 
-          <div class="text-center mb-3">
-            <div class="company-logo d-flex align-items-center justify-content-center">
-                <img class="company-logo-img" [src]="item.image" alt="Logo {{item.name}}" width="180">
-            </div>
-          </div>
+  <!-- Company grid -->
+  <div *ngIf="!isLoading && companies.length > 0" class="grid">
+    <article
+      *ngFor="let item of companies"
+      class="company-card"
+      [class.card-inactive]="item.status !== 1"
+    >
+      <!-- Status strip -->
+      <div class="card-status-strip" [ngClass]="statusStripClass(item)"></div>
 
-          <div class="text-center mb-3">
-            <h4 class="fw-bold mb-1">{{ item.name }}</h4>
-            <p class="card-text text-muted mb-0">{{ item.description }}</p>
-          </div>
-
-          <div class="row text-center text-muted mb-3 small">
-            <div class="col-6 border-end">
-              <div class="fw-semibold">225</div>
-              <div>Agendamentos em janeiro</div>
-            </div>
-            <div class="col-6">
-              <div class="fw-semibold">197</div>
-              <div>Agendamentos hoje</div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-center">
-            <ng-container *ngIf="item.status == 1; else inactive">
-              <a [routerLink]="['/company', item.id, 'schedule']" class="btn btn-outline-conci">Selecionar</a>
-            </ng-container>
-            <ng-template #inactive>
-              <button class="btn btn-outline-success" (click)="activeCompany(item.id)">Ativar</button>
-            </ng-template>
+      <!-- Card top row -->
+      <div class="card-top">
+        <div class="logo-wrap">
+          <img
+            *ngIf="item.image"
+            [src]="item.image"
+            [alt]="item.name"
+            class="company-logo"
+          />
+          <div *ngIf="!item.image" class="logo-placeholder">
+            <i class="bi bi-building"></i>
           </div>
         </div>
-      </article>
-    </div>
-  </ng-container>
 
-  <div class="col-12 col-sm-6 col-md-4">
-    <button class="card add-company-card" (click)="editCompany(null)" aria-label="Adicionar empresa">
-      <div class="card-body d-flex justify-content-center align-items-center" style="min-height:140px;">
-        <i class="bi bi-plus fs-1"></i>
+        <div class="card-actions">
+          <span class="status-badge" [ngClass]="statusBadgeClass(item)">
+            {{ statusLabel(item) }}
+          </span>
+
+          <div ngbDropdown placement="bottom-end">
+            <button class="icon-btn" ngbDropdownToggle>
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <div ngbDropdownMenu class="actions-menu">
+              <button ngbDropdownItem (click)="editCompany(item)">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button ngbDropdownItem (click)="copyLink(item)">
+                <i class="bi bi-link-45deg"></i> Copiar link
+              </button>
+              <div class="menu-divider"></div>
+              <button ngbDropdownItem (click)="openCloseSchedule(item.id)">
+                <i
+                  class="bi"
+                  [ngClass]="
+                    item.scheduleStatus === 1
+                      ? 'bi-calendar-x'
+                      : 'bi-calendar-check'
+                  "
+                ></i>
+                {{
+                  item.scheduleStatus === 1 ? "Fechar agenda" : "Abrir agenda"
+                }}
+              </button>
+              <div class="menu-divider"></div>
+              <button
+                ngbDropdownItem
+                class="item-danger"
+                (click)="deleteCompany(item.id)"
+              >
+                <i class="bi bi-trash"></i> Remover
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </button>
+
+      <!-- Company info -->
+      <div class="card-info">
+        <h3 class="company-name">{{ item.name }}</h3>
+        <p *ngIf="item.description" class="company-desc">
+          {{ item.description }}
+        </p>
+
+        <div class="company-url" *ngIf="item.schedulingUrl">
+          <i class="bi bi-globe2"></i>
+          <span>agende.com/{{ item.schedulingUrl }}</span>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="card-stats">
+        <div class="stat">
+          <i class="bi bi-people"></i>
+          <span>{{ item?.employeers?.length ?? 0 }}</span>
+          <small>profissionais</small>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <i class="bi bi-scissors"></i>
+          <span>{{ item?.servicesOffered?.length ?? 0 }}</span>
+          <small>serviços</small>
+        </div>
+      </div>
+
+      <!-- Card footer -->
+      <div class="card-footer-actions">
+        <ng-container *ngIf="item.status === 1; else inactiveFooter">
+          <a
+            [routerLink]="['/company', item.id, 'schedule']"
+            class="btn-primary-action"
+          >
+            <i class="bi bi-calendar3"></i>
+            Ver Agenda
+          </a>
+        </ng-container>
+        <ng-template #inactiveFooter>
+          <button class="btn-activate" (click)="activeCompany(item.id)">
+            <i class="bi bi-check-circle"></i>
+            Ativar empresa
+          </button>
+        </ng-template>
+      </div>
+    </article>
   </div>
 </div>
 
-<app-create [companyToEdit]="companyToEdit" *ngIf="clickedEdit"></app-create>
-</div>
+<app-create
+  [companyToEdit]="companyToEdit"
+  *ngIf="clickedEdit"
+  (closed)="onModalClosed()"
+></app-create>

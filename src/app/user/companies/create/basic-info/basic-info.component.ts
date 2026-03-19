@@ -55,7 +55,6 @@ export class BasicInfoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.form);
     this.prefix = 'agende.com/';
 
     // Set up URL validation with debounce
@@ -132,8 +131,7 @@ export class BasicInfoComponent implements OnInit {
         }
         this.isCheckingUrl = false;
       },
-      error: (err) => {
-        console.log(err);
+      error: () => {
         this.urlErrorMessage = 'Erro ao verificar a URL';
         this.isCheckingUrl = false;
       },

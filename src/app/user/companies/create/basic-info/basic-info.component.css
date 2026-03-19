@@ -5,9 +5,10 @@
 
 /* Card Styles */
 ::ng-deep .mat-mdc-card {
-  background-color: white !important;
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 16px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
   margin-bottom: 1.5rem;
   overflow: visible !important;
 }
@@ -20,7 +21,7 @@
   gap: 1.5rem;
   margin: 1.5rem 0 2.5rem;
   padding: 2rem;
-  background: linear-gradient(45deg, rgba(63, 134, 156, 0.05), rgba(132, 220, 198, 0.05));
+  background: linear-gradient(45deg, rgba(0, 200, 83, 0.04), rgba(0, 230, 118, 0.04));
   border-radius: 16px;
   position: relative;
 }
@@ -32,7 +33,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border: 2px dashed rgba(63, 134, 156, 0.2);
+  border: 2px dashed var(--border-color);
   border-radius: 16px;
   pointer-events: none;
 }
@@ -43,14 +44,14 @@
   height: 160px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: white;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background-color: var(--bg-secondary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   transition: all 0.3s ease;
 }
 
 .image-preview:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
 }
 
 .image-preview:hover .upload-overlay {
@@ -70,7 +71,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(0deg, rgba(63, 134, 156, 0.95), rgba(63, 134, 156, 0.8));
+  background: linear-gradient(0deg, rgba(0, 200, 83, 0.9), rgba(0, 200, 83, 0.7));
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
@@ -102,19 +103,20 @@
   transition: all 0.2s ease;
   border: none !important;
   background-color: rgba(244, 67, 54, 0.1) !important;
-  color: #f44336 !important;
+  color: var(--error-color) !important;
 }
 
 .remove-image-btn:hover {
   opacity: 1;
-  background-color: rgba(244, 67, 54, 0.15) !important;
+  background-color: rgba(244, 67, 54, 0.2) !important;
   transform: translateY(-1px);
 }
 
 /* Form Section Styles */
 .form-section {
   padding: 2rem;
-  background-color: white;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   margin-bottom: 2rem;
 }
@@ -128,18 +130,16 @@
 
 .section-description {
   font-size: 0.875rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
   line-height: 1.5;
 }
 
 /* Form Field Styles */
-.full-width {
-  width: 100%;
-}
+.full-width { width: 100%; }
 
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
-  background-color: white;
+  background-color: var(--bg-secondary);
 }
 
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline-thick {
@@ -168,19 +168,15 @@
   align-items: flex-start;
 }
 
-.prefix-field {
-  width: 30%;
-}
+.prefix-field { width: 30%; }
 
 .prefix-field ::ng-deep .mat-mdc-text-field-wrapper {
-  background-color: #f8fafc !important;
+  background-color: var(--bg-primary) !important;
 }
 
-.url-field {
-  flex: 1;
-}
+.url-field { flex: 1; }
 
-/* Message Styles */
+/* URL Status */
 .url-status {
   display: flex !important;
   align-items: center;
@@ -190,23 +186,14 @@
   transition: all 0.3s ease;
 }
 
-.url-status.success {
-  color: #10b981 !important;
-}
+.url-status.success { color: var(--success-color) !important; }
+.url-status.error { color: var(--error-color) !important; }
 
-.url-status.error {
-  color: #f44336 !important;
-}
-
-.status-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-}
+.status-icon { font-size: 16px; width: 16px; height: 16px; }
 
 .checking-icon {
   animation: spin 1s linear infinite;
-  color: rgba(0, 0, 0, 0.38);
+  color: var(--text-muted);
   font-size: 18px;
 }
 
@@ -220,37 +207,15 @@
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--border-color);
 }
 
-/* Overlay Fix */
-::ng-deep .cdk-overlay-container {
-  z-index: 1600 !important;
-}
+::ng-deep .cdk-overlay-container { z-index: 1600 !important; }
 
-/* Responsive Styles */
 @media screen and (max-width: 600px) {
-  .url-input-group {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .prefix-field,
-  .url-field {
-    width: 100%;
-  }
-
-  .image-preview {
-    width: 100%;
-    max-width: 200px;
-  }
-
-  .form-section {
-    padding: 1.5rem;
-  }
-
-  .image-upload-container {
-    padding: 1.5rem;
-    margin: 1rem 0 2rem;
-  }
+  .url-input-group { flex-direction: column; gap: 0.5rem; }
+  .prefix-field, .url-field { width: 100%; }
+  .image-preview { width: 100%; max-width: 200px; }
+  .form-section { padding: 1.5rem; }
+  .image-upload-container { padding: 1.5rem; margin: 1rem 0 2rem; }
 }
