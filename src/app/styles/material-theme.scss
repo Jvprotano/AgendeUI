@@ -1,85 +1,104 @@
 @use '@angular/material' as mat;
-@use './_colors.scss' as colors;
 
-// Define the custom palette using our dark green color system
+// Custom palette aligned with design tokens
 $agende-primary: (
-  50: colors.color('primary', 50),
-  100: colors.color('primary', 100),
-  200: colors.color('primary', 200),
-  300: colors.color('primary', 300),
-  400: colors.color('primary', 400),
-  500: colors.color('primary', 500),
-  600: colors.color('primary', 600),
-  700: colors.color('primary', 700),
-  800: colors.color('primary', 800),
-  900: colors.color('primary', 900),
+  50:  #e0f5ea,
+  100: #b3e6cb,
+  200: #80d5a9,
+  300: #4dc487,
+  400: #26b76d,
+  500: #00c853,
+  600: #00b94c,
+  700: #00a642,
+  800: #009439,
+  900: #007429,
   contrast: (
-    50: white,
-    100: white,
-    200: white,
-    300: white,
+    50:  rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
     400: white,
     500: white,
     600: white,
-    700: rgba(0,0,0,0.87),
-    800: rgba(0,0,0,0.87),
-    900: rgba(0,0,0,0.87),
+    700: white,
+    800: white,
+    900: white,
   )
 );
 
-// Create the dark theme
+// Dark theme
 $agende-theme: mat.define-dark-theme((
   color: (
     primary: mat.define-palette($agende-primary),
-    accent: mat.define-palette(mat.$green-palette, A400, A200, A700),
-    warn: mat.define-palette(mat.$red-palette),
+    accent:  mat.define-palette(mat.$green-palette, A400, A200, A700),
+    warn:    mat.define-palette(mat.$red-palette),
   ),
   typography: mat.define-typography-config(),
   density: 0,
 ));
 
-// Apply the theme to all Material components
 @include mat.all-component-themes($agende-theme);
 
-// Dark card style
+// ─── Card ───
 .mat-mdc-card {
-  --mdc-elevated-card-container-color: #1A1A1A !important;
-  border-radius: 12px !important;
-  border: 1px solid #2A2A2A !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  --mdc-elevated-card-container-color: var(--bg-elevated) !important;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
-// Dark form fields
+// ─── Form fields ───
 .mat-mdc-form-field {
-  --mdc-filled-text-field-container-color: #1A1A1A;
-  --mdc-filled-text-field-label-text-color: #9E9E9E;
-  --mdc-filled-text-field-input-text-color: #F0F0F0;
-  --mdc-outlined-text-field-outline-color: #2A2A2A;
-  --mdc-outlined-text-field-focus-outline-color: #00C853;
-  --mdc-outlined-text-field-label-text-color: #9E9E9E;
-  --mdc-outlined-text-field-input-text-color: #F0F0F0;
-  --mdc-outlined-text-field-hover-outline-color: #3A3A3A;
+  --mdc-filled-text-field-container-color: var(--bg-input);
+  --mdc-filled-text-field-label-text-color: var(--text-secondary);
+  --mdc-filled-text-field-input-text-color: var(--text-primary);
+  --mdc-outlined-text-field-outline-color: var(--border-default);
+  --mdc-outlined-text-field-focus-outline-color: var(--accent);
+  --mdc-outlined-text-field-label-text-color: var(--text-secondary);
+  --mdc-outlined-text-field-input-text-color: var(--text-primary);
+  --mdc-outlined-text-field-hover-outline-color: var(--border-strong);
 }
 
-// Dark select panel
+.mat-mdc-text-field-wrapper {
+  background-color: var(--bg-input) !important;
+}
+
+.mat-mdc-form-field-input-control {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-form-field-label,
+.mat-mdc-floating-label {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+}
+
+.mat-mdc-form-field.mat-mdc-focused .mat-mdc-form-field-outline {
+  box-shadow: 0 0 0 3px var(--accent-subtle) !important;
+}
+
+// ─── Select panel ───
 .mat-mdc-select-panel {
-  background-color: #1A1A1A !important;
-  border: 1px solid #2A2A2A !important;
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
   z-index: 1600 !important;
 }
 
 .mat-mdc-option {
-  color: #F0F0F0 !important;
-  &:hover, &.mat-mdc-option-active {
-    background-color: #2A2A2A !important;
+  color: var(--text-primary) !important;
+
+  &:hover,
+  &.mat-mdc-option-active {
+    background-color: var(--bg-hover) !important;
   }
+
   &.mdc-list-item--selected {
-    background-color: rgba(0, 200, 83, 0.15) !important;
-    color: #00C853 !important;
+    background-color: var(--accent-subtle) !important;
+    color: var(--accent) !important;
   }
 }
 
-// Fix z-index issues with modals and dropdowns
+// ─── Z-index management ───
 .cdk-overlay-container {
   z-index: 1500 !important;
 }
@@ -96,68 +115,55 @@ $agende-theme: mat.define-dark-theme((
   z-index: 1450 !important;
 }
 
-// Dark overlays/dialogs
+// ─── Dialog ───
 .cdk-overlay-dark-backdrop {
   background: rgba(0, 0, 0, 0.7) !important;
 }
 
 .mat-mdc-dialog-container {
-  --mdc-dialog-container-color: #1A1A1A !important;
-  border: 1px solid #2A2A2A !important;
+  --mdc-dialog-container-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
 }
 
-/* Labels readable in dark theme */
-.mat-mdc-form-field-label,
-.mat-mdc-floating-label {
-  color: #9E9E9E !important;
-  font-weight: 500;
-}
-
-.mat-mdc-text-field-wrapper {
-  background-color: #1A1A1A !important;
-}
-
-.mat-mdc-form-field-input-control {
-  color: #F0F0F0 !important;
-}
-
-/* Focus ring using primary green */
-.mat-mdc-form-field.mat-mdc-focused .mat-mdc-form-field-outline {
-  box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.12) !important;
-}
-
-/* Checkbox dark */
+// ─── Checkbox ───
 .mat-mdc-checkbox .mdc-checkbox__background {
-  border-color: #2A2A2A !important;
+  border-color: var(--border-strong) !important;
 }
 
-/* Slide toggle */
+// ─── Slide toggle ───
 .mat-mdc-slide-toggle {
-  --mdc-switch-unselected-track-color: #2A2A2A;
-  --mdc-switch-unselected-handle-color: #616161;
+  --mdc-switch-unselected-track-color: var(--bg-hover);
+  --mdc-switch-unselected-handle-color: var(--text-tertiary);
 }
 
-/* Menu panel */
+// ─── Menu panel ───
 .mat-mdc-menu-panel {
-  background-color: #1A1A1A !important;
-  border: 1px solid #2A2A2A !important;
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
 }
 
 .mat-mdc-menu-item {
-  color: #F0F0F0 !important;
+  color: var(--text-primary) !important;
+
   &:hover {
-    background-color: #2A2A2A !important;
+    background-color: var(--bg-hover) !important;
   }
 }
 
-/* Chip */
+// ─── Chip ───
 .mat-mdc-chip {
-  background-color: #2A2A2A !important;
-  color: #F0F0F0 !important;
+  background-color: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
 }
 
-/* Tooltip */
+// ─── Tooltip ───
 .mat-mdc-tooltip {
-  background-color: #2A2A2A !important;
-  color: #F0F0F0 !important;
+  background-color: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+// ─── Progress bar ───
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--accent) !important;
+  --mdc-linear-progress-track-color: var(--accent-subtle) !important;
 }

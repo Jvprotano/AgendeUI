@@ -22,8 +22,8 @@
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-muted);
-  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
 }
 
 .search-input {
@@ -37,28 +37,28 @@
 
 .empty-icon {
   font-size: 3.5rem;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
 
 // Service cards
 .service-card {
-  background-color: var(--bg-elevated);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--transition-fast);
   height: 100%;
 
   &:hover {
-    border-color: rgba(0, 200, 83, 0.3);
+    border-color: var(--accent-muted);
   }
 }
 
 .service-name {
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: var(--font-size-base);
 }
 
 .service-desc {
@@ -66,18 +66,19 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.4;
+  line-height: var(--line-height-normal);
+  color: var(--text-secondary);
 }
 
 .service-price {
-  color: var(--primary-green);
-  font-weight: 600;
-  font-size: 0.95rem;
+  color: var(--accent);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
 }
 
 .service-duration {
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm);
 }
 
 // Icon buttons
@@ -88,21 +89,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
   background-color: transparent;
   color: var(--text-secondary);
-  transition: all 0.15s ease;
+  transition: all var(--transition-fast);
 
   &:hover {
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-hover);
     color: var(--text-primary);
-    border-color: var(--text-muted);
+    border-color: var(--border-strong);
   }
 }
 
 .btn-icon-danger:hover {
-  background-color: rgba(244, 67, 54, 0.1);
-  color: var(--error-color);
-  border-color: rgba(244, 67, 54, 0.3);
+  background-color: rgba(239, 68, 68, 0.08);
+  color: var(--error);
+  border-color: rgba(239, 68, 68, 0.25);
 }

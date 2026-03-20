@@ -1,17 +1,18 @@
 .navbar-brand {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-family-display);
   font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--primary-green);
+  font-weight: var(--font-weight-bold);
+  color: var(--accent);
   white-space: normal;
   text-align: center;
   word-break: break-all;
 }
 
 .navbar {
-  background-color: rgba(10, 10, 10, 0.95);
-  border-bottom: 1px solid var(--border-color);
-  backdrop-filter: blur(8px);
+  background-color: rgba(12, 14, 20, 0.92);
+  border-bottom: 1px solid var(--border-default);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .dropdown-toggle {
@@ -31,36 +32,54 @@
   align-items: center;
   padding: 0.5rem 1rem;
   color: var(--text-primary);
+  transition: background var(--transition-fast);
 }
 
 .dropdown-menu {
   min-width: 160px;
   background-color: var(--bg-elevated);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
 }
 
 .dropdown img {
   object-fit: cover;
-  border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  box-shadow: var(--shadow-sm);
 }
 
 .dropdown-item:hover {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-hover);
   color: var(--text-primary);
 }
 
 .dropdown-item.active {
-  background-color: rgba(0, 200, 83, 0.15);
-  color: var(--primary-green);
+  background-color: var(--accent-subtle);
+  color: var(--accent);
 }
 
 .icon-header {
   width: 40px;
   height: 40px;
   background: var(--gradient);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon-header svg {
   width: 22px;
+}
+
+.nav-link {
+  color: var(--text-secondary) !important;
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--accent) !important;
 }

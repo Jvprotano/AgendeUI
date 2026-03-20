@@ -1,13 +1,1 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top { border-top: 1px solid var(--border-color); }
-.border-bottom { border-bottom: 1px solid var(--border-color); }
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, 0.4); }
+/* App root — minimal styles; global resets are in styles.scss */

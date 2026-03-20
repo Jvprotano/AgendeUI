@@ -1,53 +1,46 @@
-Design tokens and usage
+# Design Tokens
 
-This document describes the SCSS design tokens available under `src/app/styles/_colors.scss`.
+All design tokens are defined in `src/styles/_tokens.scss` as CSS custom properties on `:root`.
 
-Overview
-- Centralized color maps: `$colors` contains `brand`, `neutral`, `semantic`, and `primary` shades.
-- Gradients, shadows and z-index scales are also defined in `$gradients`, `$shadows`, and `$z-index`.
-- CSS custom properties (variables) are exported via the `:root` block so runtime code and plain CSS can use them.
+## Usage
 
-API / helpers
-- SCSS function: `color($category, $shade)`
-  - Examples:
-    - `color('brand', 'primary')` returns the brand primary color (string key)
-    - `color('primary', 500)` returns the primary 500 shade (numeric shade)
-  - Prefer numeric shades when reading "material-like" palettes (50,100,...500..900).
+Use `var(--token-name)` in all component CSS/SCSS files:
 
-- SCSS function: `gradient($name)`
-  - Examples: `gradient('primary')` returns the primary gradient definition.
+```css
+.my-component {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+```
 
-- SCSS function: `shadow($size)`
-  - Examples: `shadow('md')` returns the medium shadow value.
+## Token categories
 
-- SCSS function: `z($layer)`
-  - Examples: `z('modal')` returns the z-index for modals (1450 by default).
+| Category   | Examples                                                    |
+|------------|-------------------------------------------------------------|
+| Background | `--bg-base`, `--bg-surface`, `--bg-elevated`, `--bg-hover`  |
+| Text       | `--text-primary`, `--text-secondary`, `--text-tertiary`     |
+| Accent     | `--accent`, `--accent-hover`, `--accent-subtle`             |
+| Status     | `--status-pending`, `--status-confirmed`, `--status-cancelled`, `--status-completed` |
+| Borders    | `--border-default`, `--border-strong`                       |
+| Shadows    | `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-xl`  |
+| Radius     | `--radius-sm`, `--radius-md`, `--radius-lg`                 |
+| Spacing    | `--space-xs` through `--space-2xl`                          |
+| Typography | `--font-size-*`, `--font-weight-*`, `--line-height-*`       |
 
-CSS custom properties (runtime)
-- Use in plain CSS or templates:
-  - `var(--primary-green)`, `var(--text-primary)`, `var(--border-color)`, `var(--gradient)`, `var(--error-color)`
+## Legacy aliases
 
-Recommended usage patterns
-- Component SCSS (preferred):
-  ```scss
-  @use 'src/app/styles/_colors.scss' as tokens;
+For backward compatibility, old variable names are aliased in `_tokens.scss`:
+- `--primary-green` -> `--accent`
+- `--bg-primary` -> `--bg-base`
+- `--bg-secondary` -> `--bg-surface`
+- `--border-color` -> `--border-default`
+- `--text-muted` -> `--text-tertiary`
 
-  .my-component {
-    background: tokens.color('primary', 100);
-    box-shadow: tokens.shadow('md');
-  }
-  ```
+## Rules
 
-- Template or global CSS: use CSS variables
-  ```html
-  <div style="background: var(--background-secondary); color: var(--text-primary)">...</div>
-  ```
-
-Notes & conventions
-- Prefer using semantic names (e.g. `semantic.success`) in components where appropriate.
-- When adding new colors, update both the `$colors` map and the `:root` CSS variables for runtime availability.
-- Keep Material theme customizations inside `src/app/styles/material-theme.scss` where possible to avoid needing `::ng-deep`.
-
-If you want, I can:
-- Run a repository-wide replacement to swap literal hex values for tokens.
-- Add a small `mixins.scss` with commonly used mixins (focus-outline, elevated-card, etc.).
+- **No hardcoded hex colors** in component CSS. All colors must reference tokens.
+- The only exception is `#fff` for text on accent/gradient buttons.
+- Material palette definitions in `material-theme.scss` use hex (required by Angular Material API).

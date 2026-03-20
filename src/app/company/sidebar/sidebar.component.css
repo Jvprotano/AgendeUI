@@ -2,14 +2,14 @@
   position: fixed;
   width: 65px;
   height: 100%;
-  background-color: var(--bg-elevated);
-  border-right: 1px solid var(--border-color);
-  transition: 1s;
-  z-index: 99;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-default);
+  transition: width var(--transition-slow);
+  z-index: var(--z-sticky);
   left: 0;
 }
 
-::ng-deep.company-area {
+::ng-deep .company-area {
   width: calc(100% - 90px);
   margin-left: 80px;
   margin-top: 40px;
@@ -29,24 +29,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background var(--transition-fast);
 }
 
 .sidebar-menu .menu-item i {
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
+  transition: color var(--transition-fast);
 }
 
 .sidebar-menu .menu-item:not(.active):hover i {
-  color: var(--primary-green);
+  color: var(--accent);
+}
+
+.sidebar-menu .menu-item:not(.active):hover {
+  background-color: var(--bg-hover);
 }
 
 .sidebar-menu .menu-item.active {
-  background-color: rgba(0, 200, 83, 0.1);
-  border-left: 3px solid var(--primary-green);
+  background-color: var(--accent-subtle);
+  border-left: 3px solid var(--accent);
 }
 
 .sidebar-menu .menu-item.active i {
-  color: var(--primary-green);
+  color: var(--accent);
 }
 
 .sidebar-menu .menu-item.menu-item-disabled {
@@ -55,7 +61,11 @@
 }
 
 .sidebar-menu .menu-item.menu-item-disabled:hover i {
-  color: var(--text-muted);
+  color: var(--text-tertiary);
+}
+
+.sidebar-menu .menu-item.menu-item-disabled:hover {
+  background-color: transparent;
 }
 
 .menu-item-exit {
@@ -65,23 +75,23 @@
 
 .sidebar-menu .menu-item.menu-item-exit i {
   font-weight: 400;
-  color: rgba(244, 67, 54, 0.6);
+  color: rgba(239, 68, 68, 0.5);
 }
 
 .sidebar-menu .menu-item.menu-item-exit:not(.active):hover i {
-  color: var(--error-color);
+  color: var(--error);
 }
 
 .agende-logo {
   position: absolute;
   left: 75px;
   top: 10px;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-family-display);
   font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--primary-green);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent);
 }
 
-::ng-deep.tooltip {
+::ng-deep .tooltip {
   width: 110px !important;
 }

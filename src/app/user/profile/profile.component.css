@@ -4,7 +4,27 @@ img {
   max-width: 250px;
   max-height: 250px;
   margin: 20px;
-  border: 2px solid var(--border-color);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+img:hover {
+  border-color: var(--accent-muted);
+  box-shadow: var(--shadow-lg);
+}
+
+.profile-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
 }

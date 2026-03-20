@@ -7,14 +7,16 @@
   padding: 0 1rem;
   box-sizing: border-box;
   text-align: center;
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
 }
 
 .footer p {
   margin: 0;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
 }
 
-.text-footer { color: var(--text-muted); }
+.text-footer {
+  color: var(--text-tertiary);
+}

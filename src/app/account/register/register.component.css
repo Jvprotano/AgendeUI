@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-base);
   position: relative;
   overflow: hidden;
 }
@@ -23,23 +23,23 @@
   width: 44px;
   height: 44px;
   background: var(--gradient);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 0.75rem;
 }
 
-.brand-icon i { font-size: 20px; color: white; }
-.brand-text { font-size: 1.6rem; font-weight: 700; color: var(--primary-green); margin: 0; }
-.welcome-text { font-size: 1rem; color: var(--text-secondary); margin: 0.25rem 0 0; }
+.brand-icon i { font-size: 20px; color: #fff; }
+.brand-text { font-size: 1.6rem; font-weight: var(--font-weight-bold); color: var(--accent); margin: 0; }
+.welcome-text { font-size: var(--font-size-base); color: var(--text-secondary); margin: 0.25rem 0 0; }
 
 .register-card {
   background: var(--bg-elevated);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   padding: 2rem;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
   width: 100%;
   max-width: 720px;
   position: relative;
@@ -48,20 +48,21 @@
 
 .register-form .form-group { margin-bottom: 1rem; }
 .input-group { position: relative; display: flex; align-items: center; }
-.input-icon { position: absolute; left: 0.9rem; color: var(--text-muted); z-index: 2; }
+.input-icon { position: absolute; left: 0.9rem; color: var(--text-tertiary); z-index: 2; }
 
 .form-control {
   height: 44px;
   padding-left: 3rem !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 10px !important;
-  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
+  background-color: var(--bg-input) !important;
   color: var(--text-primary) !important;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .form-control:focus {
-  border-color: var(--primary-green) !important;
-  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.15) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-subtle) !important;
 }
 
 .btn-toggle-password {
@@ -69,23 +70,55 @@
   right: 0.6rem;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   cursor: pointer;
   padding: 0;
   z-index: 2;
+  transition: color var(--transition-fast);
 }
 
-.btn-gradient { border: none; background: var(--gradient); color: white; border-radius: 10px; height: 44px; }
-.btn-gradient:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3); }
+.btn-toggle-password:hover {
+  color: var(--text-secondary);
+}
 
-.register-link { color: var(--primary-green); text-decoration: none; font-weight: 600; }
-.register-link:hover { color: var(--primary-hover); }
+.btn-gradient {
+  border: none;
+  background: var(--gradient-btn);
+  color: #fff;
+  border-radius: var(--radius-md);
+  height: 44px;
+}
 
-.decoration-circle { position: absolute; border-radius: 50%; background: var(--gradient); opacity: 0.05; z-index: 0; }
+.btn-gradient:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 200, 83, 0.3);
+}
+
+.register-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: var(--font-weight-semibold);
+  transition: color var(--transition-fast);
+}
+
+.register-link:hover { color: var(--accent-hover); }
+
+.decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gradient);
+  opacity: 0.04;
+  z-index: 0;
+}
+
 .circle-1 { width: 260px; height: 260px; top: -80px; right: -80px; }
 .circle-2 { width: 180px; height: 180px; bottom: -40px; left: -40px; }
 
-.invalid-feedback { color: var(--error-color); font-size: 0.875rem; margin-top: 0.5rem; }
+.invalid-feedback {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-sm);
+}
 
 @media (max-width: 768px) {
   .register-card { padding: 1.25rem; }

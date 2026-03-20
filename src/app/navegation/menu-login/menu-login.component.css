@@ -1,9 +1,10 @@
 .btn-access {
   text-decoration: none;
   color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
   padding-left: 30px;
+  transition: color var(--transition-fast);
 }
 
 .logout {
@@ -16,7 +17,7 @@
 }
 
 .btn-access:hover {
-  color: var(--primary-green);
+  color: var(--accent);
 }
 
 .dropdown-item:active {
@@ -24,18 +25,23 @@
 }
 
 .dropdown-item:hover {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-hover);
   color: var(--text-primary);
 }
 
 #btnLogout {
-  color: var(--error-color);
+  color: var(--error);
   font-size: x-large;
+  transition: color var(--transition-fast);
 }
 
-@media(max-width: 480px) {
+#btnLogout:hover {
+  color: var(--status-cancelled);
+}
+
+@media (max-width: 480px) {
   .btn-access {
-    padding-top: 0px;
-    padding-right: 0px;
+    padding-top: 0;
+    padding-right: 0;
   }
 }

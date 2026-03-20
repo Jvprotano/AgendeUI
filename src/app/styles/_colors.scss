@@ -1,161 +1,47 @@
-// Color Palette — Dark Theme
+// ============================================================
+// Legacy colors file — redirects to design tokens
+// ============================================================
+// This file is kept for backward compatibility with imports.
+// All actual token definitions live in src/styles/_tokens.scss
+// which is loaded via styles.scss in angular.json.
+// ============================================================
+
+// The :root CSS custom properties are now defined in
+// src/styles/_tokens.scss and loaded globally.
+// This file only provides SCSS-level values for material-theme.scss.
+
+// ─── SCSS values for Material theme palette ───
+
 $colors: (
-  // Brand Colors
   brand: (
-    primary: #00C853,
-    secondary: #003300,
-    accent: #00E676,
+    primary: #00c853,
+    secondary: #002a11,
+    accent: #00e676,
   ),
-
-  // Neutrals
   neutral: (
-    white: #FFFFFF,
-    black: #000000,
-    gray-50: #1A1A1A,
-    gray-100: #2A2A2A,
-    gray-200: #3A3A3A,
-    gray-300: #4A4A4A,
-    gray-400: #616161,
-    gray-500: #9E9E9E,
-    gray-600: #BDBDBD,
-    gray-700: #E0E0E0,
-    gray-800: #F0F0F0,
-    gray-900: #F5F5F5,
+    white: #f0f2f5,
+    black: #0c0e14,
   ),
-
-  // Semantic Colors
   semantic: (
-    success: #00C853,
-    error: #F44336,
-    warning: #FFC107,
-    info: #2196F3
+    success: #10b981,
+    error: #ef4444,
+    warning: #f59e0b,
+    info: #3b82f6,
   ),
-
-  // Primary Green Variations
   primary: (
-    50: #00200D,
-    100: #003300,
-    200: #005200,
-    300: #007A29,
-    400: #00A040,
-    500: #00C853,
-    600: #00D65B,
-    700: #00E063,
-    800: #00E676,
-    900: #69F0AE,
+    50:  #e0f5ea,
+    100: #b3e6cb,
+    200: #80d5a9,
+    300: #4dc487,
+    400: #26b76d,
+    500: #00c853,
+    600: #00b94c,
+    700: #00a642,
+    800: #009439,
+    900: #007429,
   )
 );
 
-// Gradients
-$gradients: (
-  primary: linear-gradient(135deg, #003300 0%, #00C853 100%),
-  btn: linear-gradient(180deg, #00A040 0%, #00C853 100%),
-  overlay: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4))
-);
-
-// Shadow Definitions
-$shadows: (
-  sm: 0 1px 2px rgba(0, 0, 0, 0.4),
-  md: 0 4px 6px rgba(0, 0, 0, 0.5),
-  lg: 0 10px 15px rgba(0, 0, 0, 0.5),
-  xl: 0 20px 25px rgba(0, 0, 0, 0.6)
-);
-
-// Z-index Scale
-$z-index: (
-  below: -1,
-  base: 0,
-  above: 1,
-  header: 100,
-  modal-backdrop: 1400,
-  modal: 1450,
-  overlay: 1500,
-  tooltip: 1600,
-  toast: 1700
-);
-
-// CSS Custom Properties
-:root {
-  // Background Colors
-  --bg-primary: #0A0A0A;
-  --bg-secondary: #111111;
-  --bg-elevated: #1A1A1A;
-
-  // Border
-  --border-color: #2A2A2A;
-
-  // Brand Colors
-  --primary-green: #00C853;
-  --primary-hover: #00E676;
-  --primary-dark: #003300;
-
-  // Semantic Colors
-  --success-color: #00C853;
-  --error-color: #F44336;
-  --warning-color: #FFC107;
-  --info-color: #2196F3;
-
-  // Gradients
-  --gradient: #{map-get($gradients, 'primary')};
-  --gradient-btn: #{map-get($gradients, 'btn')};
-
-  // Text Colors
-  --text-primary: #F0F0F0;
-  --text-secondary: #9E9E9E;
-  --text-muted: #616161;
-
-  // Legacy aliases (kept for backward compat with components)
-  --background-primary: #0A0A0A;
-  --background-secondary: #111111;
-  --dark-blue: #003300;
-  --light-green: #00E676;
-  --gray-50: #1A1A1A;
-  --gray-100: #2A2A2A;
-  --gray-500: #9E9E9E;
-
-  // Shadow Variables
-  --shadow-sm: #{map-get($shadows, 'sm')};
-  --shadow-md: #{map-get($shadows, 'md')};
-  --shadow-lg: #{map-get($shadows, 'lg')};
-  --shadow-xl: #{map-get($shadows, 'xl')};
-}
-
-// Utility Classes
-.text-primary { color: var(--primary-green) !important; }
-.text-secondary { color: var(--text-secondary) !important; }
-.text-success { color: var(--success-color) !important; }
-.text-error { color: var(--error-color) !important; }
-.text-warning { color: var(--warning-color) !important; }
-.text-info { color: var(--info-color) !important; }
-.text-muted { color: var(--text-muted) !important; }
-
-.bg-primary { background-color: var(--primary-green) !important; }
-.bg-secondary { background-color: var(--bg-secondary) !important; }
-.bg-elevated { background-color: var(--bg-elevated) !important; }
-.bg-light { background-color: var(--bg-secondary) !important; }
-.bg-white { background-color: var(--bg-elevated) !important; }
-
-.shadow-sm { box-shadow: var(--shadow-sm) !important; }
-.shadow-md { box-shadow: var(--shadow-md) !important; }
-.shadow-lg { box-shadow: var(--shadow-lg) !important; }
-.shadow-xl { box-shadow: var(--shadow-xl) !important; }
-
-// Function to get color from map
 @function color($category, $shade) {
   @return map-get(map-get($colors, $category), $shade);
-}
-
-// Function to get gradient
-@function gradient($name) {
-  @return map-get($gradients, $name);
-}
-
-// Function to get shadow
-@function shadow($size) {
-  @return map-get($shadows, $size);
-}
-
-// Function to get z-index
-@function z($layer) {
-  @return map-get($z-index, $layer);
 }

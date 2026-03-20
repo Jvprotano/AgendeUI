@@ -1,7 +1,13 @@
 .modal-header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .modal-footer {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-default);
+}
+
+.modal-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
 }

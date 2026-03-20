@@ -6,14 +6,14 @@
 /* Card Styles */
 ::ng-deep .mat-mdc-card {
   background-color: var(--bg-elevated) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
   margin-bottom: 1.5rem;
   overflow: visible !important;
 }
 
-/* Image Upload Styles */
+/* Image Upload */
 .image-upload-container {
   display: flex;
   flex-direction: column;
@@ -21,8 +21,8 @@
   gap: 1.5rem;
   margin: 1.5rem 0 2.5rem;
   padding: 2rem;
-  background: linear-gradient(45deg, rgba(0, 200, 83, 0.04), rgba(0, 230, 118, 0.04));
-  border-radius: 16px;
+  background: linear-gradient(45deg, var(--accent-subtle), rgba(0, 230, 118, 0.04));
+  border-radius: var(--radius-lg);
   position: relative;
 }
 
@@ -33,8 +33,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border: 2px dashed var(--border-color);
-  border-radius: 16px;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
   pointer-events: none;
 }
 
@@ -42,16 +42,16 @@
   position: relative;
   width: 200px;
   height: 160px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background-color: var(--bg-secondary);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
 }
 
 .image-preview:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-xl);
 }
 
 .image-preview:hover .upload-overlay {
@@ -62,7 +62,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-base);
 }
 
 .upload-overlay {
@@ -71,7 +71,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(0deg, rgba(0, 200, 83, 0.9), rgba(0, 200, 83, 0.7));
+  background: linear-gradient(0deg, rgba(0, 200, 83, 0.85), rgba(0, 200, 83, 0.65));
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
@@ -79,8 +79,8 @@
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transition: all 0.3s ease;
-  color: white;
+  transition: opacity var(--transition-base);
+  color: #fff;
 }
 
 .upload-overlay mat-icon {
@@ -100,50 +100,51 @@
   margin-top: 0.5rem;
   padding: 0.5rem 1.25rem;
   opacity: 0.9;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
   border: none !important;
-  background-color: rgba(244, 67, 54, 0.1) !important;
-  color: var(--error-color) !important;
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  color: var(--error) !important;
+  border-radius: var(--radius-sm);
 }
 
 .remove-image-btn:hover {
   opacity: 1;
-  background-color: rgba(244, 67, 54, 0.2) !important;
+  background-color: rgba(239, 68, 68, 0.15) !important;
   transform: translateY(-1px);
 }
 
-/* Form Section Styles */
+/* Form Section */
 .form-section {
   padding: 2rem;
   background-color: var(--bg-elevated);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
   margin-bottom: 2rem;
 }
 
 .section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--primary-green);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent);
   margin-bottom: 1rem;
 }
 
 .section-description {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
 }
 
-/* Form Field Styles */
+/* Form fields */
 .full-width { width: 100%; }
 
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-input);
 }
 
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline-thick {
-  color: var(--primary-green);
+  color: var(--accent);
 }
 
 ::ng-deep .mat-mdc-form-field-subscript-wrapper {
@@ -155,7 +156,7 @@
 }
 
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 
 ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-infix {
@@ -171,7 +172,7 @@
 .prefix-field { width: 30%; }
 
 .prefix-field ::ng-deep .mat-mdc-text-field-wrapper {
-  background-color: var(--bg-primary) !important;
+  background-color: var(--bg-base) !important;
 }
 
 .url-field { flex: 1; }
@@ -181,25 +182,25 @@
   display: flex !important;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   margin-top: 0.5rem;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
 }
 
-.url-status.success { color: var(--success-color) !important; }
-.url-status.error { color: var(--error-color) !important; }
+.url-status.success { color: var(--success) !important; }
+.url-status.error   { color: var(--error) !important; }
 
 .status-icon { font-size: 16px; width: 16px; height: 16px; }
 
 .checking-icon {
   animation: spin 1s linear infinite;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   font-size: 18px;
 }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to   { transform: rotate(360deg); }
 }
 
 .form-actions {
@@ -207,7 +208,7 @@
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-default);
 }
 
 ::ng-deep .cdk-overlay-container { z-index: 1600 !important; }

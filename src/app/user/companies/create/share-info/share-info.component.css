@@ -1,2 +1,2 @@
-.message-success { color: var(--success-color); }
-.message-error { color: var(--error-color); }
+.message-success { color: var(--success); }
+.message-error   { color: var(--error); }
