@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DisplayMessage } from '../../utils/generic-form-validation';
 import { AccountService } from '../services/account.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterModule } from '@angular/router';
 import { EventService } from '../../services/event.service';
@@ -15,8 +14,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, FormsModule, ReactiveFormsModule, RouterModule, TranslateModule],
-  providers: [AccountService],
+  imports: [CommonModule, FormsModule, FormsModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -36,6 +34,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   isScheduling: boolean = false;
   showPassword: boolean = false;
 
+  // Rate limiting
+  failedAttempts: number = 0;
+  lockoutSeconds: number = 0;
+  private lockoutTimer: ReturnType<typeof setInterval> | null = null;
+  private readonly MAX_ATTEMPTS = 3;
+  private readonly LOCKOUT_DURATION = 30;
+
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -45,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private redirectService: RedirectService,
     private modalService: NgbModal,
     public translate: TranslateService
-  ) { 
+  ) {
     translate.setDefaultLang('pt');
     translate.use('pt');
   }
@@ -61,21 +66,29 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: ['', [Validators.required]],
       rememberMe: [false]
     });
-    // this.changeLoginText();
   }
 
   get form() {
     return this.loginForm.controls;
   }
 
-  guestLogin(){
+  get isLockedOut(): boolean {
+    return this.lockoutSeconds > 0;
+  }
+
+  guestLogin() {
     this.isDisabledGuest = true;
-    
+
     this.modalService.dismissAll();
   }
 
   login() {
     this.formSubmited = true;
+
+    if (this.isLockedOut) {
+      return;
+    }
+
     this.isDisabledLogin = true;
 
     if (this.loginForm.valid) {
@@ -83,15 +96,21 @@ export class LoginComponent implements OnInit, OnDestroy {
 
       this.accountService.login(this.user).subscribe({
         next: (result) => {
+          this.failedAttempts = 0;
           this.success(result);
-          this.formSubmited = false,
-            this.isDisabledLogin = false;
-        }, error: err => { this.errorResponse(err) }
-      })
+          this.formSubmited = false;
+          this.isDisabledLogin = false;
+        }, error: err => {
+          this.failedAttempts++;
+          if (this.failedAttempts >= this.MAX_ATTEMPTS) {
+            this.startLockout();
+          }
+          this.errorResponse(err);
+        }
+      });
 
     } else {
       this.isDisabledLogin = false;
-      // this.formSubmited = false
     }
 
   }
@@ -100,30 +119,63 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isDisabledLogin = false;
     this.errors = [];
 
-    if (!this.isScheduling) {
-      this.router.navigate(['/home']).then(() => {
-        this.translate.get(['LOGIN.SUCCESS', 'LOGIN.WELCOME']).subscribe((translations) => {
-          this.toastr.success(translations['LOGIN.SUCCESS'], translations['LOGIN.WELCOME'], { positionClass: 'toast-top-center' });
-        });
-      });
+    if (this.isScheduling) {
+      this.modalService.dismissAll();
+      return;
     }
+
+    // Use redirect service for post-login navigation
+    const returnRoute = this.redirectService.getReturnRoute();
+    if (returnRoute) {
+      this.redirectService.redirectToReturnRoute();
+    } else {
+      this.router.navigate(['/home']);
+    }
+
+    this.translate.get(['LOGIN.SUCCESS', 'LOGIN.WELCOME']).subscribe((translations) => {
+      this.toastr.success(translations['LOGIN.SUCCESS'], translations['LOGIN.WELCOME'], { positionClass: 'toast-top-center' });
+    });
 
     this.modalService.dismissAll();
   }
-  errorResponse(err: any) {
 
+  errorResponse(err: any) {
     this.isDisabledLogin = false;
-    this.toastr.error(err.error, 'Ops! :(');
+    if (err?.error) {
+      this.toastr.error(err.error, 'Ops! :(');
+    } else if (err?.message) {
+      this.toastr.error(err.message, 'Ops! :(');
+    }
   }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
+  private startLockout() {
+    this.lockoutSeconds = this.LOCKOUT_DURATION;
+    this.isDisabledLogin = true;
+
+    this.lockoutTimer = setInterval(() => {
+      this.lockoutSeconds--;
+      if (this.lockoutSeconds <= 0) {
+        this.clearLockout();
+      }
+    }, 1000);
+  }
+
+  private clearLockout() {
+    if (this.lockoutTimer) {
+      clearInterval(this.lockoutTimer);
+      this.lockoutTimer = null;
+    }
+    this.lockoutSeconds = 0;
+    this.failedAttempts = 0;
+    this.isDisabledLogin = false;
+  }
+
   ngOnDestroy(): void {
     this.eventService.broadcast('hide-header', false);
-    // if (this.textInterval) {
-    //   clearInterval(this.textInterval);
-    // }
+    this.clearLockout();
   }
 }

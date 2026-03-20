@@ -17,12 +17,17 @@ export class RedirectService {
     return this.returnRoute;
   }
 
+  clearReturnRoute(): void {
+    this.returnRoute = null;
+  }
+
   redirectToReturnRoute(): void {
     if (this.returnRoute) {
-      this.router.navigateByUrl(this.returnRoute);
+      const route = this.returnRoute;
+      this.returnRoute = null;
+      this.router.navigateByUrl(route);
     } else {
-      // Caso não haja uma rota guardada, redirecione para a rota padrão do agendamento
-      this.router.navigate(['/gpt-agenda']);
+      this.router.navigate(['/home']);
     }
   }
 }

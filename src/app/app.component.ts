@@ -4,16 +4,13 @@ import { RouterOutlet } from '@angular/router';
 import { HomeComponent } from './navegation/home/home.component';
 import { MenuComponent } from './navegation/menu/menu.component';
 import { FooterComponent } from './navegation/footer/footer.component';
-import { AccountService } from './account/services/account.service';
-import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalStorageUtils } from './utils/localstorage';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MenuComponent, FooterComponent, HttpClientModule, TranslateModule],
-  providers: [AccountService, LocalStorageUtils],
+  imports: [CommonModule, RouterOutlet, MenuComponent, FooterComponent, TranslateModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LocalStorageUtils } from '../../utils/localstorage';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -16,12 +15,9 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class MenuLoginComponent {
 
-  token: string | null = "";
-  user: any;
-  localStorageUtils = new LocalStorageUtils();
   isLoggedIn$: Observable<boolean>;
 
-  constructor(private router: Router, private accountService: AccountService) { 
+  constructor(private router: Router, private accountService: AccountService) {
     this.isLoggedIn$ = this.accountService.userIsLoggedObs;
   }
 

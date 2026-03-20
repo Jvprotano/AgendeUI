@@ -11,6 +11,10 @@
       "LOGIN": "Login"
     }
   },
+  "AUTH": {
+    "SESSION_EXPIRED": "Sua sessão expirou. Faça login novamente.",
+    "SESSION_EXPIRING": "Sua sessão expira em breve. Salve seu trabalho."
+  },
   "ERROR": {
     "GENERIC": "Ocorreu um erro inesperado",
     "BAD_REQUEST": "Requisição inválida",
@@ -117,7 +121,8 @@
       "INVALID_CREDENTIALS": "E-mail ou senha inválidos"
     },
     "SUCCESS": "Login realizado com sucesso",
-    "WELCOME": "Bem-vindo"
+    "WELCOME": "Bem-vindo",
+    "LOCKOUT": "Muitas tentativas. Tente novamente em {{seconds}}s."
   },
   "HOME": {
     "TITLE": "Mais que uma agenda",

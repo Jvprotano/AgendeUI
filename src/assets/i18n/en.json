@@ -9,6 +9,10 @@
       "LOGIN": "Login to your account"
     }
   },
+  "AUTH": {
+    "SESSION_EXPIRED": "Your session has expired. Please log in again.",
+    "SESSION_EXPIRING": "Your session expires soon. Please save your work."
+  },
   "ERROR": {
     "GENERIC": "An error occurred",
     "BAD_REQUEST": "Bad request",
@@ -117,7 +121,8 @@
       "INVALID_CREDENTIALS": "Invalid email or password"
     },
     "SUCCESS": "Login successful",
-    "WELCOME": "Welcome"
+    "WELCOME": "Welcome",
+    "LOCKOUT": "Too many attempts. Try again in {{seconds}}s."
   },
   "HOME": {
     "TITLE": "More than just a schedule",

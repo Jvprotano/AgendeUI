@@ -1,38 +1,60 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable, catchError, throwError } from "rxjs";
+import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { Router } from "@angular/router";
+import { catchError, EMPTY, throwError } from "rxjs";
 import { LocalStorageUtils } from '../utils/localstorage';
-import { Router } from "@angular/router"; // Import the correct Router
+import { AccountService } from '../account/services/account.service';
+import { isTokenExpired } from '../utils/token.utils';
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 
-@Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+    const localStorageUtils = inject(LocalStorageUtils);
+    const router = inject(Router);
+    const accountService = inject(AccountService);
+    const toastr = inject(ToastrService);
+    const translate = inject(TranslateService);
 
-    constructor(private localStorageUtils: LocalStorageUtils, private router: Router) {}
+    // Attach Bearer token if present and valid
+    const token = localStorageUtils.getUserToken();
+    let authReq = req;
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(req).pipe(
-            catchError(error => {
-                if (error instanceof HttpErrorResponse) {
-                    if (error.status === 400) {
-                        throw error.error;
-                    }
-                    if (error.status === 401) { // não sei quem está logado
-                        this.localStorageUtils.clearUserLocalData();
-                        this.router.navigate(['/account/login']);
-                        throw error.error;
-                    }
-                    if (error.status === 403) { // sei quem é, mas não pode acessar
-                        this.router.navigate(['/access-denied']);
-                    }
-                    if (error.status === 404) {
-                        throw error.error;
-                    }
-                    if (error.status === 500) {
-                        throw error.error;
-                    }
-                }
-                return throwError(() => new Error(error));
-            })
-        );
+    if (token && !isTokenExpired(token)) {
+        authReq = req.clone({
+            setHeaders: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+    } else if (token && isTokenExpired(token)) {
+        // Token exists but is expired — trigger session expired flow
+        accountService.handleSessionExpired();
+        translate.get('AUTH.SESSION_EXPIRED').subscribe(msg => {
+            toastr.warning(msg, '', { positionClass: 'toast-top-center' });
+        });
+        router.navigate(['/account/login']);
+        return EMPTY;
     }
-}
+
+    return next(authReq).pipe(
+        catchError((error: HttpErrorResponse) => {
+            switch (error.status) {
+                case 401:
+                    // Exclusive 401 handling — do NOT re-throw
+                    accountService.handleSessionExpired();
+                    translate.get('AUTH.SESSION_EXPIRED').subscribe(msg => {
+                        toastr.warning(msg, '', { positionClass: 'toast-top-center' });
+                    });
+                    router.navigate(['/account/login']);
+                    return EMPTY;
+
+                case 403:
+                    router.navigate(['/access-denied']);
+                    return EMPTY;
+
+                default:
+                    // Let other errors propagate to service-level handlers
+                    return throwError(() => error);
+            }
+        })
+    );
+};

@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorResponse } from '../interfaces/api-response.interface';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,24 +11,17 @@ import { Router } from '@angular/router';
 export class ErrorHandlingService {
   constructor(
     private translate: TranslateService,
-    private toastr: ToastrService,
-    private router: Router
+    private toastr: ToastrService
   ) {}
 
   handleError(error: HttpErrorResponse): Observable<never> {
+    // 401 and 403 are handled exclusively by the authInterceptor — they
+    // return EMPTY and never reach service-level catchError.
     let errorMessage = 'ERROR.GENERIC';
 
     switch (error.status) {
       case 400:
         errorMessage = 'ERROR.BAD_REQUEST';
-        break;
-      case 401:
-        this.router.navigate(['/login']);
-        window.location.reload();
-        errorMessage = 'ERROR.UNAUTHORIZED';
-        break;
-      case 403:
-        errorMessage = 'ERROR.FORBIDDEN';
         break;
       case 404:
         errorMessage = 'ERROR.NOT_FOUND';

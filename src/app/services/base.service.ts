@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { environment } from "../../environments/environment.development";
-import { LocalStorageUtils } from "../utils/localstorage";
 import { inject } from "@angular/core";
 import { ApiResponse } from "../shared/interfaces/api-response.interface";
 import { ErrorHandlingService } from "../shared/services/error-handling.service";
@@ -17,7 +16,6 @@ export abstract class BaseService {
     }
 
     protected readonly apiUrl: string = environment.apiUrl;
-    public localStorage = new LocalStorageUtils();
 
     protected getHeaderJson(): { headers: HttpHeaders } {
         return {
@@ -27,18 +25,9 @@ export abstract class BaseService {
         };
     }
 
-    protected getAuthHeaderJson(): { headers: HttpHeaders } {
-        return {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.localStorage.getUserToken()}`
-            })
-        };
-    }
-
     protected get<T>(route: string, authenticated: boolean = true): Observable<T> {
         return this.httpClient
-            .get<ApiResponse<T>>(`${this.apiUrl}${route}`, authenticated ? this.getAuthHeaderJson() : this.getHeaderJson())
+            .get<ApiResponse<T>>(`${this.apiUrl}${route}`, this.getHeaderJson())
             .pipe(
                 map(this.extractData),
                 catchError(error => this.errorHandler.handleError(error))
@@ -47,7 +36,7 @@ export abstract class BaseService {
 
     protected post<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
         return this.httpClient
-            .post<ApiResponse<T>>(`${this.apiUrl}${route}`, data, authenticated ? this.getAuthHeaderJson() : this.getHeaderJson())
+            .post<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
             .pipe(
                 map(this.extractData),
                 catchError(error => this.errorHandler.handleError(error))
@@ -56,7 +45,7 @@ export abstract class BaseService {
 
     protected put<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
         return this.httpClient
-            .put<ApiResponse<T>>(`${this.apiUrl}${route}`, data, authenticated ? this.getAuthHeaderJson() : this.getHeaderJson())
+            .put<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
             .pipe(
                 map(this.extractData),
                 catchError(error => this.errorHandler.handleError(error))
@@ -65,7 +54,7 @@ export abstract class BaseService {
 
     protected delete<T>(route: string, authenticated: boolean = true): Observable<T> {
         return this.httpClient
-            .delete<ApiResponse<T>>(`${this.apiUrl}${route}`, authenticated ? this.getAuthHeaderJson() : this.getHeaderJson())
+            .delete<ApiResponse<T>>(`${this.apiUrl}${route}`, this.getHeaderJson())
             .pipe(
                 map(this.extractData),
                 catchError(error => this.errorHandler.handleError(error))
@@ -74,7 +63,7 @@ export abstract class BaseService {
 
     protected patch<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
         return this.httpClient
-            .patch<ApiResponse<T>>(`${this.apiUrl}${route}`, data, authenticated ? this.getAuthHeaderJson() : this.getHeaderJson())
+            .patch<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
             .pipe(
                 map(this.extractData),
                 catchError(error => this.errorHandler.handleError(error))

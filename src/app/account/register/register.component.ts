@@ -16,8 +16,7 @@ import { PasswordMatcher } from '../../utils/password-matcher';
   standalone: true,
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, TranslateModule],
-  providers: [AccountService]
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
 })
 export class RegisterComponent implements OnInit, AfterViewInit {
 

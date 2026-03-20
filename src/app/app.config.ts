@@ -5,16 +5,10 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
-import { LocalStorageUtils } from './utils/localstorage';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorInterceptor } from './services/error.handle.service';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './services/error.handle.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
-// Function to create translate loader
-// export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-//   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-// }
+import { Observable } from 'rxjs';
 
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(private http: HttpClient) { }
@@ -26,11 +20,6 @@ export class CustomTranslateLoader implements TranslateLoader {
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Observable } from 'rxjs';
-
-export const httpInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
-];
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,13 +27,12 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     provideToastr(),
-    LocalStorageUtils,
-    httpInterceptorProviders,
-    provideAnimations(),
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
     MatDatepickerModule,
     MatNativeDateModule,
     importProvidersFrom(
-      HttpClientModule,
       TranslateModule.forRoot({
         defaultLanguage: 'pt',
         loader: {
