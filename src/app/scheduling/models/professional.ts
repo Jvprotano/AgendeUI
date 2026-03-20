@@ -1,7 +1,8 @@
 export interface Professional {
     id: string;
+    companyId?: string;
+    userId?: string;
     userName: string;
-    description?: string;
     userImageUrl?: string;
-    // schedule: Schedule[];
-  }
+    isOwner?: boolean;
+}

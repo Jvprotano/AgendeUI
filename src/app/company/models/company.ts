@@ -1,23 +1,29 @@
-import { Professional } from "../../scheduling/models/professional";
+import { CompanyEmployee } from "./company-employee";
 import { ServiceOffered } from "../../scheduling/models/service_offered";
 import { DaySchedule } from "./business-hours";
+import { OpeningHours } from "./opening_hours";
 
 export interface Company {
-    id: string,
-    name: string,
-    image: string,
-    description: string,
-    phone: string,
-    status: number,
-    scheduleStatus: ScheduleStatus,
-    schedulingUrl: string,
-    servicesOffered: ServiceOffered[],
-    employeers: Professional[],
-    schedule: DaySchedule[],
+    id: string;
+    name: string;
+    email?: string;
+    description?: string;
+    cnpj?: string;
+    address?: string;
+    addressNumber?: string;
+    postalCode?: string;
+    isVirtual?: boolean;
+    image?: string;
+    status?: number;
+    scheduleStatus: ScheduleStatus;
+    schedulingUrl?: string;
+    servicesOffered?: ServiceOffered[];
+    employeers?: CompanyEmployee[];
+    openingHours?: OpeningHours[];
+    schedule?: DaySchedule[];
 }
 
 export const enum ScheduleStatus {
+    CLOSED = 0,
     OPEN = 1,
-    CLOSED = 2,
-    MAINTENANCE = 3
 }

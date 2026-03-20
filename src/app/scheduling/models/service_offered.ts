@@ -1,7 +1,8 @@
 export interface ServiceOffered {
-    id: string;
+    id?: string;
     name: string;
-    description: string;
+    description?: string;
     price: number;
-    // professionals: Professional[];
-  }
+    duration?: string;
+    companyId?: string;
+}

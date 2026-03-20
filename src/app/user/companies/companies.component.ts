@@ -29,12 +29,20 @@ export class CompaniesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadCompanies();
+  }
+
+  showCreateModal = false;
+  isLoading = true;
+  companies: Company[] = [];
+
+  loadCompanies(): void {
     this.companyService
       .getAll()
       .pipe(take(1))
       .subscribe({
-        next: (companies) => {
-          this.companies = Array.isArray(companies) ? companies : [];
+        next: (result) => {
+          this.companies = Array.isArray(result?.items) ? result.items : [];
           this.isLoading = false;
         },
         error: () => {
@@ -43,23 +51,15 @@ export class CompaniesComponent implements OnInit {
       });
   }
 
-  companyToEdit: Company | null = null;
-  clickedEdit = false;
-  isLoading = true;
-  companies: Company[] = [];
-
   statusStripClass(item: Company): string {
-    if (item.status !== 1) return 'strip-inactive';
     return item.scheduleStatus === ScheduleStatus.OPEN ? 'strip-active' : 'strip-closed';
   }
 
   statusBadgeClass(item: Company): string {
-    if (item.status !== 1) return 'badge-inactive';
     return item.scheduleStatus === ScheduleStatus.OPEN ? 'badge-active' : 'badge-closed';
   }
 
   statusLabel(item: Company): string {
-    if (item.status !== 1) return 'Inativa';
     return item.scheduleStatus === ScheduleStatus.OPEN ? 'Aberta' : 'Fechada';
   }
 
@@ -91,22 +91,41 @@ export class CompaniesComponent implements OnInit {
   }
 
   deleteCompany(id: string): void {
-    const company = this.companies.find((c) => c.id === id);
-    if (company) company.status = 0;
+    this.companyService
+      .remove(id)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.companies = this.companies.filter((c) => c.id !== id);
+          this.toastr.success('Empresa removida com sucesso!');
+        },
+        error: () => {
+          this.toastr.error('Erro ao remover empresa.');
+        },
+      });
   }
 
-  activeCompany(id: string): void {
-    const company = this.companies.find((c) => c.id === id);
-    if (company) company.status = 1;
+  reactivateCompany(id: string): void {
+    this.companyService
+      .reactivate(id)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.toastr.success('Empresa reativada com sucesso!');
+          this.loadCompanies();
+        },
+        error: () => {
+          this.toastr.error('Erro ao reativar empresa.');
+        },
+      });
   }
 
-  editCompany(company: Company | null): void {
-    this.companyToEdit = company;
-    this.clickedEdit = true;
+  openCreateModal(): void {
+    this.showCreateModal = true;
   }
 
   onModalClosed(): void {
-    this.clickedEdit = false;
-    this.companyToEdit = null;
+    this.showCreateModal = false;
+    this.loadCompanies();
   }
 }

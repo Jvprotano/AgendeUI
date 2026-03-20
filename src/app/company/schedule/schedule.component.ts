@@ -2,25 +2,35 @@ import {
   Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild,
-  TemplateRef,
   OnInit,
-  OnDestroy,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  DestroyRef,
+  inject,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ToastrService } from 'ngx-toastr';
+import { Calendar, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import allLocales from '@fullcalendar/core/locales-all';
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
+import esLocale from '@fullcalendar/core/locales/es';
+import { format, addMinutes, parse } from 'date-fns';
 
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SchedulingService } from '../../scheduling/services/scheduling.service';
-import { Appointment } from '../../scheduling/models/appointment';
-import { ActivatedRoute } from '@angular/router';
+import { CompanyService } from '../services/company.service';
+import { Appointment, SchedulingStatus } from '../../scheduling/models/appointment';
+import { AppointmentDetailComponent } from './appointment-detail/appointment-detail.component';
 
 @Component({
   selector: 'app-schedule',
@@ -28,83 +38,123 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    NgbModalModule,
     SidebarComponent,
+    TranslateModule,
+    MatProgressBarModule,
   ],
-  providers: [SchedulingService],
+  providers: [SchedulingService, CompanyService],
   templateUrl: './schedule.component.html',
-  styleUrl: './schedule.component.css'
+  styleUrl: './schedule.component.scss',
 })
-export class ScheduleComponent implements OnInit, OnDestroy {
+export class ScheduleComponent implements OnInit, AfterViewInit {
+  @ViewChild('calendarEl') calendarEl!: ElementRef;
 
-  @ViewChild('detailModal') detailModal!: TemplateRef<any>;
-
-  calendarOptions!: CalendarOptions;
-  isLoading = true;
   companyId = '';
-  selectedAppointment: Appointment | null = null;
+  companyName = '';
+  isLoading = false;
 
-  private subscriptions = new Subscription();
+  readonly statusItems = [
+    { color: '#F59E0B', labelKey: 'COMPANY.CALENDAR.STATUS_PENDING' },
+    { color: '#10B981', labelKey: 'COMPANY.CALENDAR.STATUS_CONFIRMED' },
+    { color: '#EF4444', labelKey: 'COMPANY.CALENDAR.STATUS_CANCELLED' },
+    { color: '#3B82F6', labelKey: 'COMPANY.CALENDAR.STATUS_COMPLETED' },
+  ];
+
+  private calendar!: Calendar;
+  private destroyRef = inject(DestroyRef);
+  private isMobile = window.innerWidth < 768;
+  private currentFrom = '';
+  private currentTo = '';
 
   constructor(
     private schedulingService: SchedulingService,
+    private companyService: CompanyService,
     private route: ActivatedRoute,
     private modal: NgbModal,
     private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.params['id'];
+    this.loadCompanyName();
+  }
+
+  ngAfterViewInit(): void {
     this.initCalendar();
-    this.loadAppointments();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  @HostListener('window:resize')
+  onResize(): void {
+    const nowMobile = window.innerWidth < 768;
+    if (nowMobile !== this.isMobile && this.calendar) {
+      this.isMobile = nowMobile;
+      this.calendar.changeView(nowMobile ? 'listWeek' : 'timeGridWeek');
+    }
   }
 
-  initCalendar(): void {
-    this.calendarOptions = {
-      locales: allLocales,
-      locale: 'pt-br',
-      timeZone: 'local',
+  private initCalendar(): void {
+    const lang = this.translate.currentLang || 'pt';
+
+    this.calendar = new Calendar(this.calendarEl.nativeElement, {
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      initialView: this.isMobile ? 'listWeek' : 'timeGridWeek',
+      locale: this.getCalendarLocale(lang),
+      firstDay: 1,
       editable: false,
-      droppable: false,
       selectable: false,
       navLinks: true,
-      initialView: this.getInitialView(),
+      nowIndicator: true,
+      dayMaxEventRows: 3,
+      slotDuration: '00:30:00',
+      slotMinTime: '06:00:00',
+      slotMaxTime: '22:00:00',
+      allDaySlot: false,
+      businessHours: {
+        daysOfWeek: [1, 2, 3, 4, 5],
+        startTime: '08:00',
+        endTime: '18:00',
+      },
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,listWeek'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
       },
-      buttonText: {
-        day: 'Dia',
-        month: 'Mês',
-        today: 'Hoje',
-        week: 'Semana',
-        list: 'Lista',
-      },
-      plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
-      dayMaxEventRows: 3,
-      eventClick: (info: EventClickArg) => this.onEventClick(info),
-      events: [],
-    };
+      height: 'auto',
+      datesSet: (info) => this.onDatesSet(info),
+      eventClick: (info) => this.onEventClick(info),
+    });
+
+    this.calendar.render();
   }
 
-  loadAppointments(): void {
-    const now = new Date();
-    const startDate = this.getWeekStart(now);
-    const endDate = this.getWeekEnd(now);
+  private onDatesSet(info: { start: Date; end: Date }): void {
+    const from = format(info.start, 'yyyy-MM-dd');
+    const to = format(info.end, 'yyyy-MM-dd');
 
-    const sub = this.schedulingService
-      .getByCompanyId(this.companyId, startDate, endDate)
+    if (from === this.currentFrom && to === this.currentTo) return;
+
+    this.currentFrom = from;
+    this.currentTo = to;
+    this.loadAppointments(from, to);
+  }
+
+  private loadAppointments(from: string, to: string): void {
+    this.isLoading = true;
+    this.cdr.markForCheck();
+
+    this.schedulingService
+      .getByCompany(this.companyId, from, to, 1, 100)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (appointments) => {
-          this.calendarOptions = {
-            ...this.calendarOptions,
-            events: this.mapToCalendarEvents(appointments),
-          };
+        next: (result) => {
+          const appointments = result?.items ?? [];
+          const events = this.mapToEvents(appointments);
+          this.calendar.removeAllEvents();
+          if (events.length) {
+            this.calendar.addEventSource(events);
+          }
           this.isLoading = false;
           this.cdr.markForCheck();
         },
@@ -113,63 +163,96 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
       });
-
-    this.subscriptions.add(sub);
   }
 
-  mapToCalendarEvents(appointments: Appointment[]): any[] {
-    return (appointments ?? []).map((apt) => ({
-      id: apt.id,
-      title: `${apt.customerName} — ${apt.serviceName}`,
-      start: `${apt.date}T${apt.time}`,
-      backgroundColor: this.statusColor(apt.status),
-      borderColor: this.statusColor(apt.status),
-      extendedProps: { appointment: apt },
-    }));
+  private loadCompanyName(): void {
+    this.companyService
+      .getById(this.companyId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (company) => {
+          this.companyName = company?.name || '';
+          this.cdr.markForCheck();
+        },
+        error: () => {},
+      });
   }
 
-  statusColor(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'confirmed': return '#00C853';
-      case 'cancelled': return '#F44336';
-      default: return '#FFC107';
+  private mapToEvents(appointments: Appointment[]): EventInput[] {
+    return (appointments ?? []).map((apt) => {
+      const startStr = `${apt.date}T${apt.time}`;
+      const startDate = parse(`${apt.date} ${apt.time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
+      const endDate = addMinutes(startDate, 30);
+      const color = this.getStatusColor(apt.status);
+
+      return {
+        id: apt.id,
+        title: apt.customerName || 'Cliente',
+        start: startStr,
+        end: format(endDate, "yyyy-MM-dd'T'HH:mm:ss"),
+        backgroundColor: color,
+        borderColor: color,
+        textColor: '#ffffff',
+        extendedProps: { appointment: apt },
+      };
+    });
+  }
+
+  private onEventClick(info: { event: any }): void {
+    const appointment: Appointment = info.event.extendedProps['appointment'];
+
+    const modalRef = this.modal.open(AppointmentDetailComponent, {
+      centered: true,
+      size: 'md',
+    });
+
+    modalRef.componentInstance.appointment = appointment;
+
+    modalRef.result.then(
+      (result) => {
+        if (result?.action === 'cancel') {
+          this.cancelAppointment(result.appointmentId, info.event);
+        }
+      },
+      () => {},
+    );
+  }
+
+  private cancelAppointment(appointmentId: string, calendarEvent: any): void {
+    this.schedulingService
+      .cancel(appointmentId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          const cancelledColor = this.getStatusColor(SchedulingStatus.Cancelled);
+          calendarEvent.setProp('backgroundColor', cancelledColor);
+          calendarEvent.setProp('borderColor', cancelledColor);
+          calendarEvent.setExtendedProp('appointment', {
+            ...calendarEvent.extendedProps['appointment'],
+            status: SchedulingStatus.Cancelled,
+          });
+          this.toastr.success(
+            this.translate.instant('COMPANY.CALENDAR.CANCEL_SUCCESS'),
+          );
+        },
+      });
+  }
+
+  private getStatusColor(status: SchedulingStatus): string {
+    switch (status) {
+      case SchedulingStatus.Pending: return '#F59E0B';
+      case SchedulingStatus.Confirmed: return '#10B981';
+      case SchedulingStatus.Cancelled: return '#EF4444';
+      case SchedulingStatus.Completed: return '#3B82F6';
+      default: return '#6B7280';
     }
   }
 
-  onEventClick(info: EventClickArg): void {
-    this.selectedAppointment = info.event.extendedProps['appointment'];
-    this.modal.open(this.detailModal, { centered: true, size: 'sm' });
-  }
-
-  getInitialView(): string {
-    return window.innerWidth <= 768 ? 'listWeek' : 'timeGridWeek';
-  }
-
-  getWeekStart(date: Date): string {
-    const d = new Date(date);
-    d.setDate(d.getDate() - d.getDay());
-    return d.toISOString().split('T')[0];
-  }
-
-  getWeekEnd(date: Date): string {
-    const d = new Date(date);
-    d.setDate(d.getDate() + (6 - d.getDay()));
-    return d.toISOString().split('T')[0];
-  }
-
-  statusLabel(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'confirmed': return 'Confirmado';
-      case 'cancelled': return 'Cancelado';
-      default: return 'Pendente';
-    }
-  }
-
-  statusClass(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'confirmed': return 'status-confirmed';
-      case 'cancelled': return 'status-cancelled';
-      default: return 'status-pending';
+  private getCalendarLocale(lang: string): any {
+    switch (lang) {
+      case 'es': return esLocale;
+      case 'en': return undefined;
+      default: return ptBrLocale;
     }
   }
 }

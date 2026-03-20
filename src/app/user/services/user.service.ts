@@ -9,7 +9,11 @@ export class UserService extends BaseService {
     constructor() { super() }
 
     getProfile(): Observable<AppUser> {
-        return this.get('user', true);
+        return this.get('user/profile', true);
+    }
+
+    getById(id: string): Observable<AppUser> {
+        return this.get(`user/${id}`, true);
     }
 
     updateUser(user: AppUser): Observable<AppUser> {

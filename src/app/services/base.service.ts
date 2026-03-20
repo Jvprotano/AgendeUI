@@ -72,6 +72,15 @@ export abstract class BaseService {
             );
     }
 
+    protected patch<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
+        return this.httpClient
+            .patch<ApiResponse<T>>(`${this.apiUrl}${route}`, data, authenticated ? this.getAuthHeaderJson() : this.getHeaderJson())
+            .pipe(
+                map(this.extractData),
+                catchError(error => this.errorHandler.handleError(error))
+            );
+    }
+
     protected extractData<T>(response: ApiResponse<T>): T {
         return response.data;
     }

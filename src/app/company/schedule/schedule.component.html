@@ -1,56 +1,41 @@
 <div class="h-100 w-100 d-flex">
-  <app-sidebar></app-sidebar>
-  <div class="row company-area" style="width: 100%;">
+  <app-sidebar [companyId]="companyId"></app-sidebar>
 
-    <!-- Loading state -->
-    <div *ngIf="isLoading" class="calendar-loading">
-      <div class="spinner-border" style="color: var(--primary-green);" role="status">
-        <span class="visually-hidden">Carregando...</span>
+  <div class="company-area w-100">
+    <!-- Page Header -->
+    <div class="d-flex align-items-center justify-content-between mb-3 px-1">
+      <div>
+        <h4 class="fw-semibold mb-1" style="color: #1f2937;">
+          {{ companyName || ('COMPANY.CALENDAR.SCHEDULE' | translate) }}
+        </h4>
+        <p class="text-muted mb-0 small">
+          {{ 'COMPANY.CALENDAR.SCHEDULE_SUBTITLE' | translate }}
+        </p>
       </div>
-      <span class="text-muted">Carregando agendamentos...</span>
     </div>
 
-    <!-- Calendar -->
-    <div *ngIf="!isLoading" id="calendar" class="w-100"></div>
-
-  </div>
-</div>
-
-<!-- Appointment detail modal -->
-<ng-template #detailModal let-close="close">
-  <div class="modal-header">
-    <h5 class="modal-title" style="color: var(--primary-green);">Detalhes do Agendamento</h5>
-    <button type="button" class="btn-close" style="filter: invert(1);" (click)="close()"></button>
-  </div>
-  <div class="modal-body appointment-detail" *ngIf="selectedAppointment">
-    <div class="detail-row">
-      <span class="detail-label">Cliente</span>
-      <span>{{ selectedAppointment.customerName }}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Serviço</span>
-      <span>{{ selectedAppointment.serviceName }}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Profissional</span>
-      <span>{{ selectedAppointment.professionalName }}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Data</span>
-      <span>{{ selectedAppointment.date | date:'dd/MM/yyyy' }}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Horário</span>
-      <span>{{ selectedAppointment.time }}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Status</span>
-      <span class="status-badge" [ngClass]="statusClass(selectedAppointment.status)">
-        {{ statusLabel(selectedAppointment.status) }}
+    <!-- Status Legend -->
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 px-1">
+      <span
+        *ngFor="let item of statusItems"
+        class="d-inline-flex align-items-center gap-1 small text-muted"
+      >
+        <span class="legend-dot" [style.background-color]="item.color"></span>
+        <span>{{ item.labelKey | translate }}</span>
       </span>
     </div>
+
+    <!-- Calendar Card -->
+    <div class="calendar-card rounded-3 shadow-sm position-relative">
+      <!-- Loading Bar -->
+      <mat-progress-bar
+        *ngIf="isLoading"
+        mode="indeterminate"
+        class="calendar-loading-bar"
+      ></mat-progress-bar>
+
+      <!-- Calendar -->
+      <div #calendarEl class="p-3"></div>
+    </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">Fechar</button>
-  </div>
-</ng-template>
+</div>

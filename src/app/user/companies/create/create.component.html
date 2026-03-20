@@ -1,52 +1,51 @@
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="square-jelly-box" [fullScreen]="true">
-  <p style="color: white">Carregando...</p>
-</ngx-spinner>
-
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
-    <h1 class="modal-title text-center mb-0">{{companyToEdit ? "Editar" : "Criar" }} Empresa</h1>
-    <button type="button" class="btn btn-close" (click)="close()">
-    </button>
+    <h1 class="modal-title">Criar Empresa</h1>
+    <button type="button" class="btn btn-close" (click)="close()"></button>
   </div>
 
-  <mat-progress-bar mode="determinate"
-    value="{{this.currentStep == 0 ? 50 : 100}}"></mat-progress-bar>
+  <mat-progress-bar mode="determinate" [value]="currentStep === 0 ? 50 : 100"></mat-progress-bar>
 
-  <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="modal-body company-modal">
+      <app-basic-info
+        *ngIf="currentStep === 0"
+        [form]="form">
+      </app-basic-info>
 
-      <app-basic-info *ngIf="currentStep == 0" (next)="onNextStep($event)" [form]="createForm"></app-basic-info>
-
-      <app-business-sector *ngIf="currentStep == 1" [form]="createForm" (previous)="onPreviousStep()" (next)="onNextStep($event)"></app-business-sector>
-
-
+      <app-business-sector
+        *ngIf="currentStep === 1"
+        [form]="form">
+      </app-business-sector>
     </div>
-    <div class="float-end justify-content-between modal-footer w-100">
-      <div *ngIf="currentStep === 0"></div>
-       <div class="form-actions">
-        <button 
-          *ngIf="currentStep != 0" 
-          (click)="currentStep = currentStep - 1" 
-          mat-stroked-button type="button">
+
+    <div class="modal-footer">
+      <div class="footer-actions">
+        <button
+          *ngIf="currentStep > 0"
+          mat-stroked-button
+          type="button"
+          (click)="onPreviousStep()">
           <mat-icon>arrow_back</mat-icon>
           Voltar
         </button>
-        <button 
-          *ngIf="currentStep != 1" 
+        <span class="spacer"></span>
+        <button
+          *ngIf="currentStep === 0"
           mat-flat-button
-          color="primary" 
+          color="primary"
           type="button"
-          (click)="currentStep = currentStep + 1"
-          >
-          Próximo
+          (click)="onNextStep()">
+          Pr&oacute;ximo
           <mat-icon>arrow_forward</mat-icon>
         </button>
-    </div>
-
-      <div class="form-group m-0" style="text-align: center;" *ngIf="currentStep == 1">
-        <button class="btn btn-success" type="submit">Save</button>
+        <button
+          *ngIf="currentStep === 1"
+          class="btn btn-success"
+          type="submit">
+          Criar
+        </button>
       </div>
     </div>
-
   </form>
 </ng-template>

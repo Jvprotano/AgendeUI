@@ -5,31 +5,30 @@
       <mat-card-subtitle>Configure os horários de atendimento da sua empresa</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="day-schedule-card">
-      <!-- General Schedule Error Message -->
       <div *ngIf="scheduleError" class="error-message mat-error mb-3">
         {{ scheduleError }}
       </div>
 
       <div formArrayName="schedule" class="schedule-container">
-        <div *ngFor="let dayControl of getScheduleControls(); let dayIndex = index" 
+        <div *ngFor="let dayControl of getScheduleControls(); let dayIndex = index"
              [formGroupName]="dayIndex"
              class="day-schedule">
           <div class="day-header">
-            <mat-slide-toggle formControlName="isOpen" 
-                            (change)="onDayToggle(dayIndex, $event.checked)">
+            <mat-slide-toggle formControlName="isOpen"
+                              (change)="onDayToggle(dayIndex, $event.checked)">
               {{ daysOfWeek[dayIndex].name }}
             </mat-slide-toggle>
           </div>
 
           <div class="intervals-container" *ngIf="dayControl.get('isOpen')?.value">
             <div formArrayName="intervals">
-              <div *ngFor="let interval of getIntervals(dayIndex).controls; let intervalIndex = index" 
+              <div *ngFor="let interval of getIntervals(dayIndex).controls; let intervalIndex = index"
                    [formGroupName]="intervalIndex"
                    class="time-interval">
                 <mat-form-field appearance="outline">
                   <mat-label>Início</mat-label>
                   <mat-select formControlName="start" (selectionChange)="onChangeTimeRange()">
-                    <mat-option *ngFor="let time of timeOptions" [value]="time" >
+                    <mat-option *ngFor="let time of timeOptions" [value]="time">
                       {{ time }}
                     </mat-option>
                   </mat-select>
@@ -41,7 +40,7 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Fim</mat-label>
                   <mat-select formControlName="end" (selectionChange)="onChangeTimeRange()">
-                    <mat-option *ngFor="let time of timeOptions" [value]="time" >
+                    <mat-option *ngFor="let time of timeOptions" [value]="time">
                       {{ time }}
                     </mat-option>
                   </mat-select>

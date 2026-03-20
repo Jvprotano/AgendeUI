@@ -4,11 +4,12 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-export interface PaginatedResponse<T> extends ApiResponse<T> {
-  totalItems: number;
-  currentPage: number;
+export interface PaginatedResult<T> {
+  items: T[];
+  page: number;
   pageSize: number;
-  totalPages: number;
+  total: number;
+  hasNextPage: boolean;
 }
 
 export interface ErrorResponse {

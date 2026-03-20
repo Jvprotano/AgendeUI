@@ -1,0 +1,61 @@
+:host { display: block; height: 100vh; }
+.calendar-card { overflow: hidden; background: #fff; border: 1px solid #e5e7eb; }
+.calendar-loading-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+::ng-deep .fc {
+  font-family: inherit; color: #374151; background: #fff;
+  a { color: #374151; text-decoration: none; }
+  .fc-toolbar { flex-wrap: wrap; gap: .5rem; }
+  .fc-toolbar-title { font-size: 1.125rem; font-weight: 600; color: #1f2937; }
+  .fc-button-primary {
+    background: #f9fafb !important; border-color: #e5e7eb !important;
+    color: #374151 !important; font-size: .8125rem !important;
+    font-weight: 500 !important; box-shadow: none !important;
+    &:hover { background: #f3f4f6 !important; border-color: #d1d5db !important; }
+    &:not(:disabled).fc-button-active, &:not(:disabled):active {
+      background: #111827 !important; border-color: #111827 !important; color: #fff !important;
+    }
+    &:focus { box-shadow: 0 0 0 2px rgba(59,130,246,.25) !important; }
+  }
+  .fc-scrollgrid { border-color: #e5e7eb !important; overflow: hidden; }
+  .fc-view-harness, table, .fc-timegrid-col, .fc-daygrid-day, .fc-list, .fc-list-event { background: #fff; }
+  td, th { border-color: #f3f4f6 !important; }
+  .fc-col-header-cell {
+    background: #f9fafb; padding: .625rem 0 !important;
+    .fc-col-header-cell-cushion { color: #6b7280; font-size: .8125rem; font-weight: 500; text-transform: uppercase; }
+  }
+  .fc-timegrid-slot { height: 3rem !important; border-color: #f3f4f6 !important; }
+  .fc-timegrid-slot-label-cushion { color: #9ca3af; font-size: .75rem; }
+  .fc-timegrid-now-indicator-line { border-color: #ef4444; border-width: 2px; }
+  .fc-non-business { background: #fafafa; }
+  .fc-day-today { background: rgba(59,130,246,.03) !important; }
+  .fc-daygrid-day-number { color: #374151; font-size: .875rem; }
+  .fc-day-today .fc-daygrid-day-number {
+    background: #3b82f6; color: #fff; border-radius: 50%;
+    width: 1.75rem; height: 1.75rem; display: flex; align-items: center; justify-content: center;
+  }
+  .fc-event {
+    border-radius: .375rem !important; padding: .125rem .375rem !important;
+    font-size: .8125rem !important; font-weight: 500 !important;
+    border-width: 0 !important; border-left-width: 3px !important;
+    color: #fff !important; cursor: pointer;
+    &:hover { box-shadow: 0 2px 4px rgba(0,0,0,.1); }
+  }
+  .fc-event-title, .fc-event-time, .fc-event-main { color: #fff !important; }
+  .fc-list { border-color: #e5e7eb !important; overflow: hidden; }
+  .fc-list-day-cushion { background: #f9fafb !important; color: #374151; }
+  .fc-list-event td { color: #374151; }
+  .fc-list-event:hover td { background: #f9fafb; }
+  .fc-list-empty { background: #fff; }
+  .fc-list-empty-cushion { color: #9ca3af; }
+  .fc-more-link { color: #3b82f6; font-size: .75rem; font-weight: 500; }
+  .fc-popover { background: #fff; .fc-popover-header { background: #f9fafb; color: #374151; } }
+}
+
+@media (max-width: 767px) {
+  ::ng-deep .fc .fc-toolbar {
+    flex-direction: column; align-items: stretch;
+    .fc-toolbar-chunk { display: flex; justify-content: center; }
+  }
+}

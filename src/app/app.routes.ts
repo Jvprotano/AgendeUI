@@ -14,6 +14,8 @@ import { SchedulingComponent } from './scheduling/scheduling.component';
 import { FinantialComponent } from './company/finantial/finantial.component';
 import { SuccessComponent } from './scheduling/success/success.component';
 import { DashboardComponent } from './company/dashboard/dashboard.component';
+import { CompanyEditComponent } from './company/edit/company-edit.component';
+import { ServicesManagementComponent } from './company/services-management/services-management.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -40,6 +42,8 @@ export const routes: Routes = [
     {
         path: 'company', component: CompanyComponent, children: [
             { path: ':id/schedule', component: ScheduleComponent, canActivate: [protectedGuard] },
+            { path: ':id/services', component: ServicesManagementComponent, canActivate: [protectedGuard] },
+            { path: ':id/edit', component: CompanyEditComponent, canActivate: [protectedGuard] },
             { path: ':id/finantial', component: FinantialComponent, canActivate: [protectedGuard] },
             { path: ':id/dashboard', component: DashboardComponent, canActivate: [protectedGuard] }
         ]

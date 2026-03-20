@@ -11,8 +11,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchedulingService } from './services/scheduling.service';
 import { Scheduling } from './models/scheduling';
-import { Professional } from './models/professional';
 import { ServiceOffered } from './models/service_offered';
+import { CompanyEmployee } from '../company/models/company-employee';
 
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { CompanyService } from '../company/services/company.service';
@@ -39,7 +39,7 @@ import { Company } from '../company/models/company';
 })
 export class SchedulingComponent implements OnInit {
   serviceSelected?: ServiceOffered;
-  professionalSelected?: Professional;
+  professionalSelected?: CompanyEmployee;
   timesAvailable: string[] = [];
   timeSelected: string = '';
   companyName: string = '';
@@ -50,7 +50,7 @@ export class SchedulingComponent implements OnInit {
   companyUrl: string = '';
   countSteps = 1;
   services: ServiceOffered[] = [];
-  professionals: Professional[] = [];
+  professionals: CompanyEmployee[] = [];
   isLoadingTimes = false;
 
   constructor(
@@ -106,8 +106,8 @@ export class SchedulingComponent implements OnInit {
   }
 
   loadCompanyInformation(companyResult: Company) {
-    this.services = companyResult.servicesOffered;
-    this.professionals = companyResult.employeers;
+    this.services = companyResult.servicesOffered ?? [];
+    this.professionals = companyResult.employeers ?? [];
   }
 
   openLoginModal(): void {
@@ -134,13 +134,13 @@ export class SchedulingComponent implements OnInit {
         continueButton.scrollIntoView({ behavior: 'smooth' });
         this.schedulingForm
           .get('professionalId')
-          ?.setValue(this.professionalSelected.id);
+          ?.setValue(this.professionalSelected.userId);
         this.schedulingForm.get('serviceId')?.setValue(this.serviceSelected.id);
       }
     }
   }
 
-  selecionarProfissional(professional: Professional) {
+  selecionarProfissional(professional: CompanyEmployee) {
     if (this.professionalSelected == professional) {
       this.professionalSelected = undefined;
       return;
@@ -210,15 +210,15 @@ export class SchedulingComponent implements OnInit {
       return;
     }
 
-    this.schedulingForm.patchValue({
-      professionalId: this.professionalSelected?.id,
-      serviceId: this.serviceSelected?.id,
-      time: this.timeSelected,
-    });
+    const scheduling: Scheduling = {
+      companyId: this.companyUrl,
+      serviceId: this.serviceSelected?.id ?? '',
+      professionalId: this.professionalSelected?.userId,
+      date: this.schedulingForm.get('date')?.value,
+      time: this.timeSelected + ':00',
+    };
 
-    this.Scheduling = Object.assign({}, this.schedulingForm.value);
-
-    this.schedulingService.schedule(this.Scheduling).subscribe({
+    this.schedulingService.schedule(scheduling).subscribe({
       next: () => {
         this.processarSucesso();
       },

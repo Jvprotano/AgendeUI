@@ -1,8 +1,7 @@
-export interface Scheduling{
+export interface Scheduling {
     companyId: string;
-    professionalId: string;
     serviceId: string;
-    customerId: string;
+    professionalId?: string;
     date: string;
     time: string;
 }

@@ -1,10 +1,8 @@
-import { Component, Output, EventEmitter, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocationService } from '../../../../company/services/location.service';
-import { StringUtils } from '../../../../utils/string-utils';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { CompanyService } from '../../../../company/services/company.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,43 +26,30 @@ import { MatRippleModule } from '@angular/material/core';
     MatIconModule,
     MatRippleModule,
   ],
-  providers: [LocationService, provideNgxMask(), CompanyService],
+  providers: [provideNgxMask(), CompanyService],
   templateUrl: './basic-info.component.html',
   styleUrl: './basic-info.component.css',
 })
-export class BasicInfoComponent implements OnInit {
-  @Output() next: EventEmitter<any> = new EventEmitter();
-
+export class BasicInfoComponent implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
-  name: string = '';
-  cnpj: string = '';
-  email: string = '';
-  image: string = '';
-  schedulingUrl: string = '';
+  @Input() isEditing = false;
+  @Input() companyId?: string;
+  @Input() showCard = true;
 
-  prefix!: string;
-  urlToCheck!: string;
+  prefix = 'agende.com/';
   urlErrorMessage: string | undefined;
   urlSuccessMessage: string | undefined;
-  isCheckingUrl: boolean = false;
+  isCheckingUrl = false;
+
   private urlSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private companyService: CompanyService
-  ) {}
+  constructor(private companyService: CompanyService) {}
 
   ngOnInit(): void {
-    this.prefix = 'agende.com/';
-
-    // Set up URL validation with debounce
-    this.urlSubject.pipe(
-      debounceTime(500), // Wait 500ms after the last change
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    ).subscribe(url => {
-      this.validateUrl(url);
-    });
+    this.urlSubject
+      .pipe(debounceTime(500), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((url) => this.validateUrl(url));
   }
 
   ngOnDestroy(): void {
@@ -72,62 +57,51 @@ export class BasicInfoComponent implements OnInit {
     this.destroy$.complete();
   }
 
+  get imageValue(): string {
+    return this.form.get('image')?.value || '';
+  }
+
   hasImage(): boolean {
-    return !StringUtils.isNullOrEmpty(this.image);
+    return !!this.imageValue;
   }
 
   removeImage(): void {
-    this.image = '';
+    this.form.patchValue({ image: '' });
   }
 
-  onFileChange(event: any) {
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
     const reader = new FileReader();
-
-    if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      reader.readAsDataURL(file);
-
-      reader.onload = () => {
-        this.image = reader.result as string;
-
-        this.form.patchValue({
-          image: this.image,
-        });
-      };
-    }
+    reader.readAsDataURL(input.files[0]);
+    reader.onload = () => {
+      this.form.patchValue({ image: reader.result as string });
+    };
   }
 
-  // updateForm(dados: any): void {
-  //   // this.createForm.patchValue({
-  //   //   city: dados.localidade,
-  //   //   street: dados.logradouro,
-  //   //   state: dados.uf,
-  //   //   neighborhood: dados.bairro,
-  //   // });
-  // }
-
-  checkUrlIsValid() {
+  checkUrlIsValid(): void {
     const url = this.form.get('schedulingUrl')?.value;
     this.urlSubject.next(url);
   }
 
-  private validateUrl(url: string) {
+  private validateUrl(url: string): void {
     this.urlErrorMessage = undefined;
     this.urlSuccessMessage = undefined;
     this.isCheckingUrl = true;
 
-    if (url.length <= 2) {
+    if (!url || url.length <= 2) {
       this.urlErrorMessage = 'A URL deve ter ao menos 3 caracteres';
       this.isCheckingUrl = false;
       return;
     }
 
-    this.companyService.checkUrlIsValid('', url).subscribe({
+    this.companyService.checkUrlIsValid(url, this.companyId).subscribe({
       next: (result: boolean) => {
-        if (result === true) {
-          this.urlSuccessMessage = '✓ URL disponível para uso';
+        if (result) {
+          this.urlSuccessMessage = 'URL disponivel para uso';
         } else {
-          this.urlErrorMessage = '✗ URL já está sendo utilizada';
+          this.urlErrorMessage = 'URL ja esta sendo utilizada';
         }
         this.isCheckingUrl = false;
       },

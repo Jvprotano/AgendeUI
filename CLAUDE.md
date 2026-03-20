@@ -23,6 +23,7 @@ Angular 17 SPA for **Agende** — an appointment/scheduling platform. The app le
 ## Architecture
 
 ### Module Structure
+
 ```
 src/app/
 ├── account/        # Login, register, auth guard
@@ -44,8 +45,13 @@ src/app/
 **Services extend `BaseService`** — all HTTP calls go through `get<T>()`, `post<T>()`, `put<T>()`, `delete<T>()`. These unwrap `ApiResponse<T>` via `extractData()` and pipe through `ErrorHandlingService`.
 
 **API Response shape**:
+
 ```typescript
-interface ApiResponse<T> { data: T; success: boolean; message?: string; }
+interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+}
 ```
 
 **State management**: No NgRx. Uses `BehaviorSubject` (login status), `EventService` pub/sub (cross-component events), and component-level state.
@@ -55,6 +61,7 @@ interface ApiResponse<T> { data: T; success: boolean; message?: string; }
 **LocalStorage keys** (prefix `bie.`): token, user, language.
 
 ### Routing
+
 ```
 /home                          → HomeComponent
 /scheduling/:id                → SchedulingComponent (public)
@@ -70,7 +77,7 @@ interface ApiResponse<T> { data: T; success: boolean; message?: string; }
 
 ## API
 
-**Base URL**: `https://localhost:7243/api/v1/` (both dev and prod currently point to localhost — update `environment.ts` and `environment.development.ts` for deployment).
+**Base URL**: `http://localhost:5400/api/v1/` (both dev and prod currently point to localhost — update `environment.ts` and `environment.development.ts` for deployment).
 
 The API wraps all responses in `ApiResponse<T>`. The backend uses .NET / ASP.NET Core. Brazilian CEP lookup uses the external ViaCEP API.
 
@@ -84,19 +91,20 @@ npm test           # ng test (Karma/Jasmine)
 
 ## Key Files to Know
 
-| File | Purpose |
-|------|---------|
-| [src/app/services/base.service.ts](src/app/services/base.service.ts) | All HTTP communication — extend this for new services |
-| [src/app/shared/interfaces/api-response.interface.ts](src/app/shared/interfaces/api-response.interface.ts) | `ApiResponse<T>`, `PaginatedResponse<T>`, `ErrorResponse` |
-| [src/app/shared/services/error-handling.service.ts](src/app/shared/services/error-handling.service.ts) | Centralized HTTP error handling + toastr notifications |
-| [src/app/utils/localstorage.ts](src/app/utils/localstorage.ts) | All localStorage access — use this, never access localStorage directly |
-| [src/app/utils/generic-form-validation.ts](src/app/utils/generic-form-validation.ts) | Maps form control errors to display messages |
-| [src/assets/i18n/](src/assets/i18n/) | Translation files (`pt.json`, `es.json`, `en.json`) |
-| [src/environments/](src/environments/) | API URL config — one file per environment |
+| File                                                                                                       | Purpose                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [src/app/services/base.service.ts](src/app/services/base.service.ts)                                       | All HTTP communication — extend this for new services                  |
+| [src/app/shared/interfaces/api-response.interface.ts](src/app/shared/interfaces/api-response.interface.ts) | `ApiResponse<T>`, `PaginatedResponse<T>`, `ErrorResponse`              |
+| [src/app/shared/services/error-handling.service.ts](src/app/shared/services/error-handling.service.ts)     | Centralized HTTP error handling + toastr notifications                 |
+| [src/app/utils/localstorage.ts](src/app/utils/localstorage.ts)                                             | All localStorage access — use this, never access localStorage directly |
+| [src/app/utils/generic-form-validation.ts](src/app/utils/generic-form-validation.ts)                       | Maps form control errors to display messages                           |
+| [src/assets/i18n/](src/assets/i18n/)                                                                       | Translation files (`pt.json`, `es.json`, `en.json`)                    |
+| [src/environments/](src/environments/)                                                                     | API URL config — one file per environment                              |
 
 ## Company Creation Wizard
 
 `CreateComponent` is a 3-step modal wizard (step 3 is commented out):
+
 1. **Basic Info** (`app-basic-info`): name, CNPJ, image, scheduling URL with availability check
 2. **Business Sector** (`app-business-sector`): operating hours per day with interval validation
 

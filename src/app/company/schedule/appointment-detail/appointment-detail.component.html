@@ -1,0 +1,100 @@
+<div class="modal-header border-bottom-0 pb-0">
+  <h5 class="modal-title fw-semibold">
+    {{ 'COMPANY.CALENDAR.APPOINTMENT_DETAIL' | translate }}
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  ></button>
+</div>
+
+<div class="modal-body pt-3">
+  <!-- Status Badge -->
+  <div class="mb-4">
+    <span
+      class="status-badge"
+      [style.background-color]="statusColor + '1A'"
+      [style.color]="statusColor"
+    >
+      <i class="bi bi-circle-fill me-1 status-dot"></i>
+      {{ statusKey | translate }}
+    </span>
+  </div>
+
+  <!-- Details -->
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="detail-label text-muted">
+        <i class="bi bi-person me-2"></i>{{ 'COMPANY.CALENDAR.CUSTOMER' | translate }}
+      </div>
+      <div class="detail-value">
+        {{ appointment.customerName || ('COMPANY.CALENDAR.NO_CUSTOMER' | translate) }}
+      </div>
+    </div>
+
+    <div class="detail-item">
+      <div class="detail-label text-muted">
+        <i class="bi bi-briefcase me-2"></i>{{ 'COMPANY.CALENDAR.SERVICE' | translate }}
+      </div>
+      <div class="detail-value">{{ appointment.serviceName || '—' }}</div>
+    </div>
+
+    <div class="detail-item">
+      <div class="detail-label text-muted">
+        <i class="bi bi-person-badge me-2"></i>{{ 'COMPANY.CALENDAR.PROFESSIONAL' | translate }}
+      </div>
+      <div class="detail-value">{{ appointment.professionalName || '—' }}</div>
+    </div>
+
+    <div class="detail-item">
+      <div class="detail-label text-muted">
+        <i class="bi bi-calendar3 me-2"></i>{{ 'COMPANY.CALENDAR.DATE' | translate }}
+      </div>
+      <div class="detail-value text-capitalize">{{ formattedDate }}</div>
+    </div>
+
+    <div class="detail-item">
+      <div class="detail-label text-muted">
+        <i class="bi bi-clock me-2"></i>{{ 'COMPANY.CALENDAR.TIME' | translate }}
+      </div>
+      <div class="detail-value">{{ formattedTime }}</div>
+    </div>
+  </div>
+
+  <!-- Cancel Confirmation -->
+  <div *ngIf="showConfirmCancel" class="cancel-confirm mt-4 p-3 rounded-3 bg-light border">
+    <p class="mb-3 fw-medium text-danger">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      {{ 'COMPANY.CALENDAR.CANCEL_CONFIRM' | translate }}
+    </p>
+    <div class="d-flex gap-2">
+      <button class="btn btn-danger btn-sm" (click)="onConfirmCancel()">
+        {{ 'COMPANY.CALENDAR.YES_CANCEL' | translate }}
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="onDismissCancel()">
+        {{ 'COMPANY.CALENDAR.NO' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer border-top-0 pt-0">
+  <button
+    *ngIf="canCancel && !showConfirmCancel"
+    type="button"
+    class="btn btn-outline-danger btn-sm"
+    (click)="onCancelClick()"
+  >
+    <i class="bi bi-x-circle me-1"></i>
+    {{ 'COMPANY.CALENDAR.CANCEL' | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary btn-sm"
+    (click)="activeModal.dismiss()"
+  >
+    {{ 'COMPANY.CALENDAR.CLOSE' | translate }}
+  </button>
+</div>

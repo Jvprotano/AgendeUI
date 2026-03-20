@@ -11,17 +11,19 @@
     <li ngbTooltip="Dashboard (em breve)" placement="right" class="menu-item menu-item-disabled">
       <i class="bi-bar-chart-line menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Agenda" placement="right" [routerLink]="['/company/0/schedule']" routerLinkActive="active"
+    <li ngbTooltip="Agenda" placement="right" [routerLink]="['/company', companyId, 'schedule']" routerLinkActive="active"
       class="menu-item">
       <i class="bi-calendar-date menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Serviços" placement="right" class="menu-item">
-      <i class="bi-tags menu-icon fs-3"></i>
+    <li ngbTooltip="Serviços" placement="right" [routerLink]="['/company', companyId, 'services']" routerLinkActive="active"
+      class="menu-item">
+      <i class="bi-briefcase menu-icon fs-3"></i>
     </li>
     <li ngbTooltip="Financeiro (em breve)" placement="right" class="menu-item menu-item-disabled">
       <i class="bi-cash-coin menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Editar Empresa" (click)="openEditCompany()" placement="right" class="menu-item">
+    <li ngbTooltip="Editar Empresa" placement="right" [routerLink]="['/company', companyId, 'edit']" routerLinkActive="active"
+      class="menu-item">
       <i class="bi-pencil menu-icon fs-3"></i>
     </li>
     <li ngbTooltip="Sair" placement="right" class="menu-item menu-item-exit" [routerLink]="['/user/companies']">
@@ -29,5 +31,3 @@
     </li>
   </ul>
 </div>
-
-<app-create [companyToEdit]="companyToEdit" *ngIf="clickedEdit" (closed)="onEditClosed()"></app-create>

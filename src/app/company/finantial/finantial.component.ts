@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
@@ -6,8 +7,14 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   standalone: true,
   imports: [SidebarComponent],
   templateUrl: './finantial.component.html',
-  styleUrl: './finantial.component.css'
+  styleUrl: './finantial.component.css',
 })
-export class FinantialComponent {
+export class FinantialComponent implements OnInit {
+  companyId = '';
 
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.companyId = this.route.snapshot.params['id'];
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,15 +7,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BusinessSectorComponent } from './business-sector/business-sector.component';
 import { LocationService } from '../../../company/services/location.service';
-import { Company } from '../../../company/models/company';
 import { BasicInfoComponent } from './basic-info/basic-info.component';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +26,9 @@ import { CompanyService } from '../../../company/services/company.service';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
 import { DaySchedule } from '../../../company/models/business-hours';
+import { ToastrService } from 'ngx-toastr';
+import { buildScheduleFormArray } from '../../../company/models/schedule-form.helper';
+import { scheduleToOpeningHours } from '../../../company/models/schedule-mapper';
 
 @Component({
   selector: 'app-create',
@@ -55,9 +56,8 @@ import { DaySchedule } from '../../../company/models/business-hours';
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })
-export class CreateComponent {
-  createForm!: FormGroup;
-  @Input() companyToEdit: Company | null = null;
+export class CreateComponent implements OnInit {
+  form!: FormGroup;
   @Output() closed = new EventEmitter<void>();
 
   @ViewChild('modalContent', { static: true })
@@ -67,62 +67,68 @@ export class CreateComponent {
 
   constructor(
     private fb: FormBuilder,
-    private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private companyService: CompanyService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
-    this.spinner.show();
-    this.initFormValidation(this.companyToEdit);
+    this.buildForm();
     this.openModal();
-    this.spinner.hide();
   }
 
-  onNextStep(data: any) {
-    this.createForm.patchValue(data);
-    this.currentStep++;
-  }
-
-  onPreviousStep() {
-    this.currentStep--;
-  }
-
-  initFormValidation(company: Company | null) {
-    this.createForm = this.fb.group({
-      image: [company?.image],
+  private buildForm(): void {
+    this.form = this.fb.group({
+      image: [''],
       cnpj: [''],
-      name: [company?.name],
-      schedulingUrl: [company?.schedulingUrl],
+      name: ['', Validators.required],
+      schedulingUrl: [''],
+      schedule: buildScheduleFormArray(this.fb, []),
     });
   }
 
-  openModal() {
-    const ref = this.modalService.open(this.modalContent, { size: 'lg', centered: true });
+  onNextStep(): void {
+    this.currentStep++;
+  }
+
+  onPreviousStep(): void {
+    this.currentStep--;
+  }
+
+  openModal(): void {
+    const ref = this.modalService.open(this.modalContent, {
+      size: 'lg',
+      centered: true,
+    });
     ref.result.finally(() => this.closed.emit());
   }
 
   onSubmit(): void {
-    let request = this.createForm.value as Company;
-    request.schedule = request.schedule.filter((day: any) => day.isOpen);
+    if (!this.form.valid) return;
 
-    request.schedule.forEach((day: DaySchedule) => {
-      day.intervals.forEach((interval) => {
-        if (interval.start.length === 5)
-          interval.start = interval.start + ':00';
+    const formValue = this.form.value;
+    const filteredSchedule: DaySchedule[] = (formValue.schedule ?? []).filter(
+      (day: DaySchedule) => day.isOpen,
+    );
 
-        if (interval.end.length === 5)
-          interval.end = interval.end + ':00';
-      });
-    });
+    const request = {
+      ...formValue,
+      openingHours: scheduleToOpeningHours(filteredSchedule),
+    };
+    delete request.schedule;
 
     this.companyService
       .create(request)
       .pipe(take(1))
-      .subscribe((result) => {
-        this.modalService.dismissAll();
-        this.router.navigate(['/company', result.id, 'schedule']);
+      .subscribe({
+        next: (result) => {
+          this.modalService.dismissAll();
+          this.router.navigate(['/company', result.id, 'schedule']);
+        },
+        error: () => {
+          this.toastr.error('Erro ao criar empresa.');
+        },
       });
   }
 }

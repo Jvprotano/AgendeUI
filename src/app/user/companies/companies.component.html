@@ -5,7 +5,7 @@
       <h1 class="page-title">Minhas Empresas</h1>
       <p class="page-subtitle">Gerencie suas empresas e agendamentos</p>
     </div>
-    <button class="btn-new" (click)="editCompany(null)">
+    <button class="btn-new" (click)="openCreateModal()">
       <i class="bi bi-plus-lg"></i>
       Nova Empresa
     </button>
@@ -30,7 +30,7 @@
     <p class="empty-text">
       Crie sua primeira empresa para começar a gerenciar agendamentos.
     </p>
-    <button class="btn-new" (click)="editCompany(null)">
+    <button class="btn-new" (click)="openCreateModal()">
       <i class="bi bi-plus-lg"></i>
       Criar empresa
     </button>
@@ -39,9 +39,10 @@
   <!-- Company grid -->
   <div *ngIf="!isLoading && companies.length > 0" class="grid">
     <article
-      *ngFor="let item of companies"
+      *ngFor="let item of companies; let i = index"
       class="company-card"
       [class.card-inactive]="item.status !== 1"
+      [style.animation-delay]="(i * 0.06) + 's'"
     >
       <!-- Status strip -->
       <div class="card-status-strip" [ngClass]="statusStripClass(item)"></div>
@@ -70,9 +71,9 @@
               <i class="bi bi-three-dots-vertical"></i>
             </button>
             <div ngbDropdownMenu class="actions-menu">
-              <button ngbDropdownItem (click)="editCompany(item)">
+              <a ngbDropdownItem [routerLink]="['/company', item.id, 'edit']">
                 <i class="bi bi-pencil"></i> Editar
-              </button>
+              </a>
               <button ngbDropdownItem (click)="copyLink(item)">
                 <i class="bi bi-link-45deg"></i> Copiar link
               </button>
@@ -143,7 +144,7 @@
           </a>
         </ng-container>
         <ng-template #inactiveFooter>
-          <button class="btn-activate" (click)="activeCompany(item.id)">
+          <button class="btn-activate" (click)="reactivateCompany(item.id)">
             <i class="bi bi-check-circle"></i>
             Ativar empresa
           </button>
@@ -154,7 +155,6 @@
 </div>
 
 <app-create
-  [companyToEdit]="companyToEdit"
-  *ngIf="clickedEdit"
+  *ngIf="showCreateModal"
   (closed)="onModalClosed()"
 ></app-create>
