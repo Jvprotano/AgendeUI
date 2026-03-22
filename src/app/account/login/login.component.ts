@@ -2,7 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DisplayMessage } from '../../utils/generic-form-validation';
 import { AccountService } from '../services/account.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterModule } from '@angular/router';
 import { EventService } from '../../services/event.service';
@@ -14,16 +20,21 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, FormsModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TranslateModule,
+  ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
-
 export class LoginComponent implements OnInit, OnDestroy {
-
   loginForm: FormGroup = new FormGroup({});
   user!: Login;
-  name: string = "";
+  name: string = '';
   errors = [];
   displayMessage: DisplayMessage = {};
   formSubmited: boolean = false;
@@ -49,22 +60,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private redirectService: RedirectService,
     private modalService: NgbModal,
-    public translate: TranslateService
+    public translate: TranslateService,
   ) {
     translate.setDefaultLang('pt');
     translate.use('pt');
   }
 
   ngOnInit() {
-
-    this.isScheduling = this.redirectService.getReturnRoute()?.includes('scheduling') ?? false;
+    this.isScheduling =
+      this.redirectService.getReturnRoute()?.includes('scheduling') ?? false;
 
     this.eventService.broadcast('hide-header', true);
 
     this.loginForm = this.fb.group({
       emailOrPhone: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
-      rememberMe: [false]
+      rememberMe: [false],
     });
   }
 
@@ -100,19 +111,18 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.success(result);
           this.formSubmited = false;
           this.isDisabledLogin = false;
-        }, error: err => {
+        },
+        error: (err) => {
           this.failedAttempts++;
           if (this.failedAttempts >= this.MAX_ATTEMPTS) {
             this.startLockout();
           }
           this.errorResponse(err);
-        }
+        },
       });
-
     } else {
       this.isDisabledLogin = false;
     }
-
   }
 
   success(result: any) {
@@ -129,12 +139,18 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (returnRoute) {
       this.redirectService.redirectToReturnRoute();
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/user/companies']);
     }
 
-    this.translate.get(['LOGIN.SUCCESS', 'LOGIN.WELCOME']).subscribe((translations) => {
-      this.toastr.success(translations['LOGIN.SUCCESS'], translations['LOGIN.WELCOME'], { positionClass: 'toast-top-center' });
-    });
+    this.translate
+      .get(['LOGIN.SUCCESS', 'LOGIN.WELCOME'])
+      .subscribe((translations) => {
+        this.toastr.success(
+          translations['LOGIN.SUCCESS'],
+          translations['LOGIN.WELCOME'],
+          { positionClass: 'toast-top-center' },
+        );
+      });
 
     this.modalService.dismissAll();
   }

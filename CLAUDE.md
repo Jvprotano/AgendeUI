@@ -14,7 +14,7 @@ Angular 17 SPA for **Agende** — an appointment/scheduling platform. The app le
 - **Forms**: Reactive Forms (`FormBuilder`, `FormGroup`, `FormArray`)
 - **HTTP**: `HttpClient` with typed wrappers in `BaseService`
 - **i18n**: `ngx-translate` — Portuguese (`pt`), Spanish (`es`), English (`en`)
-- **Auth**: Bearer token stored in `localStorage` (prefix `bie.`)
+- **Auth**: Bearer token stored in `localStorage`
 - **Animations**: GSAP + ScrollTrigger (home page only)
 - **Modals**: `@ng-bootstrap/ng-bootstrap` (`NgbModal`)
 - **Toasts**: `ngx-toastr`

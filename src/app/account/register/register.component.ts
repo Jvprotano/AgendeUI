@@ -6,7 +6,6 @@ import { Observable, fromEvent, merge } from 'rxjs';
 import { AppUser } from '../../user/models/user';
 import { AccountService } from '../services/account.service';
 import { ValidationMessages, GenericValidator, DisplayMessage } from '../../utils/generic-form-validation';
-import { HttpClientModule } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PasswordMatcher } from '../../utils/password-matcher';

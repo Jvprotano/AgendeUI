@@ -33,7 +33,6 @@ import { ServiceFormComponent, ServiceFormData } from './service-form/service-fo
     MatProgressSpinnerModule,
     CurrencyFormatPipe,
   ],
-  providers: [CompanyService],
   templateUrl: './services-management.component.html',
   styleUrl: './services-management.component.scss',
 })

@@ -5,7 +5,7 @@ import { Scheduling } from "../models/scheduling";
 import { Appointment } from "../models/appointment";
 import { PaginatedResult } from "../../shared/interfaces/api-response.interface";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SchedulingService extends BaseService {
 
     getAvailableTimes(date: string, professionalId: string, companyId: string, serviceId: string): Observable<string[]> {

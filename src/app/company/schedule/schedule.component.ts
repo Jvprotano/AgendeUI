@@ -42,7 +42,6 @@ import { AppointmentDetailComponent } from './appointment-detail/appointment-det
     TranslateModule,
     MatProgressBarModule,
   ],
-  providers: [SchedulingService, CompanyService],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.scss',
 })

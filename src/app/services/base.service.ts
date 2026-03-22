@@ -1,76 +1,83 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import { environment } from "../../environments/environment.development";
-import { inject } from "@angular/core";
-import { ApiResponse } from "../shared/interfaces/api-response.interface";
-import { ErrorHandlingService } from "../shared/services/error-handling.service";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment.development';
+import { inject, Injectable } from '@angular/core';
+import { ApiResponse } from '../shared/interfaces/api-response.interface';
+import { ErrorHandlingService } from '../shared/services/error-handling.service';
 
+@Injectable({
+  providedIn: 'root',
+})
 export abstract class BaseService {
-    protected httpClient: HttpClient;
-    protected errorHandler: ErrorHandlingService;
+  protected httpClient: HttpClient;
+  protected errorHandler: ErrorHandlingService;
 
-    constructor() {
-        this.httpClient = inject(HttpClient);
-        this.errorHandler = inject(ErrorHandlingService);
-    }
+  constructor() {
+    this.httpClient = inject(HttpClient);
+    this.errorHandler = inject(ErrorHandlingService);
+  }
 
-    protected readonly apiUrl: string = environment.apiUrl;
+  protected readonly apiUrl: string = environment.apiUrl;
 
-    protected getHeaderJson(): { headers: HttpHeaders } {
-        return {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
-    }
+  protected getHeaderJson(): { headers: HttpHeaders } {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+  }
 
-    protected get<T>(route: string, authenticated: boolean = true): Observable<T> {
-        return this.httpClient
-            .get<ApiResponse<T>>(`${this.apiUrl}${route}`, this.getHeaderJson())
-            .pipe(
-                map(this.extractData),
-                catchError(error => this.errorHandler.handleError(error))
-            );
-    }
+  protected get<T>(route: string): Observable<T> {
+    return this.httpClient
+      .get<ApiResponse<T>>(`${this.apiUrl}${route}`, this.getHeaderJson())
+      .pipe(
+        map(this.extractData),
+        catchError((error) => this.errorHandler.handleError(error)),
+      );
+  }
 
-    protected post<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
-        return this.httpClient
-            .post<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
-            .pipe(
-                map(this.extractData),
-                catchError(error => this.errorHandler.handleError(error))
-            );
-    }
+  protected post<T>(route: string, data: unknown): Observable<T> {
+    return this.httpClient
+      .post<
+        ApiResponse<T>
+      >(`${this.apiUrl}${route}`, data, this.getHeaderJson())
+      .pipe(
+        map(this.extractData),
+        catchError((error) => this.errorHandler.handleError(error)),
+      );
+  }
 
-    protected put<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
-        return this.httpClient
-            .put<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
-            .pipe(
-                map(this.extractData),
-                catchError(error => this.errorHandler.handleError(error))
-            );
-    }
+  protected put<T>(route: string, data: unknown): Observable<T> {
+    return this.httpClient
+      .put<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
+      .pipe(
+        map(this.extractData),
+        catchError((error) => this.errorHandler.handleError(error)),
+      );
+  }
 
-    protected delete<T>(route: string, authenticated: boolean = true): Observable<T> {
-        return this.httpClient
-            .delete<ApiResponse<T>>(`${this.apiUrl}${route}`, this.getHeaderJson())
-            .pipe(
-                map(this.extractData),
-                catchError(error => this.errorHandler.handleError(error))
-            );
-    }
+  protected delete<T>(route: string): Observable<T> {
+    return this.httpClient
+      .delete<ApiResponse<T>>(`${this.apiUrl}${route}`, this.getHeaderJson())
+      .pipe(
+        map(this.extractData),
+        catchError((error) => this.errorHandler.handleError(error)),
+      );
+  }
 
-    protected patch<T>(route: string, data: unknown, authenticated: boolean = true): Observable<T> {
-        return this.httpClient
-            .patch<ApiResponse<T>>(`${this.apiUrl}${route}`, data, this.getHeaderJson())
-            .pipe(
-                map(this.extractData),
-                catchError(error => this.errorHandler.handleError(error))
-            );
-    }
+  protected patch<T>(route: string, data: unknown): Observable<T> {
+    return this.httpClient
+      .patch<
+        ApiResponse<T>
+      >(`${this.apiUrl}${route}`, data, this.getHeaderJson())
+      .pipe(
+        map(this.extractData),
+        catchError((error) => this.errorHandler.handleError(error)),
+      );
+  }
 
-    protected extractData<T>(response: ApiResponse<T>): T {
-        return response.data;
-    }
+  protected extractData<T>(response: ApiResponse<T>): T {
+    return response.data;
+  }
 }

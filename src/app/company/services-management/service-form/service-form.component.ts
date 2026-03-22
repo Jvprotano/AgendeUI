@@ -48,7 +48,6 @@ export const DURATION_PRESETS = [
     MatButtonModule,
     MatProgressSpinnerModule,
   ],
-  providers: [CompanyService],
   templateUrl: './service-form.component.html',
   styleUrl: './service-form.component.scss',
 })

@@ -3,15 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppUser } from '../models/user';
 import { UserService } from '../services/user.service';
-import { HttpClientModule } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { StringUtils } from '../../utils/string-utils';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule],
-  providers: [UserService],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })

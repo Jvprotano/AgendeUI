@@ -33,7 +33,6 @@ import { Company } from '../company/models/company';
     NgxSpinnerModule,
     CurrencyFormatPipe,
   ],
-  providers: [SchedulingService, CompanyService],
   templateUrl: './scheduling.component.html',
   styleUrl: './scheduling.component.css',
 })

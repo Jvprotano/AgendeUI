@@ -6,50 +6,42 @@ import { isTokenExpired } from './token.utils';
 })
 export class LocalStorageUtils {
   private inMemoryToken: string | null = null;
-  private useSessionStorage = false;
 
   public saveUserLocalData(response: any, rememberMe: boolean) {
     this.saveUserToken(response.bearer, rememberMe);
   }
 
   public getUserToken(): string | null {
-    // 1. Check in-memory first (always available during session)
+    // 1. Check in-memory first (fastest)
     if (this.inMemoryToken && !isTokenExpired(this.inMemoryToken)) {
       return this.inMemoryToken;
     }
 
-    // 2. Check sessionStorage (persists across page refresh, clears on tab close)
+    // 2. Check sessionStorage (survives page refresh, clears on tab close)
     if (typeof sessionStorage !== 'undefined') {
       const sessionToken = sessionStorage.getItem('access_token');
       if (sessionToken && !isTokenExpired(sessionToken)) {
         this.inMemoryToken = sessionToken;
-        this.useSessionStorage = true;
         return sessionToken;
       }
-      // Clear expired token from sessionStorage
       if (sessionToken) {
         sessionStorage.removeItem('access_token');
       }
     }
 
-    // 3. Migrate: check old localStorage token (one-time migration)
+    // 3. Check localStorage ("Remember me" — survives browser close)
     if (typeof localStorage !== 'undefined') {
-      const oldToken = localStorage.getItem('access_token');
-      if (oldToken && !isTokenExpired(oldToken)) {
-        // Migrate to sessionStorage
-        this.inMemoryToken = oldToken;
-        this.useSessionStorage = true;
+      const localToken = localStorage.getItem('access_token');
+      if (localToken && !isTokenExpired(localToken)) {
+        this.inMemoryToken = localToken;
+        // Re-populate sessionStorage for faster access
         if (typeof sessionStorage !== 'undefined') {
-          sessionStorage.setItem('access_token', oldToken);
+          sessionStorage.setItem('access_token', localToken);
         }
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('access_user');
-        return oldToken;
+        return localToken;
       }
-      // Clean up expired/old tokens
-      if (oldToken) {
+      if (localToken) {
         localStorage.removeItem('access_token');
-        localStorage.removeItem('access_user');
       }
     }
 
@@ -59,10 +51,15 @@ export class LocalStorageUtils {
 
   public saveUserToken(token: string, rememberMe: boolean) {
     this.inMemoryToken = token;
-    this.useSessionStorage = rememberMe;
 
-    if (rememberMe && typeof sessionStorage !== 'undefined') {
+    // Always store in sessionStorage (survives page refresh, clears on tab close)
+    if (typeof sessionStorage !== 'undefined') {
       sessionStorage.setItem('access_token', token);
+    }
+
+    // With "Remember me", also store in localStorage (survives browser close)
+    if (rememberMe && typeof localStorage !== 'undefined') {
+      localStorage.setItem('access_token', token);
     }
   }
 
@@ -79,13 +76,11 @@ export class LocalStorageUtils {
 
   public clearUserLocalData() {
     this.inMemoryToken = null;
-    this.useSessionStorage = false;
 
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem('access_token');
     }
 
-    // Clean up any legacy localStorage auth data (preserve bie.language)
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('access_token');
       localStorage.removeItem('access_user');

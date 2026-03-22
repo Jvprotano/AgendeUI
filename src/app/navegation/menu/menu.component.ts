@@ -15,7 +15,7 @@ import { LocalStorageUtils } from '../../utils/localstorage';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
     imports: [NgbCollapse, NgbDropdownModule, RouterModule, MenuLoginComponent, CommonModule, TranslateModule],
-    providers: [LocalStorageUtils]
+    providers: []
 })
 export class MenuComponent implements OnInit {
 

@@ -33,7 +33,6 @@ import { buildScheduleFormArray } from '../models/schedule-form.helper';
     MatButtonModule,
     MatIconModule,
   ],
-  providers: [CompanyService],
   templateUrl: './company-edit.component.html',
   styleUrl: './company-edit.component.css',
 })

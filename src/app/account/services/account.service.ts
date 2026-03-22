@@ -1,20 +1,24 @@
-import { Injectable, NgZone, OnDestroy } from "@angular/core";
-import { AppUser } from "../../user/models/user";
-import { BaseService } from "../../services/base.service";
-import { BehaviorSubject, Observable, tap } from "rxjs";
-import { Login } from "../models/login";
-import { LocalStorageUtils } from "../../utils/localstorage";
-import { decodeToken, getTimeUntilExpiration, isTokenExpired, TokenPayload } from '../../utils/token.utils';
-import { ToastrService } from "ngx-toastr";
-import { TranslateService } from "@ngx-translate/core";
-import { RedirectService } from "../../services/redirect.service";
-import { Router } from "@angular/router";
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { AppUser } from '../../user/models/user';
+import { BaseService } from '../../services/base.service';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Login } from '../models/login';
+import { LocalStorageUtils } from '../../utils/localstorage';
+import {
+  decodeToken,
+  getTimeUntilExpiration,
+  isTokenExpired,
+  TokenPayload,
+} from '../../utils/token.utils';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
+import { RedirectService } from '../../services/redirect.service';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService extends BaseService implements OnDestroy {
-
   private loggedIn = new BehaviorSubject<boolean>(false);
   private expirationTimerId: ReturnType<typeof setTimeout> | null = null;
   private readonly EXPIRATION_WARNING_MS = 5 * 60 * 1000; // 5 minutes
@@ -25,7 +29,7 @@ export class AccountService extends BaseService implements OnDestroy {
     private translate: TranslateService,
     private redirectService: RedirectService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {
     super();
     const token = this.localStorageUtils.getUserToken();
@@ -38,7 +42,7 @@ export class AccountService extends BaseService implements OnDestroy {
   }
 
   registerUser(user: AppUser): Observable<AppUser> {
-    return this.post('register', user, false);
+    return this.post('register', user);
   }
 
   get userIsLoggedObs(): Observable<boolean> {
@@ -64,8 +68,8 @@ export class AccountService extends BaseService implements OnDestroy {
   }
 
   login(user: Login): Observable<any> {
-    return this.post('login', user, false).pipe(
-      tap(response => {
+    return this.post('login', user).pipe(
+      tap((response) => {
         if (response) {
           this.localStorageUtils.saveUserLocalData(response, user.rememberMe);
           this.loggedIn.next(true);
@@ -75,7 +79,7 @@ export class AccountService extends BaseService implements OnDestroy {
             this.scheduleExpirationWarning(token);
           }
         }
-      })
+      }),
     );
   }
 
@@ -116,12 +120,12 @@ export class AccountService extends BaseService implements OnDestroy {
   }
 
   private showExpirationWarning() {
-    this.translate.get('AUTH.SESSION_EXPIRING').subscribe(msg => {
+    this.translate.get('AUTH.SESSION_EXPIRING').subscribe((msg) => {
       this.toastr.warning(msg, '', {
         timeOut: 0,
         extendedTimeOut: 0,
         closeButton: true,
-        positionClass: 'toast-top-center'
+        positionClass: 'toast-top-center',
       });
     });
   }

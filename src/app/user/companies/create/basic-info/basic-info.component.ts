@@ -26,7 +26,7 @@ import { MatRippleModule } from '@angular/material/core';
     MatIconModule,
     MatRippleModule,
   ],
-  providers: [provideNgxMask(), CompanyService],
+  providers: [provideNgxMask()],
   templateUrl: './basic-info.component.html',
   styleUrl: './basic-info.component.css',
 })

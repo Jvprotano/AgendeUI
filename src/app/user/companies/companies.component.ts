@@ -18,7 +18,6 @@ import { take } from 'rxjs';
     CreateComponent,
     NgbDropdownModule,
   ],
-  providers: [CompanyService],
   templateUrl: './companies.component.html',
   styleUrls: ['./companies.component.css'],
 })

@@ -6,13 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BusinessSectorComponent } from './business-sector/business-sector.component';
-import { LocationService } from '../../../company/services/location.service';
 import { BasicInfoComponent } from './basic-info/basic-info.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -33,10 +31,8 @@ import { scheduleToOpeningHours } from '../../../company/models/schedule-mapper'
 @Component({
   selector: 'app-create',
   standalone: true,
-  providers: [LocationService, CompanyService],
   imports: [
     ReactiveFormsModule,
-    HttpClientModule,
     NgxSpinnerModule,
     CommonModule,
     FormsModule,
