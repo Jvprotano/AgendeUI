@@ -1,115 +1,284 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SchedulingService } from './services/scheduling.service';
-import { Scheduling } from './models/scheduling';
-import { ServiceOffered } from './models/service_offered';
-import { CompanyEmployee } from '../company/models/company-employee';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { SchedulingService } from './services/scheduling.service';
 import { CompanyService } from '../company/services/company.service';
-import { CurrencyFormatPipe } from '../utils/currency-format.pipe';
 import { AccountService } from '../account/services/account.service';
 import { RedirectService } from '../services/redirect.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from '../account/login/login.component';
+
 import { Company } from '../company/models/company';
+import { ServiceOffered } from './models/service_offered';
+import { CompanyEmployee } from '../company/models/company-employee';
+import { Scheduling } from './models/scheduling';
+import { OpeningHours } from '../company/models/opening_hours';
+
+import { BookingStepperComponent, StepDefinition } from './components/booking-stepper/booking-stepper.component';
+import { StepServiceComponent } from './steps/step-service/step-service.component';
+import { StepProfessionalComponent } from './steps/step-professional/step-professional.component';
+import { StepDatetimeComponent, DateTimeSelection } from './steps/step-datetime/step-datetime.component';
+import { StepConfirmComponent } from './steps/step-confirm/step-confirm.component';
 
 @Component({
   selector: 'app-scheduling',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgxSpinnerModule,
-    CurrencyFormatPipe,
+    TranslateModule,
+    BookingStepperComponent,
+    StepServiceComponent,
+    StepProfessionalComponent,
+    StepDatetimeComponent,
+    StepConfirmComponent,
   ],
   templateUrl: './scheduling.component.html',
-  styleUrl: './scheduling.component.css',
+  styleUrl: './scheduling.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchedulingComponent implements OnInit {
-  serviceSelected?: ServiceOffered;
-  professionalSelected?: CompanyEmployee;
-  timesAvailable: string[] = [];
-  timeSelected: string = '';
-  companyName: string = '';
-
-  schedulingForm!: FormGroup;
-  Scheduling!: Scheduling;
-  companyId: string = '';
-  companyUrl: string = '';
-  countSteps = 1;
+  // Company data
+  company: Company | null = null;
   services: ServiceOffered[] = [];
   professionals: CompanyEmployee[] = [];
-  isLoadingTimes = false;
+  openingHours: OpeningHours[] = [];
+
+  // Selections
+  selectedService: ServiceOffered | null = null;
+  selectedProfessional: CompanyEmployee | null = null;
+  noPreferenceSelected = false;
+  selectedDate: string | null = null;
+  selectedTime: string | null = null;
+
+  // UI state
+  currentStep = 0;
+  isLoading = true;
+  isSubmitting = false;
+  companyNotFound = false;
+
+  // Route params
+  private companySlug = '';
+  companyId = '';
+
+  // Stepper config
+  steps: StepDefinition[] = [
+    { label: 'SCHEDULING.STEPPER.SERVICE', icon: 'bi-tag' },
+    { label: 'SCHEDULING.STEPPER.PROFESSIONAL', icon: 'bi-person' },
+    { label: 'SCHEDULING.STEPPER.DATETIME', icon: 'bi-calendar3' },
+    { label: 'SCHEDULING.STEPPER.CONFIRM', icon: 'bi-check-circle' },
+  ];
+
+  private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
-    private fb: FormBuilder,
     private schedulingService: SchedulingService,
     private companyService: CompanyService,
-    private toastr: ToastrService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private spinner: NgxSpinnerService,
     private accountService: AccountService,
     private redirectService: RedirectService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private router: Router,
+    private route: ActivatedRoute,
     private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
-    if (!this.accountService.isLoggedUser()) {
-      this.openLoginModal();
+    this.companySlug = this.route.snapshot.params['id'];
+    this.loadCompany();
+  }
+
+  get isLoggedIn(): boolean {
+    return this.accountService.isLoggedUser();
+  }
+
+  // ─── Step navigation ───
+
+  goToStep(step: number) {
+    if (step < this.currentStep || this.canAdvance()) {
+      this.currentStep = step;
     }
+  }
 
-    this.spinner.show();
+  goToNextStep() {
+    if (this.canAdvance()) {
+      this.currentStep++;
+    }
+  }
 
-    this.companyUrl = this.route.snapshot.params['id'];
+  goToPreviousStep() {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+    }
+  }
 
-    this.companyService.getBySchedulingUrl(this.companyUrl).subscribe({
-      next: (result) => {
-        this.companyName = result.name;
-        this.companyUrl = result.id;
+  canAdvance(): boolean {
+    switch (this.currentStep) {
+      case 0: return !!this.selectedService;
+      case 1: return !!this.selectedProfessional || this.noPreferenceSelected;
+      case 2: return !!this.selectedDate && !!this.selectedTime;
+      case 3: return false;
+      default: return false;
+    }
+  }
 
-        if (result.id == null) {
-          this.router.navigate(['/']).then(() => {
-            this.toastr.error('Empresa não encontrada.');
+  // ─── Step 0: Service selection ───
+
+  onServiceSelected(service: ServiceOffered) {
+    if (this.selectedService?.id === service.id) {
+      this.selectedService = null;
+    } else {
+      this.selectedService = service;
+    }
+  }
+
+  // ─── Step 1: Professional selection ───
+
+  onProfessionalSelected(professional: CompanyEmployee | null) {
+    if (professional === null) {
+      // "No preference" toggle
+      if (this.noPreferenceSelected) {
+        this.noPreferenceSelected = false;
+        this.selectedProfessional = null;
+      } else {
+        this.noPreferenceSelected = true;
+        this.selectedProfessional = null;
+      }
+    } else {
+      if (this.selectedProfessional?.id === professional.id && !this.noPreferenceSelected) {
+        this.selectedProfessional = null;
+      } else {
+        this.noPreferenceSelected = false;
+        this.selectedProfessional = professional;
+      }
+    }
+    // Reset datetime when professional changes (affects availability)
+    this.selectedDate = null;
+    this.selectedTime = null;
+  }
+
+  // ─── Step 2: Date & Time selection ───
+
+  onDateTimeSelected(selection: DateTimeSelection) {
+    this.selectedDate = selection.date;
+    this.selectedTime = selection.time;
+  }
+
+  // ─── Step 3: Confirm ───
+
+  onConfirmed() {
+    if (!this.isLoggedIn) {
+      this.openLoginModal();
+      return;
+    }
+    this.submitBooking();
+  }
+
+  onGuestConfirmed() {
+    this.submitBooking();
+  }
+
+  onLoginRequested() {
+    this.openLoginModal();
+  }
+
+  onEditStep(step: number) {
+    this.currentStep = step;
+  }
+
+  // ─── Data loading ───
+
+  private loadCompany() {
+    this.isLoading = true;
+    this.companyService
+      .getBySchedulingUrl(this.companySlug)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          if (!result || !result.id) {
+            this.companyNotFound = true;
+            this.isLoading = false;
+            this.cdr.markForCheck();
+            this.router.navigate(['/']).then(() => {
+              this.toastr.error(
+                this.translate.instant('SCHEDULING.ERRORS.COMPANY_NOT_FOUND'),
+              );
+            });
+            return;
+          }
+
+          this.company = result;
+          this.companyId = result.id;
+          this.services = result.servicesOffered ?? [];
+          this.professionals = result.employeers ?? [];
+          this.openingHours = result.openingHours ?? [];
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.toastr.error(
+            this.translate.instant('SCHEDULING.ERRORS.COMPANY_NOT_FOUND'),
+          );
+          this.companyNotFound = true;
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  // ─── Booking submission ───
+
+  private submitBooking() {
+    this.isSubmitting = true;
+    this.cdr.markForCheck();
+
+    const scheduling: Scheduling = {
+      companyId: this.companyId,
+      serviceId: this.selectedService?.id ?? '',
+      professionalId: this.noPreferenceSelected
+        ? undefined
+        : this.selectedProfessional?.userId,
+      date: this.selectedDate!,
+      time: this.selectedTime + ':00',
+    };
+
+    this.schedulingService
+      .schedule(scheduling)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.router.navigate(['scheduling/success']).then(() => {
+            this.toastr.success(
+              this.translate.instant('SCHEDULING.SUCCESS.MESSAGE'),
+              this.translate.instant('SCHEDULING.SUCCESS.TITLE'),
+            );
           });
-        }
-
-        this.loadCompanyInformation(result);
-      },
-      error: () => this.toastr.error('Empresa não encontrada!'),
-    });
-
-    this.schedulingForm = this.fb.group({
-      name: ['', Validators.required],
-      lastName: ['', Validators.required],
-      phone: [''],
-      email: [''],
-      date: ['', Validators.required],
-      professionalId: [''],
-      serviceId: [''],
-      time: [''],
-    });
-
-    this.spinner.hide();
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          this.cdr.markForCheck();
+          const msg = err?.error
+            ?? this.translate.instant('SCHEDULING.ERRORS.BOOKING_FAILED');
+          this.toastr.error(msg);
+        },
+      });
   }
 
-  loadCompanyInformation(companyResult: Company) {
-    this.services = companyResult.servicesOffered ?? [];
-    this.professionals = companyResult.employeers ?? [];
-  }
+  // ─── Login modal ───
 
-  openLoginModal(): void {
+  private openLoginModal(): void {
     this.redirectService.setReturnRoute(this.router.url);
 
     const modalRef = this.modalService.open(LoginComponent, {
@@ -119,137 +288,18 @@ export class SchedulingComponent implements OnInit {
     });
 
     modalRef.result.then(
-      () => {},
-      () => {},
+      () => {
+        // Modal closed after successful login — submit the booking
+        if (this.isLoggedIn) {
+          this.submitBooking();
+        }
+        this.cdr.markForCheck();
+      },
+      () => {
+        // Modal dismissed (guest login)
+        this.submitBooking();
+        this.cdr.markForCheck();
+      },
     );
-  }
-
-  atualizarProfissionais() {}
-
-  checkProfessionalAndServiceAreSelected() {
-    if (this.serviceSelected && this.professionalSelected) {
-      const continueButton = document.getElementById('continueButton');
-      if (continueButton) {
-        continueButton.scrollIntoView({ behavior: 'smooth' });
-        this.schedulingForm
-          .get('professionalId')
-          ?.setValue(this.professionalSelected.userId);
-        this.schedulingForm.get('serviceId')?.setValue(this.serviceSelected.id);
-      }
-    }
-  }
-
-  selecionarProfissional(professional: CompanyEmployee) {
-    if (this.professionalSelected == professional) {
-      this.professionalSelected = undefined;
-      return;
-    }
-
-    this.professionalSelected = professional;
-    this.checkProfessionalAndServiceAreSelected();
-  }
-
-  selectService(service: ServiceOffered) {
-    if (this.serviceSelected == service) {
-      this.serviceSelected = undefined;
-      return;
-    }
-    this.serviceSelected = service;
-    this.checkProfessionalAndServiceAreSelected();
-  }
-
-  selectTime(time: string) {
-    if (this.timeSelected == time) {
-      this.timeSelected = '';
-      return;
-    }
-    this.timeSelected = time;
-  }
-
-  isStepValid() {
-    if (this.countSteps == 1) {
-      return !!(this.professionalSelected && this.serviceSelected);
-    }
-    if (this.countSteps == 2) {
-      return !!(this.hasDateSelected() && this.timeSelected);
-    }
-    return false;
-  }
-
-  updateTimesAvailable() {
-    const date = this.schedulingForm.get('date')?.value;
-    if (!date) return;
-
-    this.isLoadingTimes = true;
-    this.timesAvailable = [];
-
-    this.schedulingService
-      .getAvailableTimes(
-        date,
-        this.professionalSelected?.id ?? '',
-        this.companyUrl,
-        this.serviceSelected?.id ?? '',
-      )
-      .subscribe({
-        next: (result) => {
-          this.timesAvailable = Array.isArray(result) ? result : [];
-          this.isLoadingTimes = false;
-        },
-        error: () => {
-          this.toastr.error('Erro ao obter os horários disponíveis');
-          this.timesAvailable = [];
-          this.isLoadingTimes = false;
-        },
-      });
-  }
-
-  agendar() {
-    if (!this.schedulingForm.valid) {
-      this.toastr.warning('Preencha todos os campos obrigatórios.');
-      return;
-    }
-
-    const scheduling: Scheduling = {
-      companyId: this.companyUrl,
-      serviceId: this.serviceSelected?.id ?? '',
-      professionalId: this.professionalSelected?.userId,
-      date: this.schedulingForm.get('date')?.value,
-      time: this.timeSelected + ':00',
-    };
-
-    this.schedulingService.schedule(scheduling).subscribe({
-      next: () => {
-        this.processarSucesso();
-      },
-      error: (err) => {
-        this.processarFalha(err);
-      },
-    });
-  }
-
-  processarFalha(response: any) {
-    if (response.error) this.toastr.error(response.error, 'Opa :(');
-    else this.toastr.error('Ocorreu um erro!', 'Opa :(');
-  }
-
-  processarSucesso() {
-    this.router.navigate(['scheduling/success']).then(() => {
-      this.toastr.success(
-        'Agendamento realizado com sucesso!',
-        'Você será notificado em breve com informações sobre o agendamento.',
-      );
-    });
-  }
-
-  goToNextStep() {
-    this.countSteps++;
-  }
-
-  goToPreviousStep() {
-    this.countSteps--;
-  }
-
-  hasDateSelected(): boolean {
-    return this.schedulingForm.get('date')?.value;
   }
 }

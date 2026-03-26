@@ -1,0 +1,255 @@
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.step-header {
+  text-align: center;
+}
+
+.step-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.step-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+// ─── Two-panel layout ───
+.datetime-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+// ─── Calendar ───
+.calendar-panel {
+  ::ng-deep .mat-calendar {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    width: 320px;
+  }
+
+  // Ensure hidden day-name labels stay offscreen (CDK a11y fix)
+  ::ng-deep .cdk-visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  ::ng-deep .mat-calendar-table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  ::ng-deep .mat-calendar-header {
+    padding: var(--space-sm) var(--space-sm) 0;
+  }
+
+  ::ng-deep .mat-calendar-controls {
+    margin: 0;
+  }
+
+  ::ng-deep .mat-calendar-period-button {
+    color: var(--text-primary) !important;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  ::ng-deep .mat-calendar-arrow {
+    fill: var(--text-primary);
+  }
+
+  ::ng-deep .mat-calendar-previous-button,
+  ::ng-deep .mat-calendar-next-button {
+    color: var(--text-secondary) !important;
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+  }
+
+  ::ng-deep .mat-calendar-table-header th {
+    color: var(--text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  ::ng-deep .mat-calendar-body-label {
+    color: var(--text-tertiary);
+  }
+
+  ::ng-deep .mat-calendar-body-cell-content {
+    color: var(--text-primary);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+  }
+
+  ::ng-deep .mat-calendar-body-disabled > .mat-calendar-body-cell-content {
+    color: var(--text-tertiary);
+    opacity: 0.3;
+  }
+
+  ::ng-deep .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+    > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+    background-color: var(--accent-subtle) !important;
+  }
+
+  ::ng-deep .mat-calendar-body-selected {
+    background-color: var(--accent) !important;
+    color: var(--text-inverse) !important;
+  }
+
+  ::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    border-color: var(--accent-muted) !important;
+  }
+}
+
+// ─── Time slots panel ───
+.times-panel {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.times-placeholder,
+.times-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: var(--space-xl);
+
+  i {
+    font-size: 2.5rem;
+    opacity: 0.5;
+  }
+
+  span {
+    font-size: var(--font-size-sm);
+  }
+}
+
+.times-loading {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
+}
+
+.skeleton-pill {
+  height: 42px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 25%,
+    var(--bg-hover) 50%,
+    var(--bg-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ─── Time groups ───
+.time-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.time-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.group-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.time-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--accent-muted);
+    background: var(--accent-subtle);
+  }
+
+  &.selected {
+    background: var(--accent);
+    color: var(--text-inverse);
+    border-color: var(--accent);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: 0 2px 8px rgba(0, 200, 83, 0.3);
+  }
+}
+
+// ─── Responsive ───
+@media (max-width: 640px) {
+  .datetime-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-panel {
+    display: flex;
+    justify-content: center;
+
+    ::ng-deep .mat-calendar {
+      width: 100%;
+      max-width: 340px;
+    }
+  }
+
+  .time-slots {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .time-slots {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

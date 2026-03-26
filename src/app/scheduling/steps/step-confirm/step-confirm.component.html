@@ -1,0 +1,113 @@
+<div class="step-content">
+  <div class="step-header">
+    <h2 class="step-title">{{ 'SCHEDULING.STEP_CONFIRM.TITLE' | translate }}</h2>
+    <p class="step-subtitle">{{ 'SCHEDULING.STEP_CONFIRM.SUBTITLE' | translate }}</p>
+  </div>
+
+  <div class="summary-card">
+    <!-- Company header -->
+    <div class="summary-company" *ngIf="company">
+      <img *ngIf="company.image" class="company-logo" [src]="company.image" [alt]="company.name">
+      <div *ngIf="!company.image" class="company-logo-placeholder">
+        <i class="bi bi-building"></i>
+      </div>
+      <span class="company-name">{{ company.name }}</span>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Summary rows -->
+    <div class="summary-rows">
+      <!-- Service -->
+      <div class="summary-row">
+        <div class="row-icon"><i class="bi bi-tag"></i></div>
+        <div class="row-content">
+          <span class="row-label">{{ 'SCHEDULING.STEP_CONFIRM.SERVICE_LABEL' | translate }}</span>
+          <span class="row-value">{{ service?.name }}</span>
+        </div>
+        <div class="row-extra">
+          <span class="row-price">{{ service?.price ?? 0 | currencyFormat }}</span>
+        </div>
+        <button class="row-edit" (click)="onEditStep(0)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </div>
+
+      <!-- Professional -->
+      <div class="summary-row">
+        <div class="row-icon">
+          <img *ngIf="professional?.userImageUrl && !noPreference"
+               class="row-avatar"
+               [src]="professional!.userImageUrl"
+               [alt]="professional!.userName">
+          <i *ngIf="!professional?.userImageUrl || noPreference" class="bi bi-person"></i>
+        </div>
+        <div class="row-content">
+          <span class="row-label">{{ 'SCHEDULING.STEP_CONFIRM.PROFESSIONAL_LABEL' | translate }}</span>
+          <span class="row-value">
+            {{ noPreference
+              ? ('SCHEDULING.STEP_CONFIRM.NO_PREFERENCE' | translate)
+              : professional?.userName }}
+          </span>
+        </div>
+        <button class="row-edit" (click)="onEditStep(1)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </div>
+
+      <!-- Date -->
+      <div class="summary-row">
+        <div class="row-icon"><i class="bi bi-calendar3"></i></div>
+        <div class="row-content">
+          <span class="row-label">{{ 'SCHEDULING.STEP_CONFIRM.DATE_LABEL' | translate }}</span>
+          <span class="row-value">{{ formattedDate }}</span>
+        </div>
+        <button class="row-edit" (click)="onEditStep(2)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </div>
+
+      <!-- Time -->
+      <div class="summary-row">
+        <div class="row-icon"><i class="bi bi-clock"></i></div>
+        <div class="row-content">
+          <span class="row-label">{{ 'SCHEDULING.STEP_CONFIRM.TIME_LABEL' | translate }}</span>
+          <span class="row-value">{{ time }}</span>
+        </div>
+        <button class="row-edit" (click)="onEditStep(2)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Login notice (if not logged in) -->
+    <div *ngIf="!isLoggedIn" class="login-notice">
+      <i class="bi bi-info-circle"></i>
+      <span>{{ 'SCHEDULING.STEP_CONFIRM.LOGIN_NOTICE' | translate }}</span>
+      <div class="login-actions">
+        <button class="btn-login" (click)="onLogin()">
+          {{ 'LOGIN.SIGN_IN' | translate }}
+        </button>
+        <span class="login-divider">{{ 'LOGIN.OR' | translate }}</span>
+        <button class="btn-guest" (click)="onGuestConfirm()">
+          {{ 'LOGIN.CONTINUE_AS_GUEST' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Confirm button (if logged in) -->
+    <button *ngIf="isLoggedIn"
+            class="confirm-button"
+            [class.loading]="isSubmitting"
+            [disabled]="isSubmitting"
+            (click)="onConfirm()">
+      <span *ngIf="!isSubmitting">{{ 'SCHEDULING.STEP_CONFIRM.CONFIRM_BUTTON' | translate }}</span>
+      <span *ngIf="isSubmitting" class="loading-content">
+        <span class="spinner"></span>
+        {{ 'SCHEDULING.STEP_CONFIRM.CONFIRMING_BUTTON' | translate }}
+      </span>
+    </button>
+  </div>
+</div>

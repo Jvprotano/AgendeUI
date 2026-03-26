@@ -1,0 +1,235 @@
+// ─── Booking page layout ───
+
+.booking-page {
+  min-height: 100vh;
+  background: var(--bg-base);
+  display: flex;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md) var(--space-2xl);
+}
+
+.booking-container {
+  width: 100%;
+  max-width: 720px;
+}
+
+// ─── Company header ───
+
+.booking-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.header-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 1px solid var(--border-default);
+}
+
+.header-logo-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 1.5rem;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-company-name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.header-powered {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+// ─── Step content ───
+
+.booking-content {
+  min-height: 400px;
+}
+
+.step-wrapper {
+  padding: var(--space-md) 0;
+}
+
+// ─── Step entrance animation ───
+
+.animate-in {
+  animation: step-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes step-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Navigation footer ───
+
+.booking-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-lg);
+  gap: var(--space-md);
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.625rem 1.25rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+}
+
+.btn-continue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.625rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--text-inverse);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-left: auto;
+
+  &:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.25);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// ─── Loading skeleton ───
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.skeleton-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 200px;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-stepper {
+  height: 56px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.skeleton-card {
+  height: 120px;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+
+  &.short {
+    height: 72px;
+    width: 60%;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 25%,
+    var(--bg-hover) 50%,
+    var(--bg-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ─── Responsive ───
+
+@media (max-width: 480px) {
+  .booking-page {
+    padding: var(--space-lg) var(--space-sm) var(--space-xl);
+  }
+
+  .header-company-name {
+    font-size: var(--font-size-lg);
+  }
+
+  .booking-footer {
+    flex-wrap: wrap;
+
+    .btn-continue {
+      width: 100%;
+      justify-content: center;
+      order: -1;
+    }
+
+    .btn-back {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

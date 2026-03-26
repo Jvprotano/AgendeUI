@@ -165,6 +165,59 @@
     }
   },
   "SCHEDULING": {
+    "TITLE": "Agendar",
+    "POWERED_BY": "Desenvolvido por Agende",
+    "BACK": "Voltar",
+    "CONTINUE": "Continuar",
+    "STEPPER": {
+      "SERVICE": "Serviço",
+      "PROFESSIONAL": "Profissional",
+      "DATETIME": "Data e Hora",
+      "CONFIRM": "Confirmar"
+    },
+    "STEP_SERVICE": {
+      "TITLE": "Escolha um serviço",
+      "SUBTITLE": "Selecione o serviço que deseja agendar"
+    },
+    "STEP_PROFESSIONAL": {
+      "TITLE": "Escolha um profissional",
+      "SUBTITLE": "Selecione quem você gostaria de atendê-lo",
+      "NO_PREFERENCE": "Sem preferência"
+    },
+    "STEP_DATETIME": {
+      "TITLE": "Escolha a data e o horário",
+      "SUBTITLE": "Selecione quando deseja seu agendamento",
+      "MORNING": "Manhã",
+      "AFTERNOON": "Tarde",
+      "EVENING": "Noite",
+      "SELECT_DATE": "Selecione uma data para ver os horários"
+    },
+    "STEP_CONFIRM": {
+      "TITLE": "Confirme seu agendamento",
+      "SUBTITLE": "Revise os detalhes do seu agendamento",
+      "SERVICE_LABEL": "Serviço",
+      "PROFESSIONAL_LABEL": "Profissional",
+      "DATE_LABEL": "Data",
+      "TIME_LABEL": "Horário",
+      "PRICE_LABEL": "Valor",
+      "NO_PREFERENCE": "Sem preferência",
+      "CHANGE": "Alterar",
+      "LOGIN_NOTICE": "Faça login ou continue como convidado para completar seu agendamento",
+      "CONFIRM_BUTTON": "Confirmar Agendamento",
+      "CONFIRMING_BUTTON": "Agendando..."
+    },
+    "SUCCESS": {
+      "TITLE": "Agendamento Confirmado!",
+      "MESSAGE": "Seu agendamento foi realizado com sucesso.",
+      "THANKS": "Obrigado por nos escolher!",
+      "SEE_YOU": "Nos vemos em breve!",
+      "NEW_BOOKING": "Fazer novo agendamento"
+    },
+    "ERRORS": {
+      "COMPANY_NOT_FOUND": "Empresa não encontrada.",
+      "BOOKING_FAILED": "Ocorreu um erro ao realizar o agendamento.",
+      "FILL_REQUIRED": "Preencha todos os campos obrigatórios."
+    },
     "NO_TIMES_AVAILABLE": "Nenhum horário disponível para a data selecionada.",
     "LOADING": "Buscando horários...",
     "ERROR_LOADING": "Erro ao obter os horários disponíveis."

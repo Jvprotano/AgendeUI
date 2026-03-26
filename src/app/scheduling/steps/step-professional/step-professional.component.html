@@ -1,0 +1,45 @@
+<div class="step-content">
+  <div class="step-header">
+    <h2 class="step-title">{{ 'SCHEDULING.STEP_PROFESSIONAL.TITLE' | translate }}</h2>
+    <p class="step-subtitle">{{ 'SCHEDULING.STEP_PROFESSIONAL.SUBTITLE' | translate }}</p>
+  </div>
+
+  <div class="professionals-grid">
+    <!-- No preference option -->
+    <button class="professional-card no-preference"
+            [class.selected]="noPreferenceSelected"
+            (click)="selectProfessional(null)">
+      <div class="avatar-wrapper">
+        <div class="avatar placeholder-avatar">
+          <i class="bi bi-people"></i>
+        </div>
+        <div class="check-badge" *ngIf="noPreferenceSelected">
+          <i class="bi bi-check-lg"></i>
+        </div>
+      </div>
+      <span class="professional-name">{{ 'SCHEDULING.STEP_PROFESSIONAL.NO_PREFERENCE' | translate }}</span>
+    </button>
+
+    <!-- Professional cards -->
+    <button *ngFor="let professional of professionals"
+            class="professional-card"
+            [class.selected]="isSelected(professional)"
+            (click)="selectProfessional(professional)">
+      <div class="avatar-wrapper">
+        <img *ngIf="professional.userImageUrl"
+             class="avatar"
+             [src]="professional.userImageUrl"
+             [alt]="professional.userName"
+             loading="lazy">
+        <div *ngIf="!professional.userImageUrl" class="avatar placeholder-avatar">
+          <i class="bi bi-person"></i>
+        </div>
+        <div class="check-badge" *ngIf="isSelected(professional)">
+          <i class="bi bi-check-lg"></i>
+        </div>
+      </div>
+      <span class="professional-name">{{ professional.userName }}</span>
+      <span *ngIf="professional.description" class="professional-role">{{ professional.description }}</span>
+    </button>
+  </div>
+</div>

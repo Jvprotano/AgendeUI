@@ -163,6 +163,59 @@
     }
   },
   "SCHEDULING": {
+    "TITLE": "Reservar Cita",
+    "POWERED_BY": "Desarrollado por Agende",
+    "BACK": "Volver",
+    "CONTINUE": "Continuar",
+    "STEPPER": {
+      "SERVICE": "Servicio",
+      "PROFESSIONAL": "Profesional",
+      "DATETIME": "Fecha y Hora",
+      "CONFIRM": "Confirmar"
+    },
+    "STEP_SERVICE": {
+      "TITLE": "Elige un servicio",
+      "SUBTITLE": "Selecciona el servicio que deseas reservar"
+    },
+    "STEP_PROFESSIONAL": {
+      "TITLE": "Elige un profesional",
+      "SUBTITLE": "Selecciona quién te gustaría que te atienda",
+      "NO_PREFERENCE": "Sin preferencia"
+    },
+    "STEP_DATETIME": {
+      "TITLE": "Elige fecha y hora",
+      "SUBTITLE": "Selecciona cuándo deseas tu cita",
+      "MORNING": "Mañana",
+      "AFTERNOON": "Tarde",
+      "EVENING": "Noche",
+      "SELECT_DATE": "Selecciona una fecha para ver horarios disponibles"
+    },
+    "STEP_CONFIRM": {
+      "TITLE": "Confirma tu reserva",
+      "SUBTITLE": "Revisa los detalles de tu cita",
+      "SERVICE_LABEL": "Servicio",
+      "PROFESSIONAL_LABEL": "Profesional",
+      "DATE_LABEL": "Fecha",
+      "TIME_LABEL": "Hora",
+      "PRICE_LABEL": "Precio",
+      "NO_PREFERENCE": "Sin preferencia",
+      "CHANGE": "Cambiar",
+      "LOGIN_NOTICE": "Inicia sesión o continúa como invitado para completar tu reserva",
+      "CONFIRM_BUTTON": "Confirmar Reserva",
+      "CONFIRMING_BUTTON": "Reservando..."
+    },
+    "SUCCESS": {
+      "TITLE": "¡Reserva Confirmada!",
+      "MESSAGE": "Tu cita ha sido reservada con éxito.",
+      "THANKS": "¡Gracias por elegirnos!",
+      "SEE_YOU": "¡Nos vemos pronto!",
+      "NEW_BOOKING": "Hacer otra reserva"
+    },
+    "ERRORS": {
+      "COMPANY_NOT_FOUND": "Empresa no encontrada.",
+      "BOOKING_FAILED": "Ocurrió un error al realizar la reserva.",
+      "FILL_REQUIRED": "Completa todos los campos obligatorios."
+    },
     "NO_TIMES_AVAILABLE": "No hay horarios disponibles para la fecha seleccionada.",
     "LOADING": "Buscando horarios disponibles...",
     "ERROR_LOADING": "Error al obtener los horarios disponibles."

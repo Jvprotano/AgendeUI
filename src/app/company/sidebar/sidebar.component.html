@@ -4,29 +4,55 @@
       <img src="assets/default-user.jpg" width="40" height="40" />
     </a>
   </div>
-  <div class="agende-logo">
-    Agende
-  </div>
+  <div class="agende-logo">Agende</div>
   <ul class="align-items-center d-flex flex-column list-unstyled mt-4">
-    <li ngbTooltip="Dashboard (em breve)" placement="right" class="menu-item menu-item-disabled">
-      <i class="bi-bar-chart-line menu-icon fs-3"></i>
-    </li>
-    <li ngbTooltip="Agenda" placement="right" [routerLink]="['/company', companyId, 'schedule']" routerLinkActive="active"
-      class="menu-item">
+    <li
+      ngbTooltip="Agenda"
+      placement="right"
+      [routerLink]="['/company', companyId, 'schedule']"
+      routerLinkActive="active"
+      class="menu-item"
+    >
       <i class="bi-calendar-date menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Serviços" placement="right" [routerLink]="['/company', companyId, 'services']" routerLinkActive="active"
-      class="menu-item">
+    <li
+      ngbTooltip="Serviços"
+      placement="right"
+      [routerLink]="['/company', companyId, 'services']"
+      routerLinkActive="active"
+      class="menu-item"
+    >
       <i class="bi-briefcase menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Financeiro (em breve)" placement="right" class="menu-item menu-item-disabled">
-      <i class="bi-cash-coin menu-icon fs-3"></i>
-    </li>
-    <li ngbTooltip="Editar Empresa" placement="right" [routerLink]="['/company', companyId, 'edit']" routerLinkActive="active"
-      class="menu-item">
+    <li
+      ngbTooltip="Editar Empresa"
+      placement="right"
+      [routerLink]="['/company', companyId, 'edit']"
+      routerLinkActive="active"
+      class="menu-item"
+    >
       <i class="bi-pencil menu-icon fs-3"></i>
     </li>
-    <li ngbTooltip="Sair" placement="right" class="menu-item menu-item-exit" [routerLink]="['/user/companies']">
+    <li
+      ngbTooltip="Dashboard (em breve)"
+      placement="right"
+      class="menu-item menu-item-disabled"
+    >
+      <i class="bi-bar-chart-line menu-icon fs-3"></i>
+    </li>
+    <li
+      ngbTooltip="Financeiro (em breve)"
+      placement="right"
+      class="menu-item menu-item-disabled"
+    >
+      <i class="bi-cash-coin menu-icon fs-3"></i>
+    </li>
+    <li
+      ngbTooltip="Sair"
+      placement="right"
+      class="menu-item menu-item-exit"
+      [routerLink]="['/user/companies']"
+    >
       <i class="bi-box-arrow-right menu-icon fs-3"></i>
     </li>
   </ul>

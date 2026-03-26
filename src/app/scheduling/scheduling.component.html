@@ -1,124 +1,113 @@
-<div class="scheduling-container container">
-    <div class="card bg-white shadow-sm mt-3">
-        <div class="card-header text-white d-flex align-items-center rounded-lg shadow-sm p-3" style="background-color: var(--primary-dark);">
-            <img class="company-logo mr-3" src="/assets/logo.png" alt="Avatar">
-            <h1 class="mb-0">Agendamento - {{companyName}}</h1>
-        </div>
-        <div class="card-body" [formGroup]="schedulingForm">
-            <div *ngIf="countSteps == 1">
-                <div class="row-professionals">
-                    <div class="form-group div-professional-avatar">
-                        <button *ngFor="let professional of professionals"
-                            class="card-option professional bg-transparent" href="javascript:void(0);"
-                            (click)="selecionarProfissional(professional)"
-                            [disabled]="professionalSelected && professionalSelected != professional">
-                            <div>
-                                <img class="professional-avatar"
-                                    [ngClass]="{'selected-border': professionalSelected === professional}"
-                                    src="{{professional.userImageUrl}}" 
-                                    alt="{{professional.userName}}">
-                                <div class="professional-name">
-                                    <div class="mb-2">
-                                        {{professional.userName}}
-                                    </div>
-                                    <div class="mb-2 text-muted">
-                                        {{professional.description}}
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div *ngFor="let service of services" class="service" (click)="selectService(service)">
-                        <div class="row">
-                            <div class="col-12">
-                                <button class="card-option bg-transparent card-services" href="javascript:void(0);"
-                                    [disabled]="serviceSelected && serviceSelected != service">
-                                    <div class="card">
-                                        <div class="service-name">
-                                            {{service.name}}
-                                        </div>
-                                        <div class="service-price">
-                                            {{service.price | currencyFormat}}
-                                        </div>
-                                        <div class="service-description card-subtitle mb-2 text-muted">
-                                            {{service.description}}
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="countSteps == 2 && serviceSelected && professionalSelected">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="data" class="form-label" for="date">Data</label>
-                        <input type="date" form class="form-control" required="true" formControlName="date"
-                            (change)="updateTimesAvailable()">
-                    </div>
-                </div>
-                <div class="row" *ngIf="hasDateSelected()">
-                    <div *ngIf="isLoadingTimes" class="col-12 text-center py-3">
-                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                        <span class="ms-2 text-muted">Buscando horários...</span>
-                    </div>
-                    <div *ngIf="!isLoadingTimes && timesAvailable.length === 0" class="no-times-message col-12">
-                        <i class="bi bi-calendar-x"></i>
-                        Nenhum horário disponível para a data selecionada.
-                    </div>
-                    <div *ngFor="let time of timesAvailable" class="col-md-2">
-                        <button class="card-option bg-transparent" href="javascript:void(0);" (click)="selectTime(time)"
-                            [disabled]="timeSelected && timeSelected != time">
-                            <div class="card card-services">
-                                <div class="service-name">
-                                    {{time}}
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="row" *ngIf="timeSelected">
-                    <div class="col-md-3">
-                        <label for="name">Nome</label>
-                        <input type="text" id="name" class="form-control" formControlName="name">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="lastName">Sobrenome</label>
-                        <input type="text" id="lastName" class="form-control" formControlName="lastName">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="phone">Telefone</label>
-                        <input type="tel" id="phone" class="form-control" placeholder="(99) 9 999999999"
-                            formControlName="phone">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" class="form-control" placeholder="agende@gmail.com"
-                            formControlName="email">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="countSteps == 3">
-            <div class="card">
-                <h2>Resumo</h2>
-
-                <p>Serviço selecionado: {{ serviceSelected?.name }} - {{ serviceSelected?.description }}</p>
-                <p>Profissional selecionado: {{ professionalSelected?.userName }}</p>
-                <p>Data: {{ schedulingForm.get('date')?.value | date:'dd/MM/yyyy' }}</p>
-                <p>Nome: {{ schedulingForm.get('name')?.value + " " + schedulingForm.get('lastName')?.value }}</p>
-                <p>Horário selecionado: {{ timeSelected }}</p>
-            </div>
-        </div>
-        <div class="row">
-            <button class="btn btn-primary" *ngIf="countSteps == 3" type="submit" [disabled]="!schedulingForm.valid"
-                (click)="agendar()">Agendar</button>
-
-            <button *ngIf="countSteps != 3" id="continueButton" class="btn btn-primary"
-                (click)="goToNextStep()">Continuar</button>
-            <button *ngIf="countSteps != 1" class="btn btn-danger" (click)="goToPreviousStep()">Voltar</button>
-        </div>
+<div class="booking-page">
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="booking-container">
+    <div class="skeleton-header">
+      <div class="skeleton skeleton-logo"></div>
+      <div class="skeleton skeleton-title"></div>
     </div>
+    <div class="skeleton skeleton-stepper"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card short"></div>
+  </div>
+
+  <!-- Main booking flow -->
+  <div *ngIf="!isLoading && !companyNotFound" class="booking-container">
+    <!-- Company header -->
+    <div class="booking-header">
+      <img *ngIf="company?.image" class="header-logo" [src]="company!.image" [alt]="company!.name">
+      <div *ngIf="!company?.image" class="header-logo-placeholder">
+        <i class="bi bi-building"></i>
+      </div>
+      <div class="header-info">
+        <h1 class="header-company-name">{{ company?.name }}</h1>
+        <span class="header-powered">{{ 'SCHEDULING.POWERED_BY' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <app-booking-stepper
+      [steps]="steps"
+      [currentStep]="currentStep"
+      (stepClicked)="goToStep($event)">
+    </app-booking-stepper>
+
+    <!-- Step content with animation -->
+    <div class="booking-content">
+      <!-- Step 0: Service -->
+      <div *ngIf="currentStep === 0" class="step-wrapper animate-in">
+        <app-step-service
+          [services]="services"
+          [selectedService]="selectedService"
+          (serviceSelected)="onServiceSelected($event)">
+        </app-step-service>
+      </div>
+
+      <!-- Step 1: Professional -->
+      <div *ngIf="currentStep === 1" class="step-wrapper animate-in">
+        <app-step-professional
+          [professionals]="professionals"
+          [selectedProfessional]="selectedProfessional"
+          [noPreferenceSelected]="noPreferenceSelected"
+          (professionalSelected)="onProfessionalSelected($event)">
+        </app-step-professional>
+      </div>
+
+      <!-- Step 2: Date & Time -->
+      <div *ngIf="currentStep === 2" class="step-wrapper animate-in">
+        <app-step-datetime
+          [professionalId]="noPreferenceSelected ? '' : selectedProfessional?.id ?? ''"
+          [serviceId]="selectedService?.id ?? ''"
+          [companyId]="companyId"
+          [openingHours]="openingHours"
+          [selectedDate]="selectedDate"
+          [selectedTime]="selectedTime"
+          (dateTimeSelected)="onDateTimeSelected($event)">
+        </app-step-datetime>
+      </div>
+
+      <!-- Step 3: Confirm -->
+      <div *ngIf="currentStep === 3" class="step-wrapper animate-in">
+        <app-step-confirm
+          [company]="company"
+          [service]="selectedService"
+          [professional]="selectedProfessional"
+          [noPreference]="noPreferenceSelected"
+          [date]="selectedDate"
+          [time]="selectedTime"
+          [isSubmitting]="isSubmitting"
+          [isLoggedIn]="isLoggedIn"
+          (confirmed)="onConfirmed()"
+          (guestConfirmed)="onGuestConfirmed()"
+          (loginRequested)="onLoginRequested()"
+          (editStep)="onEditStep($event)">
+        </app-step-confirm>
+      </div>
+    </div>
+
+    <!-- Navigation footer -->
+    <div class="booking-footer" *ngIf="currentStep < 3">
+      <button *ngIf="currentStep > 0"
+              class="btn-back"
+              (click)="goToPreviousStep()">
+        <i class="bi bi-arrow-left"></i>
+        {{ 'SCHEDULING.BACK' | translate }}
+      </button>
+
+      <button class="btn-continue"
+              [class.disabled]="!canAdvance()"
+              [disabled]="!canAdvance()"
+              (click)="goToNextStep()">
+        {{ 'SCHEDULING.CONTINUE' | translate }}
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Back button on confirm step -->
+    <div class="booking-footer" *ngIf="currentStep === 3">
+      <button class="btn-back" (click)="goToPreviousStep()">
+        <i class="bi bi-arrow-left"></i>
+        {{ 'SCHEDULING.BACK' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

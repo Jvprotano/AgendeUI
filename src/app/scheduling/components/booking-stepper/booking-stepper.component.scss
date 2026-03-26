@@ -1,0 +1,107 @@
+.stepper {
+  position: relative;
+  padding: var(--space-md) 0 var(--space-lg);
+}
+
+.stepper-track {
+  position: absolute;
+  top: calc(var(--space-md) + 16px);
+  left: 32px;
+  right: 32px;
+  height: 2px;
+  background: var(--border-default);
+  border-radius: 1px;
+  z-index: 0;
+}
+
+.stepper-progress {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stepper-steps {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: default;
+  min-width: 0;
+
+  &.completed {
+    cursor: pointer;
+  }
+}
+
+.step-indicator {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--transition-base);
+  background: var(--bg-elevated);
+  color: var(--text-tertiary);
+  border: 2px solid var(--border-default);
+
+  .active & {
+    background: var(--accent);
+    color: var(--text-inverse);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-subtle);
+  }
+
+  .completed & {
+    background: var(--accent);
+    color: var(--text-inverse);
+    border-color: var(--accent);
+  }
+
+  .upcoming & {
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    border-color: var(--border-default);
+  }
+}
+
+.step-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  transition: color var(--transition-base);
+
+  .active & {
+    color: var(--accent);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .completed & {
+    color: var(--text-secondary);
+  }
+}
+
+@media (max-width: 480px) {
+  .step-label {
+    display: none;
+  }
+
+  .stepper-track {
+    left: 24px;
+    right: 24px;
+  }
+}

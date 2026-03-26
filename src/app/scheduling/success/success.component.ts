@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-success',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './success.component.html',
-  styleUrl: './success.component.css'
+  styleUrl: './success.component.css',
 })
-export class SuccessComponent {
-
-}
+export class SuccessComponent {}

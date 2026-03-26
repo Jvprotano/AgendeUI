@@ -1,0 +1,30 @@
+<div class="step-content">
+  <div class="step-header">
+    <h2 class="step-title">{{ 'SCHEDULING.STEP_SERVICE.TITLE' | translate }}</h2>
+    <p class="step-subtitle">{{ 'SCHEDULING.STEP_SERVICE.SUBTITLE' | translate }}</p>
+  </div>
+
+  <div class="services-grid">
+    <button *ngFor="let service of services"
+            class="service-card"
+            [class.selected]="isSelected(service)"
+            (click)="selectService(service)">
+      <div class="service-card-content">
+        <div class="service-info">
+          <span class="service-name">{{ service.name }}</span>
+          <span *ngIf="service.description" class="service-description">{{ service.description }}</span>
+        </div>
+        <div class="service-meta">
+          <span class="service-price">{{ service.price | currencyFormat }}</span>
+          <span *ngIf="service.duration" class="service-duration">
+            <i class="bi bi-clock"></i>
+            {{ service.duration }}
+          </span>
+        </div>
+      </div>
+      <div class="check-indicator">
+        <i class="bi bi-check-lg"></i>
+      </div>
+    </button>
+  </div>
+</div>

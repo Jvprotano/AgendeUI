@@ -163,6 +163,59 @@
     }
   },
   "SCHEDULING": {
+    "TITLE": "Book Appointment",
+    "POWERED_BY": "Powered by Agende",
+    "BACK": "Back",
+    "CONTINUE": "Continue",
+    "STEPPER": {
+      "SERVICE": "Service",
+      "PROFESSIONAL": "Professional",
+      "DATETIME": "Date & Time",
+      "CONFIRM": "Confirm"
+    },
+    "STEP_SERVICE": {
+      "TITLE": "Choose a service",
+      "SUBTITLE": "Select the service you would like to book"
+    },
+    "STEP_PROFESSIONAL": {
+      "TITLE": "Choose a professional",
+      "SUBTITLE": "Select who you would like to see",
+      "NO_PREFERENCE": "No preference"
+    },
+    "STEP_DATETIME": {
+      "TITLE": "Pick a date and time",
+      "SUBTITLE": "Choose when you would like your appointment",
+      "MORNING": "Morning",
+      "AFTERNOON": "Afternoon",
+      "EVENING": "Evening",
+      "SELECT_DATE": "Select a date to see available times"
+    },
+    "STEP_CONFIRM": {
+      "TITLE": "Review your booking",
+      "SUBTITLE": "Please confirm your appointment details",
+      "SERVICE_LABEL": "Service",
+      "PROFESSIONAL_LABEL": "Professional",
+      "DATE_LABEL": "Date",
+      "TIME_LABEL": "Time",
+      "PRICE_LABEL": "Price",
+      "NO_PREFERENCE": "No preference",
+      "CHANGE": "Change",
+      "LOGIN_NOTICE": "Please login or continue as guest to complete your booking",
+      "CONFIRM_BUTTON": "Confirm Booking",
+      "CONFIRMING_BUTTON": "Booking..."
+    },
+    "SUCCESS": {
+      "TITLE": "Booking Confirmed!",
+      "MESSAGE": "Your appointment has been successfully booked.",
+      "THANKS": "Thank you for choosing us!",
+      "SEE_YOU": "We will see you soon!",
+      "NEW_BOOKING": "Book another appointment"
+    },
+    "ERRORS": {
+      "COMPANY_NOT_FOUND": "Company not found.",
+      "BOOKING_FAILED": "An error occurred while booking.",
+      "FILL_REQUIRED": "Please complete all required fields."
+    },
     "NO_TIMES_AVAILABLE": "No available time slots for the selected date.",
     "LOADING": "Loading available times...",
     "ERROR_LOADING": "Error loading available time slots."

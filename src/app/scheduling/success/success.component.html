@@ -1,15 +1,16 @@
-<div class="card">
-  <div class="card-body">
-    <div class="success-page">
-      <h1>Successo!</h1>
-      <p>Seu agendamento foi realizado com sucesso.</p>
-      <p>Obrigado por nos escolher.</p>
-      <p>Nos vemos em breve!</p>
-
-      <h3>Clique abaixo para realizar um novo agendamento</h3>
-      <button class="btn btn-primary" [routerLink]="['/scheduling']">
-        Novo agendamento
-      </button>
+<div class="success-page">
+  <div class="success-container">
+    <div class="success-icon-wrapper">
+      <i class="bi bi-check-lg"></i>
     </div>
+
+    <h1 class="success-title">{{ 'SCHEDULING.SUCCESS.TITLE' | translate }}</h1>
+    <p class="success-text">{{ 'SCHEDULING.SUCCESS.MESSAGE' | translate }}</p>
+    <p class="success-text light">{{ 'SCHEDULING.SUCCESS.THANKS' | translate }}</p>
+    <p class="success-text light">{{ 'SCHEDULING.SUCCESS.SEE_YOU' | translate }}</p>
+
+    <button class="success-button" [routerLink]="['/home']">
+      {{ 'SCHEDULING.SUCCESS.NEW_BOOKING' | translate }}
+    </button>
   </div>
 </div>

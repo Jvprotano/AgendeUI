@@ -1,0 +1,53 @@
+<div class="step-content">
+  <div class="step-header">
+    <h2 class="step-title">{{ 'SCHEDULING.STEP_DATETIME.TITLE' | translate }}</h2>
+    <p class="step-subtitle">{{ 'SCHEDULING.STEP_DATETIME.SUBTITLE' | translate }}</p>
+  </div>
+
+  <div class="datetime-layout">
+    <!-- Calendar panel -->
+    <div class="calendar-panel">
+      <mat-calendar
+        [selected]="calendarDate"
+        [minDate]="minDate"
+        [dateFilter]="dateFilter"
+        (selectedChange)="onDateSelected($event)">
+      </mat-calendar>
+    </div>
+
+    <!-- Time slots panel -->
+    <div class="times-panel">
+      <!-- No date selected -->
+      <div *ngIf="!calendarDate" class="times-placeholder">
+        <i class="bi bi-calendar3"></i>
+        <span>{{ 'SCHEDULING.STEP_DATETIME.SELECT_DATE' | translate }}</span>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="calendarDate && isLoadingTimes" class="times-loading">
+        <div class="skeleton-pill" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
+      </div>
+
+      <!-- No times available -->
+      <div *ngIf="calendarDate && !isLoadingTimes && availableTimes.length === 0" class="times-empty">
+        <i class="bi bi-calendar-x"></i>
+        <span>{{ 'SCHEDULING.NO_TIMES_AVAILABLE' | translate }}</span>
+      </div>
+
+      <!-- Time groups -->
+      <div *ngIf="calendarDate && !isLoadingTimes && timeGroups.length > 0" class="time-groups">
+        <div *ngFor="let group of timeGroups" class="time-group">
+          <span class="group-label">{{ group.translationKey | translate }}</span>
+          <div class="time-slots">
+            <button *ngFor="let time of group.times"
+                    class="time-slot"
+                    [class.selected]="selectedTime === time"
+                    (click)="selectTime(time)">
+              {{ time }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
