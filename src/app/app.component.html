@@ -1,5 +1,5 @@
-<app-menu></app-menu>
+<app-menu *ngIf="showChrome"></app-menu>
 <main class="app-content">
 	<router-outlet></router-outlet>
 </main>
-<app-footer></app-footer>
+<app-footer *ngIf="showChrome"></app-footer>

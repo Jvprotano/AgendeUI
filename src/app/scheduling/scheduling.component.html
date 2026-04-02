@@ -36,7 +36,7 @@
     <!-- Stepper -->
     <app-booking-stepper *ngIf="!scheduleClosed"
       [steps]="steps"
-      [currentStep]="currentStep"
+      [currentStep]="displayStep"
       (stepClicked)="goToStep($event)">
     </app-booking-stepper>
 
@@ -52,7 +52,7 @@
       </div>
 
       <!-- Step 1: Professional -->
-      <div *ngIf="currentStep === 1" class="step-wrapper animate-in">
+      <div *ngIf="currentStep === 1 && !skipProfessionalStep" class="step-wrapper animate-in">
         <app-step-professional
           [professionals]="professionals"
           [selectedProfessional]="selectedProfessional"
@@ -85,6 +85,7 @@
           [time]="selectedTime"
           [isSubmitting]="isSubmitting"
           [isLoggedIn]="isLoggedIn"
+          [skipProfessionalStep]="skipProfessionalStep"
           (confirmed)="onConfirmed()"
           (guestConfirmed)="onGuestConfirmed()"
           (loginRequested)="onLoginRequested()"
@@ -94,8 +95,8 @@
     </div>
 
     <!-- Navigation footer -->
-    <div class="booking-footer" *ngIf="!scheduleClosed && currentStep < 3">
-      <button *ngIf="currentStep > 0"
+    <div class="booking-footer" *ngIf="!scheduleClosed && currentStep !== 3">
+      <button *ngIf="displayStep > 0"
               class="btn-back"
               (click)="goToPreviousStep()">
         <i class="bi bi-arrow-left"></i>

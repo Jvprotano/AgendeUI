@@ -29,6 +29,7 @@ export class StepConfirmComponent {
   @Input() time: string | null = null;
   @Input() isSubmitting = false;
   @Input() isLoggedIn = false;
+  @Input() skipProfessionalStep = false;
   @Output() confirmed = new EventEmitter<void>();
   @Output() guestConfirmed = new EventEmitter<void>();
   @Output() loginRequested = new EventEmitter<void>();

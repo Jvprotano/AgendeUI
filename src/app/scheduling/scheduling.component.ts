@@ -67,18 +67,26 @@ export class SchedulingComponent implements OnInit {
   isSubmitting = false;
   companyNotFound = false;
   scheduleClosed = false;
+  skipProfessionalStep = false;
 
   // Route params
   private companySlug = '';
   companyId = '';
 
   // Stepper config
-  steps: StepDefinition[] = [
+  steps: StepDefinition[] = [];
+
+  private allSteps: StepDefinition[] = [
     { label: 'SCHEDULING.STEPPER.SERVICE', icon: 'bi-tag' },
     { label: 'SCHEDULING.STEPPER.PROFESSIONAL', icon: 'bi-person' },
     { label: 'SCHEDULING.STEPPER.DATETIME', icon: 'bi-calendar3' },
     { label: 'SCHEDULING.STEPPER.CONFIRM', icon: 'bi-check-circle' },
   ];
+
+  // Maps logical step (0-3) to display step index
+  private stepMap: number[] = [];
+  // Maps display step index back to logical step
+  private reverseStepMap: number[] = [];
 
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
@@ -104,23 +112,32 @@ export class SchedulingComponent implements OnInit {
     return this.accountService.isLoggedUser();
   }
 
+  get displayStep(): number {
+    return this.stepMap[this.currentStep] ?? 0;
+  }
+
   // ─── Step navigation ───
 
-  goToStep(step: number) {
-    if (step < this.currentStep || this.canAdvance()) {
-      this.currentStep = step;
+  goToStep(displayIndex: number) {
+    const logicalStep = this.reverseStepMap[displayIndex];
+    if (logicalStep < this.currentStep || this.canAdvance()) {
+      this.currentStep = logicalStep;
     }
   }
 
   goToNextStep() {
     if (this.canAdvance()) {
-      this.currentStep++;
+      const nextDisplay = this.displayStep + 1;
+      if (nextDisplay < this.steps.length) {
+        this.currentStep = this.reverseStepMap[nextDisplay];
+      }
     }
   }
 
   goToPreviousStep() {
-    if (this.currentStep > 0) {
-      this.currentStep--;
+    if (this.displayStep > 0) {
+      const prevDisplay = this.displayStep - 1;
+      this.currentStep = this.reverseStepMap[prevDisplay];
     }
   }
 
@@ -198,6 +215,27 @@ export class SchedulingComponent implements OnInit {
     this.currentStep = step;
   }
 
+  // ─── Step map ───
+
+  private buildStepMap() {
+    // Logical steps: 0=Service, 1=Professional, 2=DateTime, 3=Confirm
+    const logicalSteps = this.skipProfessionalStep
+      ? [0, 2, 3]
+      : [0, 1, 2, 3];
+
+    this.steps = logicalSteps.map(i => this.allSteps[i]);
+
+    // stepMap: logicalStep → displayIndex
+    this.stepMap = [0, 0, 0, 0];
+    // reverseStepMap: displayIndex → logicalStep
+    this.reverseStepMap = [];
+
+    logicalSteps.forEach((logical, display) => {
+      this.stepMap[logical] = display;
+      this.reverseStepMap[display] = logical;
+    });
+  }
+
   // ─── Data loading ───
 
   private loadCompany() {
@@ -225,6 +263,14 @@ export class SchedulingComponent implements OnInit {
           this.services = result.servicesOffered ?? [];
           this.professionals = result.employeers ?? [];
           this.openingHours = result.openingHours ?? [];
+
+          // Auto-select if only one professional
+          if (this.professionals.length === 1) {
+            this.skipProfessionalStep = true;
+            this.selectedProfessional = this.professionals[0];
+          }
+
+          this.buildStepMap();
           this.isLoading = false;
           this.cdr.markForCheck();
         },
