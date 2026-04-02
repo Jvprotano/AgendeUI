@@ -234,6 +234,10 @@
       "BOOKING_FAILED": "Ocorreu um erro ao realizar o agendamento.",
       "FILL_REQUIRED": "Preencha todos os campos obrigatórios."
     },
+    "CLOSED": {
+      "TITLE": "Agenda fechada",
+      "MESSAGE": "Esta empresa está com a agenda fechada no momento. Não é possível realizar agendamentos. Por favor, tente novamente mais tarde."
+    },
     "NO_TIMES_AVAILABLE": "Nenhum horário disponível para a data selecionada.",
     "LOADING": "Buscando horários...",
     "ERROR_LOADING": "Erro ao obter os horários disponíveis."

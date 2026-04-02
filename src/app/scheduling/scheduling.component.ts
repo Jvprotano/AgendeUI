@@ -19,7 +19,7 @@ import { AccountService } from '../account/services/account.service';
 import { RedirectService } from '../services/redirect.service';
 import { LoginComponent } from '../account/login/login.component';
 
-import { Company } from '../company/models/company';
+import { Company, ScheduleStatus } from '../company/models/company';
 import { ServiceOffered } from './models/service_offered';
 import { CompanyEmployee } from '../company/models/company-employee';
 import { Scheduling } from './models/scheduling';
@@ -66,6 +66,7 @@ export class SchedulingComponent implements OnInit {
   isLoading = true;
   isSubmitting = false;
   companyNotFound = false;
+  scheduleClosed = false;
 
   // Route params
   private companySlug = '';
@@ -220,6 +221,7 @@ export class SchedulingComponent implements OnInit {
 
           this.company = result;
           this.companyId = result.id;
+          this.scheduleClosed = result.scheduleStatus === ScheduleStatus.CLOSED;
           this.services = result.servicesOffered ?? [];
           this.professionals = result.employeers ?? [];
           this.openingHours = result.openingHours ?? [];

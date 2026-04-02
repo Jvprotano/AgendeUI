@@ -24,15 +24,24 @@
       </div>
     </div>
 
+    <!-- Schedule closed message -->
+    <div *ngIf="scheduleClosed" class="schedule-closed">
+      <div class="schedule-closed-icon">
+        <i class="bi bi-calendar-x"></i>
+      </div>
+      <h2 class="schedule-closed-title">{{ 'SCHEDULING.CLOSED.TITLE' | translate }}</h2>
+      <p class="schedule-closed-message">{{ 'SCHEDULING.CLOSED.MESSAGE' | translate }}</p>
+    </div>
+
     <!-- Stepper -->
-    <app-booking-stepper
+    <app-booking-stepper *ngIf="!scheduleClosed"
       [steps]="steps"
       [currentStep]="currentStep"
       (stepClicked)="goToStep($event)">
     </app-booking-stepper>
 
     <!-- Step content with animation -->
-    <div class="booking-content">
+    <div *ngIf="!scheduleClosed" class="booking-content">
       <!-- Step 0: Service -->
       <div *ngIf="currentStep === 0" class="step-wrapper animate-in">
         <app-step-service
@@ -85,7 +94,7 @@
     </div>
 
     <!-- Navigation footer -->
-    <div class="booking-footer" *ngIf="currentStep < 3">
+    <div class="booking-footer" *ngIf="!scheduleClosed && currentStep < 3">
       <button *ngIf="currentStep > 0"
               class="btn-back"
               (click)="goToPreviousStep()">
@@ -103,7 +112,7 @@
     </div>
 
     <!-- Back button on confirm step -->
-    <div class="booking-footer" *ngIf="currentStep === 3">
+    <div class="booking-footer" *ngIf="!scheduleClosed && currentStep === 3">
       <button class="btn-back" (click)="goToPreviousStep()">
         <i class="bi bi-arrow-left"></i>
         {{ 'SCHEDULING.BACK' | translate }}

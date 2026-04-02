@@ -232,6 +232,10 @@
       "BOOKING_FAILED": "Ocurrió un error al realizar la reserva.",
       "FILL_REQUIRED": "Completa todos los campos obligatorios."
     },
+    "CLOSED": {
+      "TITLE": "Agenda cerrada",
+      "MESSAGE": "Esta empresa no está aceptando citas en este momento. Por favor, inténtelo de nuevo más tarde."
+    },
     "NO_TIMES_AVAILABLE": "No hay horarios disponibles para la fecha seleccionada.",
     "LOADING": "Buscando horarios disponibles...",
     "ERROR_LOADING": "Error al obtener los horarios disponibles."

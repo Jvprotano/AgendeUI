@@ -232,6 +232,10 @@
       "BOOKING_FAILED": "An error occurred while booking.",
       "FILL_REQUIRED": "Please complete all required fields."
     },
+    "CLOSED": {
+      "TITLE": "Schedule closed",
+      "MESSAGE": "This company is not accepting appointments at the moment. Please try again later."
+    },
     "NO_TIMES_AVAILABLE": "No available time slots for the selected date.",
     "LOADING": "Loading available times...",
     "ERROR_LOADING": "Error loading available time slots."
