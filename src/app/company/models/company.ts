@@ -17,6 +17,7 @@ export interface Company {
     status?: number;
     scheduleStatus: ScheduleStatus;
     schedulingUrl?: string;
+    timeZoneId: string;
     servicesOffered?: ServiceOffered[];
     employeers?: CompanyEmployee[];
     openingHours?: OpeningHours[];

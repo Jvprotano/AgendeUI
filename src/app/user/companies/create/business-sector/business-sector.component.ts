@@ -1,16 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, AfterViewInit, OnDestroy, Renderer2, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DAYS_OF_WEEK, DaySchedule, TimeInterval, BusinessHours } from '../../../../company/models/business-hours';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelect } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TimePickerComponent } from '../../../../shared/components/time-picker/time-picker.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-business-sector',
@@ -19,80 +17,36 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     ReactiveFormsModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     MatButtonModule,
     MatSlideToggleModule,
     MatIconModule,
     MatTooltipModule,
+    TimePickerComponent,
   ],
   templateUrl: './business-sector.component.html',
   styleUrls: ['./business-sector.component.css'],
 })
-export class BusinessSectorComponent implements OnInit, AfterViewInit, OnDestroy {
+export class BusinessSectorComponent implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
 
   daysOfWeek = DAYS_OF_WEEK;
-  timeOptions: string[] = [];
   scheduleError: string | null = null;
 
-  @ViewChildren(MatSelect) private selects!: QueryList<MatSelect>;
-  private removeDocumentListener: (() => void) | null = null;
+  private scheduleSub: Subscription | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private renderer: Renderer2,
-  ) {
-    this.generateTimeOptions();
-  }
+  constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
-    this.removeDocumentListener = this.renderer.listen(
-      'document',
-      'mousedown',
-      (event: MouseEvent) => {
-        const path =
-          (event as any).composedPath?.() || (event as any).path || [];
-        const clickedInsidePanel = path.some((el: any) => {
-          try {
-            return (
-              el?.classList?.contains('mat-mdc-select-panel') ||
-              el?.classList?.contains('mat-select-panel')
-            );
-          } catch {
-            return false;
-          }
-        });
-
-        if (!clickedInsidePanel) {
-          this.selects.forEach((s) => {
-            try {
-              if (s.panelOpen) s.close();
-            } catch {}
-          });
-        }
-      },
-    );
+  ngOnInit(): void {
+    const scheduleControl = this.form.get('schedule');
+    if (scheduleControl) {
+      this.scheduleSub = scheduleControl.valueChanges.subscribe(() => {
+        this.onChangeTimeRange();
+      });
+    }
   }
 
   ngOnDestroy(): void {
-    if (this.removeDocumentListener) {
-      this.removeDocumentListener();
-      this.removeDocumentListener = null;
-    }
-  }
-
-  private generateTimeOptions(): void {
-    for (let hour = 0; hour < 24; hour++) {
-      for (const minute of [0, 30]) {
-        this.timeOptions.push(
-          `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`,
-        );
-      }
-    }
+    this.scheduleSub?.unsubscribe();
   }
 
   getScheduleControls(): FormGroup[] {
@@ -125,6 +79,37 @@ export class BusinessSectorComponent implements OnInit, AfterViewInit, OnDestroy
         intervals.removeAt(0);
       }
     }
+  }
+
+  applyToOtherDays(sourceDayIndex: number): void {
+    const sourceIntervals = this.getIntervals(sourceDayIndex).value as TimeInterval[];
+    const scheduleControls = this.getScheduleControls();
+
+    for (let i = 0; i < scheduleControls.length; i++) {
+      if (i === sourceDayIndex) continue;
+
+      const dayGroup = scheduleControls[i];
+      dayGroup.get('isOpen')?.setValue(true);
+
+      const intervals = this.getIntervals(i);
+      while (intervals.length > 0) {
+        intervals.removeAt(0);
+      }
+
+      for (const interval of sourceIntervals) {
+        intervals.push(
+          this.fb.group({
+            start: [interval.start, Validators.required],
+            end: [interval.end, Validators.required],
+          }),
+        );
+      }
+    }
+  }
+
+  hasFilledIntervals(dayIndex: number): boolean {
+    const intervals = this.getIntervals(dayIndex).value as TimeInterval[];
+    return intervals.length > 0 && intervals.some(i => i.start !== '' && i.end !== '');
   }
 
   onChangeTimeRange(): void {

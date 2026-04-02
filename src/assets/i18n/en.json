@@ -14,12 +14,28 @@
     "SESSION_EXPIRING": "Your session expires soon. Please save your work."
   },
   "ERROR": {
-    "GENERIC": "An error occurred",
-    "BAD_REQUEST": "Bad request",
-    "UNAUTHORIZED": "Unauthorized",
-    "FORBIDDEN": "Access denied",
-    "NOT_FOUND": "Resource not found",
-    "SERVER_ERROR": "Server error"
+    "GENERIC": "An unexpected error occurred. Please try again.",
+    "BAD_REQUEST": "Unable to process the request. Please check the data and try again.",
+    "UNAUTHORIZED": "Unauthorized. Please check your credentials.",
+    "FORBIDDEN": "You do not have permission to perform this action.",
+    "NOT_FOUND": "The requested resource was not found.",
+    "SERVER_ERROR": "Internal server error. Please try again later.",
+    "CONNECTION": "Unable to connect to the server. Check your connection.",
+    "CODES": {
+      "SCHEDULE_NO_OPENING_HOURS": "Set up your business hours before opening the schedule.",
+      "SCHEDULE_NO_SERVICES": "Add at least one service before opening the schedule.",
+      "SCHEDULE_INCOMPLETE_SETUP": "To open the schedule, set up your business hours and add at least one service.",
+      "COMPANY_NOT_FOUND": "Company not found.",
+      "COMPANY_ALREADY_EXISTS": "A company with this data already exists.",
+      "URL_ALREADY_IN_USE": "This scheduling URL is already in use.",
+      "INVALID_OPENING_HOURS": "The business hours provided are invalid.",
+      "SERVICE_NOT_FOUND": "Service not found.",
+      "EMPLOYEE_NOT_FOUND": "Professional not found.",
+      "APPOINTMENT_CONFLICT": "There is already an appointment at this time.",
+      "APPOINTMENT_NOT_FOUND": "Appointment not found.",
+      "APPOINTMENT_ALREADY_CANCELLED": "This appointment has already been cancelled.",
+      "SLOT_UNAVAILABLE": "This time slot is no longer available."
+    }
   },
   "REGISTER": {
     "TITLE": "Create your account",
@@ -273,6 +289,20 @@
       "CREATE_SUCCESS": "Service created successfully!",
       "UPDATE_SUCCESS": "Service updated successfully!",
       "DELETE_SUCCESS": "Service deleted successfully!"
+    },
+    "EDIT": {
+      "TIMEZONE": "Timezone",
+      "TIMEZONE_DESC": "Timezone used for scheduling",
+      "TIMEZONE_CURRENT": "Current"
     }
+  },
+  "TIMEZONE": {
+    "LABEL": "Timezone",
+    "SAO_PAULO": "Brasília (São Paulo)",
+    "FORTALEZA": "Fortaleza",
+    "MANAUS": "Manaus",
+    "CUIABA": "Cuiabá",
+    "BELEM": "Belém",
+    "RECIFE": "Recife"
   }
 }

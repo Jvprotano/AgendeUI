@@ -79,12 +79,21 @@ export class CreateComponent implements OnInit {
       image: [''],
       cnpj: [''],
       name: ['', Validators.required],
-      schedulingUrl: [''],
+      schedulingUrl: ['', Validators.required],
+      timeZoneId: ['America/Sao_Paulo'],
       schedule: buildScheduleFormArray(this.fb, []),
     });
   }
 
   onNextStep(): void {
+    const name = this.form.get('name');
+    const url = this.form.get('schedulingUrl');
+
+    name?.markAsTouched();
+    url?.markAsTouched();
+
+    if (name?.invalid || url?.invalid) return;
+
     this.currentStep++;
   }
 

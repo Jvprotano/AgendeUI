@@ -4,6 +4,7 @@ import { BaseService } from '../../services/base.service';
 import { Company, ScheduleStatus } from '../models/company';
 import { ServiceOffered } from '../../scheduling/models/service_offered';
 import { CompanyEmployee } from '../models/company-employee';
+import { OpeningHours } from '../models/opening_hours';
 import { PaginatedResult } from '../../shared/interfaces/api-response.interface';
 
 @Injectable({
@@ -43,8 +44,12 @@ export class CompanyService extends BaseService {
     return this.post('company', company);
   }
 
-  update(id: string, company: Company): Observable<void> {
+  update(id: string, company: Pick<Company, 'name' | 'description' | 'schedulingUrl' | 'cnpj' | 'image'> & { timeZoneId?: string }): Observable<void> {
     return this.put(`company/${id}`, company);
+  }
+
+  updateOpeningHours(id: string, openingHours: OpeningHours[]): Observable<void> {
+    return this.put(`company/${id}/opening-hours`, { openingHours });
   }
 
   remove(id: string): Observable<void> {

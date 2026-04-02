@@ -10,6 +10,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+
+export const TIMEZONE_OPTIONS = [
+  { label: 'Brasília (São Paulo)', value: 'America/Sao_Paulo' },
+  { label: 'Fortaleza', value: 'America/Fortaleza' },
+  { label: 'Manaus', value: 'America/Manaus' },
+  { label: 'Cuiabá', value: 'America/Cuiaba' },
+  { label: 'Belém', value: 'America/Belem' },
+  { label: 'Recife', value: 'America/Recife' },
+];
 
 @Component({
   selector: 'app-basic-info',
@@ -25,6 +35,7 @@ import { MatRippleModule } from '@angular/material/core';
     MatButtonModule,
     MatIconModule,
     MatRippleModule,
+    MatSelectModule,
   ],
   providers: [provideNgxMask()],
   templateUrl: './basic-info.component.html',
@@ -35,7 +46,9 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
   @Input() isEditing = false;
   @Input() companyId?: string;
   @Input() showCard = true;
+  @Input() horizontal = false;
 
+  readonly timezoneOptions = TIMEZONE_OPTIONS;
   prefix = 'agende.com/';
   urlErrorMessage: string | undefined;
   urlSuccessMessage: string | undefined;

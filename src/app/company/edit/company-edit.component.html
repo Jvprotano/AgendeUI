@@ -31,15 +31,15 @@
     <!-- Edit Form -->
     <form *ngIf="!isLoading && form" [formGroup]="form" (ngSubmit)="onSubmit()" class="edit-form">
 
-      <!-- Section: Basic Info -->
+      <!-- Section: Basic Info + Image (horizontal) -->
       <section class="edit-section">
         <div class="section-header">
           <div class="section-icon-wrap">
             <mat-icon>business</mat-icon>
           </div>
           <div>
-            <h2 class="section-title">Informações Básicas</h2>
-            <p class="section-desc">Nome, CNPJ, imagem e URL de agendamento</p>
+            <h2 class="section-title">Informações da Empresa</h2>
+            <p class="section-desc">Logo, dados cadastrais, fuso horário e URL de agendamento</p>
           </div>
         </div>
         <div class="section-body">
@@ -47,7 +47,8 @@
             [form]="form"
             [isEditing]="true"
             [companyId]="companyId"
-            [showCard]="false">
+            [showCard]="false"
+            [horizontal]="true">
           </app-basic-info>
         </div>
       </section>

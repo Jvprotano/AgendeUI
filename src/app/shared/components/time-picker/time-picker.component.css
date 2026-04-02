@@ -1,0 +1,239 @@
+/* ─── Wrapper ─── */
+.tp-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ─── Label ─── */
+.tp-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ─── Trigger button ─── */
+.tp-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  outline: none;
+  min-height: 44px;
+}
+
+.tp-trigger:hover:not(.tp-trigger--disabled) {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+
+.tp-trigger:focus-visible:not(.tp-trigger--disabled) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.tp-trigger--open {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.tp-trigger--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Trigger icons ─── */
+.tp-clock-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: color var(--transition-fast);
+}
+
+.tp-trigger--open .tp-clock-icon,
+.tp-trigger--filled .tp-clock-icon {
+  color: var(--accent);
+}
+
+.tp-value {
+  flex: 1;
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-placeholder {
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-normal);
+}
+
+.tp-chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: transform var(--transition-fast);
+}
+
+.tp-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ─── Dropdown panel ─── */
+.tp-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-popover);
+  animation: tp-slide-in 0.15s ease-out;
+  overflow: hidden;
+  min-width: 180px;
+}
+
+@keyframes tp-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Search ─── */
+.tp-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.tp-search-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.tp-search {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.tp-search::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* ─── Time list ─── */
+.tp-list {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px;
+  scroll-behavior: smooth;
+}
+
+.tp-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tp-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tp-list::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+.tp-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ─── Hour group divider ─── */
+.tp-hour-divider {
+  padding: 6px 12px 4px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  user-select: none;
+  position: sticky;
+  top: 0;
+  background: var(--bg-elevated);
+  z-index: 1;
+}
+
+/* ─── Time option ─── */
+.tp-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.tp-option:hover,
+.tp-option--highlighted {
+  background: var(--bg-hover);
+}
+
+.tp-option--selected {
+  background: var(--accent-subtle) !important;
+  color: var(--accent);
+  font-weight: var(--font-weight-semibold);
+}
+
+.tp-option-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-check-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+/* ─── Empty state ─── */
+.tp-empty {
+  padding: 20px 12px;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}

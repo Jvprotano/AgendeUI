@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -81,6 +81,7 @@ export class CompanyEditComponent implements OnInit {
       cnpj: [company.cnpj ?? ''],
       name: [company.name ?? '', Validators.required],
       schedulingUrl: [company.schedulingUrl ?? ''],
+      timeZoneId: [company.timeZoneId ?? 'America/Sao_Paulo'],
       schedule: buildScheduleFormArray(this.fb, schedule),
     });
   }
@@ -98,15 +99,23 @@ export class CompanyEditComponent implements OnInit {
       (day: DaySchedule) => day.isOpen,
     );
 
-    const request = {
-      ...this.company,
-      ...formValue,
-      openingHours: scheduleToOpeningHours(filteredSchedule),
+    const companyInfo = {
+      name: formValue.name,
+      description: this.company.description,
+      schedulingUrl: formValue.schedulingUrl,
+      cnpj: formValue.cnpj,
+      image: formValue.image,
+      ...(formValue.timeZoneId && formValue.timeZoneId !== this.company.timeZoneId
+        ? { timeZoneId: formValue.timeZoneId as string }
+        : {}),
     };
-    delete request.schedule;
 
-    this.companyService
-      .update(this.companyId, request)
+    const openingHours = scheduleToOpeningHours(filteredSchedule);
+
+    forkJoin([
+      this.companyService.update(this.companyId, companyInfo),
+      this.companyService.updateOpeningHours(this.companyId, openingHours),
+    ])
       .pipe(take(1))
       .subscribe({
         next: () => {

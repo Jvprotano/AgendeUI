@@ -45,6 +45,7 @@ export class CompaniesComponent implements OnInit {
           this.isLoading = false;
         },
         error: () => {
+          this.companies = [];
           this.isLoading = false;
         },
       });
@@ -84,8 +85,12 @@ export class CompaniesComponent implements OnInit {
       .subscribe({
         next: () => {
           company.scheduleStatus = newStatus;
+          const label = newStatus === ScheduleStatus.OPEN ? 'aberta' : 'fechada';
+          this.toastr.success(`Agenda ${label} com sucesso!`);
         },
-        error: () => {},
+        error: () => {
+          // ErrorHandlingService already displays the server message via toast
+        },
       });
   }
 
@@ -99,7 +104,7 @@ export class CompaniesComponent implements OnInit {
           this.toastr.success('Empresa removida com sucesso!');
         },
         error: () => {
-          this.toastr.error('Erro ao remover empresa.');
+          // ErrorHandlingService already displays the error via toast
         },
       });
   }
@@ -114,7 +119,7 @@ export class CompaniesComponent implements OnInit {
           this.loadCompanies();
         },
         error: () => {
-          this.toastr.error('Erro ao reativar empresa.');
+          // ErrorHandlingService already displays the error via toast
         },
       });
   }

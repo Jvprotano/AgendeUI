@@ -25,29 +25,19 @@
               <div *ngFor="let interval of getIntervals(dayIndex).controls; let intervalIndex = index"
                    [formGroupName]="intervalIndex"
                    class="time-interval">
-                <mat-form-field appearance="outline">
-                  <mat-label>Início</mat-label>
-                  <mat-select formControlName="start" (selectionChange)="onChangeTimeRange()">
-                    <mat-option *ngFor="let time of timeOptions" [value]="time">
-                      {{ time }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="interval.get('start')?.errors?.['required']">
-                    Horário inicial é obrigatório
-                  </mat-error>
-                </mat-form-field>
+                <app-time-picker
+                  formControlName="start"
+                  label="Início"
+                  placeholder="00:00">
+                </app-time-picker>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Fim</mat-label>
-                  <mat-select formControlName="end" (selectionChange)="onChangeTimeRange()">
-                    <mat-option *ngFor="let time of timeOptions" [value]="time">
-                      {{ time }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="interval.get('end')?.errors?.['required']">
-                    Horário final é obrigatório
-                  </mat-error>
-                </mat-form-field>
+                <span class="time-separator">até</span>
+
+                <app-time-picker
+                  formControlName="end"
+                  label="Fim"
+                  placeholder="00:00">
+                </app-time-picker>
 
                 <button mat-icon-button color="warn" type="button"
                         *ngIf="getIntervals(dayIndex).length > 1"
@@ -59,12 +49,23 @@
               </div>
             </div>
 
-            <button mat-stroked-button color="secondary" type="button"
-                    (click)="addInterval(dayIndex)"
-                    class="add-interval">
-              <mat-icon>add</mat-icon>
-              Adicionar intervalo
-            </button>
+            <div class="interval-actions">
+              <button mat-stroked-button color="secondary" type="button"
+                      (click)="addInterval(dayIndex)"
+                      class="add-interval">
+                <mat-icon>add</mat-icon>
+                Adicionar intervalo
+              </button>
+
+              <button mat-stroked-button type="button"
+                      *ngIf="hasFilledIntervals(dayIndex)"
+                      (click)="applyToOtherDays(dayIndex)"
+                      matTooltip="Aplicar este horário para todos os outros dias"
+                      class="apply-all-btn">
+                <mat-icon>content_copy</mat-icon>
+                Aplicar para os demais dias
+              </button>
+            </div>
           </div>
         </div>
       </div>

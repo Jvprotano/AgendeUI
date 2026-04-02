@@ -16,12 +16,28 @@
     "SESSION_EXPIRING": "Sua sessão expira em breve. Salve seu trabalho."
   },
   "ERROR": {
-    "GENERIC": "Ocorreu um erro inesperado",
-    "BAD_REQUEST": "Requisição inválida",
-    "UNAUTHORIZED": "Não autorizado. Verifique suas credenciais",
-    "FORBIDDEN": "Acesso negado",
-    "NOT_FOUND": "Recurso não encontrado",
-    "SERVER_ERROR": "Erro interno do servidor"
+    "GENERIC": "Ocorreu um erro inesperado. Tente novamente.",
+    "BAD_REQUEST": "Não foi possível processar a solicitação. Verifique os dados e tente novamente.",
+    "UNAUTHORIZED": "Não autorizado. Verifique suas credenciais.",
+    "FORBIDDEN": "Você não tem permissão para realizar esta ação.",
+    "NOT_FOUND": "O recurso solicitado não foi encontrado.",
+    "SERVER_ERROR": "Erro interno do servidor. Tente novamente mais tarde.",
+    "CONNECTION": "Não foi possível conectar ao servidor. Verifique sua conexão.",
+    "CODES": {
+      "SCHEDULE_NO_OPENING_HOURS": "Cadastre os horários de funcionamento antes de abrir a agenda.",
+      "SCHEDULE_NO_SERVICES": "Cadastre ao menos um serviço antes de abrir a agenda.",
+      "SCHEDULE_INCOMPLETE_SETUP": "Para abrir a agenda, cadastre os horários de funcionamento e ao menos um serviço.",
+      "COMPANY_NOT_FOUND": "Empresa não encontrada.",
+      "COMPANY_ALREADY_EXISTS": "Já existe uma empresa com esses dados.",
+      "URL_ALREADY_IN_USE": "Esta URL de agendamento já está em uso.",
+      "INVALID_OPENING_HOURS": "Os horários de funcionamento informados são inválidos.",
+      "SERVICE_NOT_FOUND": "Serviço não encontrado.",
+      "EMPLOYEE_NOT_FOUND": "Profissional não encontrado.",
+      "APPOINTMENT_CONFLICT": "Já existe um agendamento neste horário.",
+      "APPOINTMENT_NOT_FOUND": "Agendamento não encontrado.",
+      "APPOINTMENT_ALREADY_CANCELLED": "Este agendamento já foi cancelado.",
+      "SLOT_UNAVAILABLE": "Este horário não está mais disponível."
+    }
   },
   "REGISTER": {
     "TITLE": "Crie sua conta",
@@ -275,6 +291,20 @@
       "CREATE_SUCCESS": "Serviço criado com sucesso!",
       "UPDATE_SUCCESS": "Serviço atualizado com sucesso!",
       "DELETE_SUCCESS": "Serviço excluído com sucesso!"
+    },
+    "EDIT": {
+      "TIMEZONE": "Fuso Horário",
+      "TIMEZONE_DESC": "Fuso horário utilizado para agendamentos",
+      "TIMEZONE_CURRENT": "Atual"
     }
+  },
+  "TIMEZONE": {
+    "LABEL": "Fuso Horário",
+    "SAO_PAULO": "Brasília (São Paulo)",
+    "FORTALEZA": "Fortaleza",
+    "MANAUS": "Manaus",
+    "CUIABA": "Cuiabá",
+    "BELEM": "Belém",
+    "RECIFE": "Recife"
   }
 }

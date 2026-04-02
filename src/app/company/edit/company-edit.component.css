@@ -2,8 +2,8 @@
 .edit-page {
   width: calc(100% - 90px);
   margin-left: 80px;
-  padding: 2.5rem 3rem;
-  max-width: 920px;
+  padding: 2rem 3rem;
+  max-width: 1100px;
   min-height: 100vh;
   overflow-y: auto;
 }
@@ -13,8 +13,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--border-default);
 }
 
@@ -56,7 +56,7 @@
 
 /* ─── Sections ─── */
 .edit-section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
@@ -72,14 +72,14 @@
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1.75rem;
   border-bottom: 1px solid var(--border-default);
   background: linear-gradient(135deg, var(--accent-subtle) 0%, transparent 100%);
 }
 
 .section-icon-wrap {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-md);
   background: var(--accent-subtle);
   display: flex;
@@ -90,9 +90,9 @@
 
 .section-icon-wrap mat-icon {
   color: var(--accent);
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .section-title {
@@ -105,11 +105,11 @@
 .section-desc {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
-  margin: 0.25rem 0 0;
+  margin: 0.2rem 0 0;
 }
 
 .section-body {
-  padding: 1.5rem 2rem 2rem;
+  padding: 1.5rem 1.75rem;
 }
 
 /* ─── Save Bar ─── */
@@ -117,7 +117,7 @@
   position: sticky;
   bottom: 0;
   background: linear-gradient(to top, var(--bg-base) 60%, transparent);
-  padding: 1.5rem 0 1rem;
+  padding: 1.25rem 0 0.75rem;
   display: flex;
   justify-content: flex-end;
   z-index: 10;
@@ -153,7 +153,7 @@
 .edit-skeleton {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .skeleton-section {
@@ -211,7 +211,7 @@
     padding-top: 5rem;
   }
 
-  .section-header { padding: 1.25rem; }
-  .section-body { padding: 1.25rem; }
+  .section-header { padding: 1rem; }
+  .section-body { padding: 1rem; }
   .edit-title { font-size: var(--font-size-xl); }
 }

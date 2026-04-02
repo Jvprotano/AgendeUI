@@ -1,0 +1,74 @@
+<div class="tp-wrapper">
+  <label class="tp-label" *ngIf="label">{{ label }}</label>
+  <button
+    #trigger
+    type="button"
+    class="tp-trigger"
+    [class.tp-trigger--open]="isOpen"
+    [class.tp-trigger--filled]="value"
+    [class.tp-trigger--disabled]="disabled"
+    [disabled]="disabled"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen"
+    aria-haspopup="listbox">
+    <svg class="tp-clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <span class="tp-value" [class.tp-placeholder]="!value">
+      {{ value || placeholder }}
+    </span>
+    <svg class="tp-chevron" [class.tp-chevron--open]="isOpen"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+
+  <div #dropdown class="tp-dropdown" *ngIf="isOpen" role="listbox">
+    <div class="tp-search-wrap">
+      <svg class="tp-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        class="tp-search"
+        type="text"
+        placeholder="Buscar horário..."
+        [value]="searchQuery"
+        (input)="onSearchInput($event)"
+        (keydown.stopPropagation)="0"
+        autofocus />
+    </div>
+
+    <div class="tp-list">
+      <ng-container *ngFor="let slot of filteredSlots; let i = index; trackBy: trackByValue">
+        <div class="tp-hour-divider" *ngIf="isNewHourGroup(i)">
+          {{ getHourLabel(slot.hour) }}
+        </div>
+        <button
+          type="button"
+          class="tp-option"
+          [class.tp-option--selected]="isSelected(slot)"
+          [class.tp-option--highlighted]="isHighlighted(i)"
+          (click)="selectTime(slot)"
+          (mouseenter)="highlightedIndex = i"
+          role="option"
+          [attr.aria-selected]="isSelected(slot)">
+          <span class="tp-option-time">{{ slot.value }}</span>
+          <svg *ngIf="isSelected(slot)" class="tp-check-icon" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </button>
+      </ng-container>
+
+      <div class="tp-empty" *ngIf="filteredSlots.length === 0">
+        Nenhum horário encontrado
+      </div>
+    </div>
+  </div>
+</div>

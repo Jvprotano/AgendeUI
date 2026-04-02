@@ -211,7 +211,82 @@
   border-top: 1px solid var(--border-default);
 }
 
+/* ─── Horizontal layout mode ─── */
+.horizontal-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.horizontal-layout .image-compact {
+  margin: 0;
+  padding: 1.25rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  position: sticky;
+  top: 1rem;
+}
+
+.horizontal-layout .image-compact::before {
+  border: 1.5px dashed var(--border-default);
+}
+
+.horizontal-layout .image-compact .image-preview {
+  width: 160px;
+  height: 130px;
+}
+
+.horizontal-layout .fields-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.horizontal-layout .fields-column .form-section {
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.horizontal-layout .url-section-compact {
+  padding: 1.25rem;
+}
+
+.fields-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0;
+}
+
 ::ng-deep .cdk-overlay-container { z-index: 1600 !important; }
+
+@media screen and (max-width: 768px) {
+  .horizontal-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .horizontal-layout .image-compact {
+    position: static;
+  }
+
+  .horizontal-layout .image-compact .image-preview {
+    width: 200px;
+    height: 160px;
+  }
+
+  .fields-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .half-width { width: 100%; }
+}
 
 @media screen and (max-width: 600px) {
   .url-input-group { flex-direction: column; gap: 0.5rem; }

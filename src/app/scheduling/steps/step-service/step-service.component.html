@@ -18,7 +18,7 @@
           <span class="service-price">{{ service.price | currencyFormat }}</span>
           <span *ngIf="service.duration" class="service-duration">
             <i class="bi bi-clock"></i>
-            {{ service.duration }}
+            {{ formatDuration(service.duration) }}
           </span>
         </div>
       </div>

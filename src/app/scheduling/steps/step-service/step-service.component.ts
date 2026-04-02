@@ -30,4 +30,16 @@ export class StepServiceComponent {
   isSelected(service: ServiceOffered): boolean {
     return this.selectedService?.id === service.id;
   }
+
+  formatDuration(duration?: string): string {
+    if (!duration) return '';
+    const parts = duration.split(':');
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+
+    if (hours > 0 && minutes > 0) return `${hours}h${minutes}min`;
+    if (hours > 0) return `${hours}h`;
+    if (minutes > 0) return `${minutes}min`;
+    return '';
+  }
 }
