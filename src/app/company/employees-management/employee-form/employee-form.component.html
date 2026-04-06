@@ -1,0 +1,123 @@
+<div class="modal-header">
+  <h5 class="modal-title fw-semibold">
+    {{
+      (isEditMode
+        ? 'COMPANY.EMPLOYEES.EDIT_TITLE'
+        : 'COMPANY.EMPLOYEES.CREATE_TITLE') | translate
+    }}
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div *ngIf="!isEditMode" class="helper-card mb-3">
+      <i class="bi bi-envelope-check"></i>
+      <span>{{ 'COMPANY.EMPLOYEES.EMAIL_HELPER' | translate }}</span>
+    </div>
+
+    <div *ngIf="isEditMode" class="employee-summary mb-3">
+      <div class="employee-summary__name">
+        {{ data.employee?.userName || data.employee?.userEmail }}
+      </div>
+      <div class="employee-summary__email">{{ data.employee?.userEmail }}</div>
+      <p *ngIf="data.employee?.description" class="employee-summary__description mb-0">
+        {{ data.employee?.description }}
+      </p>
+    </div>
+
+    <ng-container *ngIf="!isEditMode">
+      <mat-form-field appearance="outline" class="w-100 mb-2">
+        <mat-label>{{ 'COMPANY.EMPLOYEES.EMAIL' | translate }}</mat-label>
+        <input matInput formControlName="email" maxlength="150" />
+        <mat-error *ngIf="form.get('email')?.hasError('required')">
+          {{ 'COMPANY.EMPLOYEES.EMAIL_REQUIRED' | translate }}
+        </mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">
+          {{ 'COMPANY.EMPLOYEES.EMAIL_INVALID' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <div class="row g-2">
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>{{ 'COMPANY.EMPLOYEES.FIRST_NAME' | translate }}</mat-label>
+            <input matInput formControlName="firstName" maxlength="100" />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>{{ 'COMPANY.EMPLOYEES.LAST_NAME' | translate }}</mat-label>
+            <input matInput formControlName="lastName" maxlength="100" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-100 mb-2">
+        <mat-label>{{ 'COMPANY.EMPLOYEES.DESCRIPTION' | translate }}</mat-label>
+        <textarea matInput formControlName="description" rows="3" maxlength="500"></textarea>
+        <mat-hint align="end">{{ form.get('description')?.value?.length || 0 }}/500</mat-hint>
+      </mat-form-field>
+    </ng-container>
+
+    <div class="service-section">
+      <div class="service-section__header">
+        <h6 class="mb-1">{{ 'COMPANY.EMPLOYEES.SELECT_SERVICES' | translate }}</h6>
+        <p class="mb-0 text-muted small">
+          {{ 'COMPANY.EMPLOYEES.SELECT_SERVICES_HELPER' | translate }}
+        </p>
+      </div>
+
+      <div class="service-grid">
+        <button
+          *ngFor="let service of services"
+          type="button"
+          class="service-option"
+          [class.service-option--selected]="isServiceSelected(service.id)"
+          (click)="toggleService(service.id)"
+        >
+          <span class="service-option__name">{{ service.name }}</span>
+          <span *ngIf="service.duration" class="service-option__meta">
+            {{ service.duration }}
+          </span>
+        </button>
+      </div>
+
+      <div
+        *ngIf="form.get('serviceIds')?.invalid && form.get('serviceIds')?.touched"
+        class="service-error"
+      >
+        {{ 'COMPANY.EMPLOYEES.SERVICES_REQUIRED' | translate }}
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-secondary btn-sm"
+    (click)="activeModal.dismiss()"
+    [disabled]="isSubmitting"
+  >
+    {{ 'COMPANY.EMPLOYEES.CANCEL' | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-gradient btn-sm d-flex align-items-center gap-2"
+    (click)="onSubmit()"
+    [disabled]="form.invalid || isSubmitting"
+  >
+    <mat-spinner *ngIf="isSubmitting" diameter="16"></mat-spinner>
+    {{
+      (isSubmitting
+        ? 'COMPANY.EMPLOYEES.SAVING'
+        : 'COMPANY.EMPLOYEES.SAVE') | translate
+    }}
+  </button>
+</div>

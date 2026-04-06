@@ -54,7 +54,7 @@
       <!-- Step 1: Professional -->
       <div *ngIf="currentStep === 1 && !skipProfessionalStep" class="step-wrapper animate-in">
         <app-step-professional
-          [professionals]="professionals"
+          [professionals]="availableProfessionals"
           [selectedProfessional]="selectedProfessional"
           [noPreferenceSelected]="noPreferenceSelected"
           (professionalSelected)="onProfessionalSelected($event)">
@@ -64,7 +64,7 @@
       <!-- Step 2: Date & Time -->
       <div *ngIf="currentStep === 2" class="step-wrapper animate-in">
         <app-step-datetime
-          [professionalId]="noPreferenceSelected ? '' : selectedProfessional?.id ?? ''"
+          [professionalId]="noPreferenceSelected ? '' : selectedProfessional?.userId ?? ''"
           [serviceId]="selectedService?.id ?? ''"
           [companyId]="companyId"
           [openingHours]="openingHours"

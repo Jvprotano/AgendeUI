@@ -159,6 +159,10 @@ export class SchedulingComponent implements OnInit {
     } else {
       this.selectedService = service;
     }
+
+    this.syncProfessionalStepState();
+    this.selectedDate = null;
+    this.selectedTime = null;
   }
 
   // ─── Step 1: Professional selection ───
@@ -236,6 +240,20 @@ export class SchedulingComponent implements OnInit {
     });
   }
 
+  get availableProfessionals(): CompanyEmployee[] {
+    if (!this.selectedService?.id) {
+      return this.professionals;
+    }
+
+    const linkedProfessionals = this.professionals.filter((professional) =>
+      professional.services?.some((service) => service.id === this.selectedService?.id),
+    );
+
+    return linkedProfessionals.length > 0
+      ? linkedProfessionals
+      : this.professionals;
+  }
+
   // ─── Data loading ───
 
   private loadCompany() {
@@ -264,13 +282,7 @@ export class SchedulingComponent implements OnInit {
           this.professionals = result.employeers ?? [];
           this.openingHours = result.openingHours ?? [];
 
-          // Auto-select if only one professional
-          if (this.professionals.length === 1) {
-            this.skipProfessionalStep = true;
-            this.selectedProfessional = this.professionals[0];
-          }
-
-          this.buildStepMap();
+          this.syncProfessionalStepState();
           this.isLoading = false;
           this.cdr.markForCheck();
         },
@@ -322,6 +334,30 @@ export class SchedulingComponent implements OnInit {
           this.toastr.error(msg);
         },
       });
+  }
+
+  private syncProfessionalStepState(): void {
+    const availableProfessionals = this.availableProfessionals;
+
+    if (availableProfessionals.length === 1) {
+      this.selectedProfessional = availableProfessionals[0];
+      this.noPreferenceSelected = false;
+    } else if (
+      this.selectedProfessional &&
+      !availableProfessionals.some(
+        (professional) => professional.userId === this.selectedProfessional?.userId,
+      )
+    ) {
+      this.selectedProfessional = null;
+    }
+
+    this.skipProfessionalStep = availableProfessionals.length === 1;
+
+    if (this.skipProfessionalStep && this.currentStep === 1) {
+      this.currentStep = 2;
+    }
+
+    this.buildStepMap();
   }
 
   // ─── Login modal ───

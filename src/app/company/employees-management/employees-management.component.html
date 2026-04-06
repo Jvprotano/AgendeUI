@@ -1,0 +1,164 @@
+<div class="h-100 w-100 d-flex">
+  <app-sidebar [companyId]="companyId"></app-sidebar>
+
+  <div class="company-area w-100">
+    <div class="d-flex align-items-center justify-content-between mb-3 px-1 flex-wrap gap-2">
+      <div>
+        <h4 class="fw-semibold mb-1 page-title">
+          {{ 'COMPANY.EMPLOYEES.TITLE' | translate }}
+        </h4>
+        <p class="text-muted mb-0 small">
+          {{ 'COMPANY.EMPLOYEES.SUBTITLE' | translate }}
+        </p>
+      </div>
+      <button
+        class="btn btn-gradient btn-sm d-flex align-items-center gap-2"
+        (click)="openCreateModal()"
+        [disabled]="!canCreateEmployee"
+      >
+        <i class="bi bi-plus-lg"></i>
+        {{ 'COMPANY.EMPLOYEES.ADD' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="!canCreateEmployee && !isLoading" class="setup-alert mb-3 px-1">
+      <div class="setup-alert__content">
+        <i class="bi bi-info-circle"></i>
+        <span>{{ 'COMPANY.EMPLOYEES.ADD_DISABLED' | translate }}</span>
+      </div>
+      <button class="btn btn-outline-secondary btn-sm" (click)="goToServices()">
+        {{ 'COMPANY.EMPLOYEES.GO_TO_SERVICES' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="showFilter" class="mb-3 px-1">
+      <div class="search-box">
+        <i class="bi bi-search search-icon"></i>
+        <input
+          type="text"
+          class="form-control search-input"
+          [placeholder]="'COMPANY.EMPLOYEES.SEARCH' | translate"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center loading-area">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading && employees.length === 0" class="empty-state text-center">
+      <i class="bi bi-people empty-icon"></i>
+      <h5 class="mt-3 fw-semibold">
+        {{
+          (canCreateEmployee
+            ? 'COMPANY.EMPLOYEES.EMPTY_TITLE'
+            : 'COMPANY.EMPLOYEES.EMPTY_TITLE_NO_SERVICES') | translate
+        }}
+      </h5>
+      <p class="text-muted mb-4">
+        {{
+          (canCreateEmployee
+            ? 'COMPANY.EMPLOYEES.EMPTY_DESC'
+            : 'COMPANY.EMPLOYEES.EMPTY_DESC_NO_SERVICES') | translate
+        }}
+      </p>
+      <button
+        *ngIf="canCreateEmployee"
+        class="btn btn-gradient"
+        (click)="openCreateModal()"
+      >
+        <i class="bi bi-plus-lg me-2"></i>
+        {{ 'COMPANY.EMPLOYEES.ADD_FIRST' | translate }}
+      </button>
+      <button
+        *ngIf="!canCreateEmployee"
+        class="btn btn-outline-secondary"
+        (click)="goToServices()"
+      >
+        {{ 'COMPANY.EMPLOYEES.GO_TO_SERVICES' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && employees.length > 0 && filteredEmployees.length === 0" class="text-center py-5">
+      <i class="bi bi-search text-muted" style="font-size: 2rem;"></i>
+      <p class="text-muted mt-2">{{ 'COMPANY.EMPLOYEES.NO_RESULTS' | translate }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && filteredEmployees.length > 0" class="row g-3 px-1">
+      <div *ngFor="let employee of filteredEmployees" class="col-12 col-md-6 col-xl-4">
+        <div class="employee-card">
+          <div class="employee-card__header">
+            <div class="employee-profile">
+              <img
+                *ngIf="employee.userImageUrl"
+                class="employee-avatar"
+                [src]="employee.userImageUrl"
+                [alt]="employee.userName || employee.userEmail || ''"
+                loading="lazy"
+              />
+              <div *ngIf="!employee.userImageUrl" class="employee-avatar employee-avatar--placeholder">
+                <i class="bi bi-person"></i>
+              </div>
+
+              <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <h6 class="fw-semibold mb-0 service-name">
+                    {{ employee.userName || employee.userEmail }}
+                  </h6>
+                  <span *ngIf="employee.isOwner" class="badge-owner">
+                    {{ 'COMPANY.EMPLOYEES.OWNER' | translate }}
+                  </span>
+                </div>
+                <p class="employee-email mb-0">{{ employee.userEmail }}</p>
+              </div>
+            </div>
+
+            <div class="d-flex gap-1 flex-shrink-0">
+              <button
+                class="btn btn-icon"
+                (click)="openEditModal(employee)"
+                [title]="'COMPANY.EMPLOYEES.EDIT' | translate"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button
+                class="btn btn-icon btn-icon-danger"
+                (click)="confirmDelete(employee)"
+                [title]="'COMPANY.EMPLOYEES.DELETE' | translate"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <p *ngIf="employee.description" class="text-muted small mb-3 employee-desc">
+            {{ employee.description }}
+          </p>
+
+          <div class="employee-services">
+            <div class="employee-services__title">
+              <span>{{ 'COMPANY.EMPLOYEES.SERVICES' | translate }}</span>
+              <span class="employee-services__count">
+                {{ getEmployeeServiceCount(employee) }}
+              </span>
+            </div>
+
+            <div *ngIf="employee.services?.length; else noServices" class="employee-services__list">
+              <span *ngFor="let service of employee.services" class="service-badge">
+                {{ service.name }}
+              </span>
+            </div>
+
+            <ng-template #noServices>
+              <p class="employee-services__empty mb-0">
+                {{ 'COMPANY.EMPLOYEES.NO_SERVICE_LINKS' | translate }}
+              </p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

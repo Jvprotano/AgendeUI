@@ -3,7 +3,11 @@ import { Observable } from 'rxjs';
 import { BaseService } from '../../services/base.service';
 import { Company, ScheduleStatus } from '../models/company';
 import { ServiceOffered } from '../../scheduling/models/service_offered';
-import { CompanyEmployee } from '../models/company-employee';
+import {
+  CompanyEmployee,
+  CompanyEmployeeRequest,
+  UpdateEmployeeServicesRequest,
+} from '../models/company-employee';
 import { OpeningHours } from '../models/opening_hours';
 import { PaginatedResult } from '../../shared/interfaces/api-response.interface';
 
@@ -67,12 +71,30 @@ export class CompanyService extends BaseService {
     return this.put(`company/${id}/schedule-status`, { scheduleStatus });
   }
 
-  addEmployee(companyId: string, employee: CompanyEmployee): Observable<void> {
+  addEmployee(
+    companyId: string,
+    employee: CompanyEmployeeRequest,
+  ): Observable<CompanyEmployee> {
     return this.post(`company/${companyId}/employees`, employee);
   }
 
   removeEmployee(companyId: string, userId: string): Observable<void> {
     return this.delete(`company/${companyId}/employees/${userId}`);
+  }
+
+  getEmployeeServices(
+    companyId: string,
+    userId: string,
+  ): Observable<ServiceOffered[]> {
+    return this.get(`company/${companyId}/employees/${userId}/services`);
+  }
+
+  updateEmployeeServices(
+    companyId: string,
+    userId: string,
+    payload: UpdateEmployeeServicesRequest,
+  ): Observable<void> {
+    return this.put(`company/${companyId}/employees/${userId}/services`, payload);
   }
 
   addService(

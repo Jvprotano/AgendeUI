@@ -25,6 +25,15 @@
       <i class="bi-briefcase menu-icon fs-3"></i>
     </li>
     <li
+      ngbTooltip="Profissionais"
+      placement="right"
+      [routerLink]="['/company', companyId, 'employees']"
+      routerLinkActive="active"
+      class="menu-item"
+    >
+      <i class="bi-people menu-icon fs-3"></i>
+    </li>
+    <li
       ngbTooltip="Editar Empresa"
       placement="right"
       [routerLink]="['/company', companyId, 'edit']"
