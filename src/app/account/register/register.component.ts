@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormControlName, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, fromEvent, merge } from 'rxjs';
+import { Observable, Subject, fromEvent, merge, take, takeUntil } from 'rxjs';
 import { AppUser } from '../../user/models/user';
 import { AccountService } from '../services/account.service';
 import { ValidationMessages, GenericValidator, DisplayMessage } from '../../utils/generic-form-validation';
@@ -31,6 +31,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   validationMessages: ValidationMessages;
   genericValidator: GenericValidator;
   displayMessage: DisplayMessage = {};
+  private destroy$ = new Subject<void>();
 
   unsavedChanges: boolean = true;
 
@@ -41,30 +42,19 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private translate: TranslateService
   ) {
 
-    this.validationMessages = {
-      email: {
-        required: translate.instant('REGISTER.FORM.EMAIL.REQUIRED'),
-        email: translate.instant('REGISTER.FORM.EMAIL.INVALID')
-      },
-      password: {
-        required: translate.instant('REGISTER.FORM.PASSWORD.REQUIRED'),
-        minlength: translate.instant('REGISTER.FORM.PASSWORD.MIN_LENGTH'),
-        maxlength: translate.instant('REGISTER.FORM.PASSWORD.MAX_LENGTH'),
-        pattern: translate.instant('REGISTER.FORM.PASSWORD.PATTERN')
-      },
-      confirmPassword: {
-        required: translate.instant('REGISTER.FORM.CONFIRM_PASSWORD.REQUIRED'),
-        minlength: translate.instant('REGISTER.FORM.PASSWORD.MIN_LENGTH'),
-        maxlength: translate.instant('REGISTER.FORM.PASSWORD.MAX_LENGTH'),
-        pattern: translate.instant('REGISTER.FORM.PASSWORD.PATTERN'),
-        match: translate.instant('REGISTER.FORM.CONFIRM_PASSWORD.NOT_MATCHING')
-      }
-    };
-
+    this.validationMessages = {};
     this.genericValidator = new GenericValidator(this.validationMessages);
   }
 
   ngOnInit(): void {
+    this.loadValidationMessages();
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.loadValidationMessages();
+        this.displayMessage = this.genericValidator.processMessages(this.registerForm);
+      });
+
     // Password must contain:
     // - At least 8 characters
     // - Maximum 30 characters
@@ -99,7 +89,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     let controlBlurs: Observable<any>[] = this.formInputElements
       .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
 
-    merge(...controlBlurs).subscribe(() => {
+    merge(...controlBlurs).pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.displayMessage = this.genericValidator.processMessages(this.registerForm);
     });
 
@@ -144,6 +134,46 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         this.translate.instant('REGISTER.SUCCESS.MESSAGE'),
         this.translate.instant('REGISTER.SUCCESS.TITLE')
       );
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadValidationMessages(): void {
+    this.translate.get([
+      'REGISTER.FORM.EMAIL.REQUIRED',
+      'REGISTER.FORM.EMAIL.INVALID',
+      'REGISTER.FORM.PASSWORD.REQUIRED',
+      'REGISTER.FORM.PASSWORD.MIN_LENGTH',
+      'REGISTER.FORM.PASSWORD.MAX_LENGTH',
+      'REGISTER.FORM.PASSWORD.PATTERN',
+      'REGISTER.FORM.CONFIRM_PASSWORD.REQUIRED',
+      'REGISTER.FORM.CONFIRM_PASSWORD.NOT_MATCHING',
+    ]).pipe(take(1)).subscribe((t) => {
+      this.validationMessages = {
+        email: {
+          required: t['REGISTER.FORM.EMAIL.REQUIRED'],
+          email: t['REGISTER.FORM.EMAIL.INVALID'],
+        },
+        password: {
+          required: t['REGISTER.FORM.PASSWORD.REQUIRED'],
+          minlength: t['REGISTER.FORM.PASSWORD.MIN_LENGTH'],
+          maxlength: t['REGISTER.FORM.PASSWORD.MAX_LENGTH'],
+          pattern: t['REGISTER.FORM.PASSWORD.PATTERN'],
+        },
+        confirmPassword: {
+          required: t['REGISTER.FORM.CONFIRM_PASSWORD.REQUIRED'],
+          minlength: t['REGISTER.FORM.PASSWORD.MIN_LENGTH'],
+          maxlength: t['REGISTER.FORM.PASSWORD.MAX_LENGTH'],
+          pattern: t['REGISTER.FORM.PASSWORD.PATTERN'],
+          match: t['REGISTER.FORM.CONFIRM_PASSWORD.NOT_MATCHING'],
+        },
+      };
+
+      this.genericValidator = new GenericValidator(this.validationMessages);
     });
   }
 }

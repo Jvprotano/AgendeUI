@@ -3,7 +3,7 @@
     "MENU": {
       "PRICING": "Precios",
       "FEATURES": "Funcionalidades",
-      "ACCESS_BUSINESS": "Acceder a mi negocio",
+      "ACCESS_BUSINESS": "Mis empresas",
       "LOGOUT": "Salir",
       "TRY_FREE": "Prueba gratis",
       "LOGIN": "Iniciar sesión"
@@ -166,6 +166,7 @@
       "FREE_TRIAL": "7 días de prueba gratis sin necesidad de tarjeta de crédito"
     },
     "GET_STARTED": "Comenzar",
+    "VIEW_PLANS": "Ver planes",
     "TRY_FREE": "Prueba gratuita",
     "SERVICES": {
       "TITLE": "Servicios Disponibles",

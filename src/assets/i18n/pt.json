@@ -5,10 +5,10 @@
       "HOME": "Início",
       "SERVICES": "Serviços",
       "FEATURES": "Funcionalidades",
-      "ACCESS_BUSINESS": "Acessar meu negócio",
+      "ACCESS_BUSINESS": "Minhas empresas",
       "LOGOUT": "Sair",
       "TRY_FREE": "Experimente grátis",
-      "LOGIN": "Login"
+      "LOGIN": "Entrar"
     }
   },
   "AUTH": {
@@ -168,6 +168,7 @@
       "FREE_TRIAL": "7 dias de teste grátis sem necessidade de cartão de crédito"
     },
     "GET_STARTED": "Comece Agora",
+    "VIEW_PLANS": "Ver planos",
     "TRY_FREE": "Experimente grátis",
     "SERVICES": {
       "TITLE": "Serviços Disponíveis",

@@ -3,10 +3,10 @@
     "MENU": {
       "PRICING": "Prices",
       "FEATURES": "Features",
-      "ACCESS_BUSINESS": "Access my business",
+      "ACCESS_BUSINESS": "My businesses",
       "LOGOUT": "Logout",
       "TRY_FREE": "Try for free",
-      "LOGIN": "Login to your account"
+      "LOGIN": "Sign in"
     }
   },
   "AUTH": {
@@ -166,6 +166,7 @@
       "FREE_TRIAL": "7-day free trial with no upfront credit card registration"
     },
     "GET_STARTED": "Get Started",
+    "VIEW_PLANS": "View plans",
     "TRY_FREE": "Try Free",
     "SERVICES": {
       "TITLE": "Available Services",

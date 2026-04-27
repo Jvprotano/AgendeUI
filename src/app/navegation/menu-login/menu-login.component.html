@@ -1,26 +1,34 @@
-<ul class="navbar-nav" *ngIf="isLoggedIn$ | async">
-  <li class="nav-item access">
-    <a class="btn-access" routerLink="user/companies">
-      <i class="bi bi-building me-1"></i>{{ 'NAV.MENU.ACCESS_BUSINESS' | translate }}
+<ul class="navbar-nav auth-menu" *ngIf="isLoggedIn$ | async">
+  <li class="nav-item">
+    <a class="btn-auth btn-auth-primary" routerLink="/user/companies">
+      <i class="bi bi-building"></i>
+      <span>{{ 'NAV.MENU.ACCESS_BUSINESS' | translate }}</span>
     </a>
   </li>
-  <li class="nav-item logout">
-    <a (click)="logout()" [title]="'NAV.MENU.LOGOUT' | translate" id="btnLogout">
+  <li class="nav-item">
+    <button
+      type="button"
+      (click)="logout()"
+      [title]="'NAV.MENU.LOGOUT' | translate"
+      class="btn-logout"
+      [attr.aria-label]="'NAV.MENU.LOGOUT' | translate"
+    >
       <i class="bi bi-box-arrow-left"></i>
-    </a>
+    </button>
   </li>
 </ul>
 
-<ul class="navbar-nav" *ngIf="!(isLoggedIn$ | async)">
+<ul class="navbar-nav auth-menu" *ngIf="!(isLoggedIn$ | async)">
   <li class="nav-item">
-    <button class="btn btn-outline-conci" routerLink="/account/register" routerLinkActive="active">
-      {{ 'NAV.MENU.TRY_FREE' | translate }}
-    </button>
-  </li>
-  <li class="nav-item access">
-    <a [routerLink]="['/account/login']" class="btn-access" routerLinkActive="router-link-active">
+    <a [routerLink]="['/account/login']" class="btn-auth btn-auth-ghost" routerLinkActive="router-link-active">
       <i class="bi bi-person"></i>
-      <span class="ms-1">{{ 'NAV.MENU.LOGIN' | translate }}</span>
+      <span>{{ 'NAV.MENU.LOGIN' | translate }}</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="btn-auth btn-auth-primary" routerLink="/account/register" routerLinkActive="active">
+      <i class="bi bi-person-plus"></i>
+      <span>{{ 'NAV.MENU.TRY_FREE' | translate }}</span>
     </a>
   </li>
 </ul>

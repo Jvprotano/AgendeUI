@@ -8,9 +8,18 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="modal-body company-modal">
+      <div class="step-description" *ngIf="currentStep === 0">
+        <p>Preencha os dados da empresa e defina o link de agendamento.</p>
+      </div>
+      <div class="step-description" *ngIf="currentStep === 1">
+        <p>Configure os horários de atendimento iniciais.</p>
+      </div>
+
       <app-basic-info
         *ngIf="currentStep === 0"
-        [form]="form">
+        [form]="form"
+        [showCard]="false"
+        [horizontal]="true">
       </app-basic-info>
 
       <app-business-sector
@@ -36,13 +45,14 @@
           color="primary"
           type="button"
           (click)="onNextStep()">
-          Pr&oacute;ximo
+          Próximo
           <mat-icon>arrow_forward</mat-icon>
         </button>
         <button
           *ngIf="currentStep === 1"
           class="btn btn-success"
-          type="submit">
+          type="submit"
+          [disabled]="!form.valid">
           Criar
         </button>
       </div>

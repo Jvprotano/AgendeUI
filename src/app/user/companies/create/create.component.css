@@ -5,13 +5,15 @@ label {
 }
 
 .company-modal {
-  padding: 2rem;
+  padding: 1.75rem 2rem 1rem;
   background-color: var(--bg-surface);
+  max-height: 72vh;
+  overflow-y: auto;
 }
 
 .modal-header {
   border: none;
-  padding: 2rem 2rem 1rem;
+  padding: 1.5rem 2rem 1rem;
   background-color: var(--bg-elevated);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   border-bottom: 1px solid var(--border-default);
@@ -48,8 +50,22 @@ label {
 }
 
 ::ng-deep .modal-dialog {
-  max-width: 800px !important;
+  max-width: 860px !important;
   margin-top: 2rem !important;
+}
+
+.step-description {
+  margin: 0 0 1rem;
+}
+
+.step-description p {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
 }
 
 ::ng-deep .mat-mdc-progress-bar {
@@ -59,7 +75,7 @@ label {
 .modal-footer {
   background-color: var(--bg-elevated);
   border-top: 1px solid var(--border-default);
-  padding: 1.25rem 2rem;
+  padding: 1rem 2rem 1.25rem;
 }
 
 .footer-actions {
@@ -94,4 +110,17 @@ label {
 .modal-footer button.btn-success:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(0, 200, 83, 0.3);
+}
+
+@media (max-width: 768px) {
+  .company-modal {
+    padding: 1rem 1rem 0.5rem;
+    max-height: 76vh;
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

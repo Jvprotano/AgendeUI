@@ -8,8 +8,9 @@
       <div #homeButtons class="home-buttons d-flex align-items-center gap-4">
         <a class="btn btn-gradient btn-lg rounded-5" [routerLink]="'/account/register'"><i
             class="bi bi-calendar-plus me-2"></i>{{ 'HOME.GET_STARTED' | translate }}</a>
-        <a class="btn btn-white btn-lg rounded-5" [routerLink]="'/account/register'"><i class="bi bi-play me-2"></i>{{
-          'HOME.TRY_FREE' | translate }}</a>
+        <a class="btn btn-hero-secondary btn-lg rounded-5" [routerLink]="['/home']" fragment="pricing">
+          <i class="bi bi-tags me-2"></i>{{ 'HOME.VIEW_PLANS' | translate }}
+        </a>
       </div>
     </div>
     <div class="col-md-6 d-flex align-items-center justify-content-center">

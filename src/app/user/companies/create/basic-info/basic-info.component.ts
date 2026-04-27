@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { environment } from '../../../../../environments/environment';
 
 export const TIMEZONE_OPTIONS = [
   { label: 'Brasília (São Paulo)', value: 'America/Sao_Paulo' },
@@ -49,7 +50,7 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
   @Input() horizontal = false;
 
   readonly timezoneOptions = TIMEZONE_OPTIONS;
-  prefix = 'agende.com/';
+  prefix = this.getSchedulingBaseUrl();
   urlErrorMessage: string | undefined;
   urlSuccessMessage: string | undefined;
   isCheckingUrl = false;
@@ -123,5 +124,11 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
         this.isCheckingUrl = false;
       },
     });
+  }
+
+  private getSchedulingBaseUrl(): string {
+    const configured = (environment.schedulingBaseUrl ?? '').trim();
+    if (!configured) return '/scheduling/';
+    return configured.endsWith('/') ? configured : `${configured}/`;
   }
 }

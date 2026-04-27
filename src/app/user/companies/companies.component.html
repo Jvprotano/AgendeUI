@@ -72,10 +72,10 @@
             </button>
             <div ngbDropdownMenu class="actions-menu">
               <a ngbDropdownItem [routerLink]="['/company', item.id, 'edit']">
-                <i class="bi bi-pencil"></i> Editar
+                <i class="bi bi-pencil"></i> Editar empresa
               </a>
               <button ngbDropdownItem (click)="copyLink(item)">
-                <i class="bi bi-link-45deg"></i> Copiar link
+                <i class="bi bi-link-45deg"></i> Copiar link de agendamento
               </button>
               <div class="menu-divider"></div>
               <button ngbDropdownItem (click)="openCloseSchedule(item.id)">
@@ -95,7 +95,7 @@
               <button
                 ngbDropdownItem
                 class="item-danger"
-                (click)="deleteCompany(item.id)"
+                (click)="deleteCompany(item)"
               >
                 <i class="bi bi-trash"></i> Remover
               </button>
@@ -112,8 +112,17 @@
         </p>
 
         <div class="company-url" *ngIf="item.schedulingUrl">
-          <i class="bi bi-globe2"></i>
-          <span>agende.com/{{ item.schedulingUrl }}</span>
+          <div class="company-url-meta">
+            <i class="bi bi-globe2"></i>
+            <span class="url-label">Link de agendamento</span>
+          </div>
+          <button type="button" class="url-copy-btn" (click)="copyLink(item)">
+            <i class="bi bi-clipboard"></i>
+            Copiar
+          </button>
+        </div>
+        <div class="company-url-value" *ngIf="item.schedulingUrl">
+          {{ buildSchedulingUrl(item.schedulingUrl) }}
         </div>
       </div>
 

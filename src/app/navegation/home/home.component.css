@@ -39,6 +39,17 @@
   color: var(--text-secondary);
 }
 
+.btn-hero-secondary {
+  background: rgba(12, 14, 20, 0.55);
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-default) !important;
+}
+
+.btn-hero-secondary:hover {
+  background: rgba(12, 14, 20, 0.75);
+  border-color: var(--accent-muted) !important;
+}
+
 /* ─── Pricing section ─── */
 .container-price {
   background: url('/assets/barbeiro.png') bottom fixed;

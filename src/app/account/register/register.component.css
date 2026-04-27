@@ -115,6 +115,7 @@
 .circle-2 { width: 180px; height: 180px; bottom: -40px; left: -40px; }
 
 .invalid-feedback {
+  display: block;
   color: var(--error);
   font-size: var(--font-size-sm);
   margin-top: var(--space-sm);

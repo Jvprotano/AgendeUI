@@ -5,14 +5,40 @@ export class PasswordMatcher {
     const passwordControl = control.get('password');
     const confirmPasswordControl = control.get('confirmPassword');
 
-    if (passwordControl?.pristine || confirmPasswordControl?.pristine) {
+    if (!passwordControl || !confirmPasswordControl) {
       return null;
     }
 
-    if (passwordControl?.value === confirmPasswordControl?.value) {
+    const currentErrors = confirmPasswordControl.errors || {};
+    const hasOnlyMatchError =
+      Object.keys(currentErrors).length === 1 && !!currentErrors['match'];
+
+    const clearMatchError = () => {
+      if (!currentErrors['match']) return;
+
+      const { match, ...otherErrors } = currentErrors;
+      confirmPasswordControl.setErrors(
+        Object.keys(otherErrors).length ? otherErrors : null,
+      );
+    };
+
+    if (passwordControl.pristine || confirmPasswordControl.pristine) {
+      if (hasOnlyMatchError) {
+        clearMatchError();
+      }
       return null;
     }
 
-    confirmPasswordControl?.setErrors({ match: true });
+    if (passwordControl.value === confirmPasswordControl.value) {
+      clearMatchError();
+      return null;
+    }
+
+    confirmPasswordControl.setErrors({
+      ...currentErrors,
+      match: true,
+    });
+
+    return null;
   }
 }

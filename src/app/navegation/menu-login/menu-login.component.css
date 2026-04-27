@@ -1,47 +1,69 @@
-.btn-access {
+.auth-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-auth {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 38px;
+  padding: 0 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   text-decoration: none;
-  color: var(--text-primary);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  padding-left: 30px;
-  transition: color var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
 
-.logout {
-  padding-left: 10px;
-  padding-top: 7px;
-}
-
-.nav-item.access {
-  padding-top: 10px;
-}
-
-.btn-access:hover {
+.btn-auth-primary {
+  border: 1px solid var(--accent-muted);
+  background: var(--accent-subtle);
   color: var(--accent);
 }
 
-.dropdown-item:active {
-  background-color: transparent;
+.btn-auth-primary:hover {
+  background: var(--accent-muted);
+  color: var(--accent-hover);
 }
 
-.dropdown-item:hover {
-  background-color: var(--bg-hover);
+.btn-auth-ghost {
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-auth-ghost:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
-#btnLogout {
+.btn-logout {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.08);
   color: var(--error);
-  font-size: x-large;
-  transition: color var(--transition-fast);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
-#btnLogout:hover {
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.4);
   color: var(--status-cancelled);
 }
 
 @media (max-width: 480px) {
-  .btn-access {
-    padding-top: 0;
-    padding-right: 0;
+  .btn-auth {
+    height: 34px;
+    padding: 0 0.7rem;
   }
 }

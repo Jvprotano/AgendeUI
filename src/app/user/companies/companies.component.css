@@ -176,7 +176,7 @@
   box-shadow: var(--shadow-lg) !important;
 }
 
-::ng-deep .actions-menu button {
+::ng-deep .actions-menu .dropdown-item {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -186,11 +186,12 @@
   background: transparent !important;
   width: 100%;
   border: none;
+  text-decoration: none;
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-::ng-deep .actions-menu button:hover {
+::ng-deep .actions-menu .dropdown-item:hover {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
@@ -235,9 +236,48 @@
 .company-url {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: space-between;
+  gap: 0.5rem;
   font-size: var(--font-size-xs);
   color: var(--text-tertiary);
+}
+
+.company-url-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.url-label {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.company-url-value {
+  margin-top: 0.35rem;
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  overflow-wrap: anywhere;
+}
+
+.url-copy-btn {
+  border: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  height: 28px;
+  padding: 0 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 11px;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.url-copy-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
 /* ─── Stats row ─── */

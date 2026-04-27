@@ -7,6 +7,7 @@ import { CreateComponent } from './create/create.component';
 import { CompanyService } from '../../company/services/company.service';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-companies',
@@ -22,6 +23,8 @@ import { take } from 'rxjs';
   styleUrls: ['./companies.component.css'],
 })
 export class CompaniesComponent implements OnInit {
+  private readonly schedulingBaseUrl = this.getSchedulingBaseUrl();
+
   constructor(
     private companyService: CompanyService,
     private toastr: ToastrService,
@@ -63,10 +66,21 @@ export class CompaniesComponent implements OnInit {
     return item.scheduleStatus === ScheduleStatus.OPEN ? 'Aberta' : 'Fechada';
   }
 
+  buildSchedulingUrl(schedulingUrl?: string): string {
+    if (!schedulingUrl) return '';
+    const slug = schedulingUrl.replace(/^\/+/, '');
+    return `${this.schedulingBaseUrl}${slug}`;
+  }
+
   copyLink(item: Company): void {
-    const url = `agende.com/${item.schedulingUrl}`;
+    const url = this.buildSchedulingUrl(item.schedulingUrl);
+    if (!url) {
+      this.toastr.warning('Esta empresa ainda não possui link de agendamento.');
+      return;
+    }
+
     navigator.clipboard.writeText(url).then(() => {
-      this.toastr.success('Link copiado!');
+      this.toastr.success('Link de agendamento copiado!');
     });
   }
 
@@ -94,13 +108,18 @@ export class CompaniesComponent implements OnInit {
       });
   }
 
-  deleteCompany(id: string): void {
+  deleteCompany(company: Company): void {
+    const confirmed = window.confirm(
+      `Tem certeza que deseja remover a empresa "${company.name}"? Esta ação não pode ser desfeita.`,
+    );
+    if (!confirmed) return;
+
     this.companyService
-      .remove(id)
+      .remove(company.id)
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.companies = this.companies.filter((c) => c.id !== id);
+          this.companies = this.companies.filter((c) => c.id !== company.id);
           this.toastr.success('Empresa removida com sucesso!');
         },
         error: () => {
@@ -131,5 +150,11 @@ export class CompaniesComponent implements OnInit {
   onModalClosed(): void {
     this.showCreateModal = false;
     this.loadCompanies();
+  }
+
+  private getSchedulingBaseUrl(): string {
+    const configured = (environment.schedulingBaseUrl ?? '').trim();
+    if (!configured) return '/scheduling/';
+    return configured.endsWith('/') ? configured : `${configured}/`;
   }
 }

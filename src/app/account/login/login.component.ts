@@ -23,7 +23,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   imports: [
     CommonModule,
     FormsModule,
-    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     TranslateModule,
@@ -119,6 +118,11 @@ export class LoginComponent implements OnInit, OnDestroy {
           }
           this.errorResponse(err);
         },
+        complete: () => {
+          // Safety net: ensures loading state is reset for streams that complete
+          // without emitting error/next (e.g., interceptor returning EMPTY).
+          this.isDisabledLogin = false;
+        },
       });
     } else {
       this.isDisabledLogin = false;
@@ -155,13 +159,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
-  errorResponse(err: any) {
+  errorResponse(_: any) {
+    // Toast message is handled by ErrorHandlingService.
     this.isDisabledLogin = false;
-    if (err?.error) {
-      this.toastr.error(err.error, 'Ops! :(');
-    } else if (err?.message) {
-      this.toastr.error(err.message, 'Ops! :(');
-    }
   }
 
   togglePasswordVisibility() {

@@ -32,7 +32,7 @@ export const authInterceptor: HttpInterceptorFn = (
       headers: req.headers.set('Authorization', `Bearer ${token}`),
     });
   } else if (token && isTokenExpired(token)) {
-    // Token exists but is expired — trigger session expired flow
+    // Token exists but is expired - trigger session expired flow
     accountService.handleSessionExpired();
     translate.get('AUTH.SESSION_EXPIRED').subscribe((msg) => {
       toastr.warning(msg, '', { positionClass: 'toast-top-center' });
@@ -43,9 +43,16 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      const isLoginRequest = req.url.includes('/login');
+
       switch (error.status) {
         case 401:
-          // Exclusive 401 handling — do NOT re-throw
+          if (isLoginRequest) {
+            // Invalid credentials must be handled by the login flow.
+            return throwError(() => error);
+          }
+
+          // Exclusive 401 handling - do NOT re-throw
           accountService.handleSessionExpired();
           translate.get('AUTH.SESSION_EXPIRED').subscribe((msg) => {
             toastr.warning(msg, '', { positionClass: 'toast-top-center' });

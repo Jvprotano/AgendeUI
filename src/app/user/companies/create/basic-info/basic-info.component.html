@@ -35,7 +35,7 @@
             <mat-label>Nome da Empresa</mat-label>
             <input matInput formControlName="name" required>
             <mat-error *ngIf="form.get('name')?.hasError('required')">
-              Nome da empresa √© obrigat√≥rio
+              Nome da empresa È obrigatÛrio
             </mat-error>
           </mat-form-field>
 
@@ -46,7 +46,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="half-width">
-              <mat-label>Fuso Hor√°rio</mat-label>
+              <mat-label>Fuso Hor·rio</mat-label>
               <mat-select formControlName="timeZoneId">
                 <mat-option *ngFor="let tz of timezoneOptions" [value]="tz.value">
                   {{ tz.label }}
@@ -66,7 +66,7 @@
         <!-- Timezone (vertical layout only) -->
         <div class="form-section" *ngIf="!horizontal && form.get('timeZoneId')">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Fuso Hor√°rio</mat-label>
+            <mat-label>Fuso Hor·rio</mat-label>
             <mat-select formControlName="timeZoneId">
               <mat-option *ngFor="let tz of timezoneOptions" [value]="tz.value">
                 {{ tz.label }}
@@ -79,7 +79,7 @@
         <div class="form-section" [class.url-section-compact]="horizontal">
           <h3 class="section-title" *ngIf="!horizontal">URL de Agendamento</h3>
           <p class="section-description" *ngIf="!horizontal">
-            Este √© o link que seus clientes usar√£o para agendar.
+            Este È o link que seus clientes usar„o para agendar.
           </p>
 
           <div class="url-input-group">
@@ -100,7 +100,7 @@
               </mat-hint>
               <mat-error *ngIf="form.get('schedulingUrl')?.hasError('required')" class="url-status error">
                 <mat-icon class="status-icon">error</mat-icon>
-                URL de agendamento √© obrigat√≥ria
+                URL de agendamento È obrigatÛria
               </mat-error>
               <mat-error *ngIf="urlErrorMessage && !form.get('schedulingUrl')?.hasError('required')" class="url-status error">
                 <mat-icon class="status-icon">error</mat-icon>
