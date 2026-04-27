@@ -1,12 +1,36 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <h3 class="mb-3">Dias da Semana</h3>
-  <div class="form-check mb-2" formArrayName="weekdays">
-    <div class="row">
-      <div class="align-items-center col-md-3 d-flex form-check form-switch fs-6 ms-1 mt-2" *ngFor="let control of $any(this.form.get('weekdays'))['controls']; let i = index">
-        <input class="form-check-input me-2" type="checkbox" [formControlName]="i" (change)="weekdays[i].checked = !weekdays[i].checked"/>
-        <label class="form-check-label mb-0"> {{weekdays[i].day}} </label>
+  <div class="business-sector-container">
+    <h5 class="mb-4 fw-bold text-dark">Horários de Funcionamento</h5>
+
+    <div class="weekdays-grid">
+      <div class="weekday-item" *ngFor="let day of weekdays; let i = index" formArrayName="weekdays">
+        <div class="day-header">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" [id]="'day-' + i"
+              [checked]="day.checked" (change)="day.checked = $any($event.target).checked"/>
+            <label class="form-check-label" [for]="'day-' + i">
+              {{ day.day }}
+            </label>
+          </div>
+        </div>
+
+        <div class="day-times" *ngIf="day.checked">
+          <div class="time-inputs">
+            <div class="time-group">
+              <label class="time-label">Abertura</label>
+              <input type="time" class="form-control form-control-sm"
+                (change)="day.intervals[0].start = $any($event.target).value"
+                [value]="day.intervals[0].start">
+            </div>
+            <div class="time-group">
+              <label class="time-label">Fechamento</label>
+              <input type="time" class="form-control form-control-sm"
+                (change)="day.intervals[0].end = $any($event.target).value"
+                [value]="day.intervals[0].end">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary">Salvar</button>
 </form>

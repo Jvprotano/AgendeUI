@@ -7,21 +7,22 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     {
         path: 'scheduling',
-        loadChildren: () => import('./scheduling/scheduling.module').then(m => m.SchedulingModule)
+        loadChildren: () => import('./scheduling/scheduling.routes').then(m => m.schedulingRoutes)
     },
     {
         path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
+        loadChildren: () => import('./account/account.route').then(m => m.accountRoutes)
     },
     {
         path: 'user',
-        loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+        loadChildren: () => import('./user/user.route').then(m => m.userRoutes)
     },
     {
         path: 'company',
-        loadChildren: () => import('./company/company.module').then(m => m.CompanyModule)
+        loadChildren: () => import('./company/company.routes').then(m => m.companyRoutes)
     },
     { path: 'not-found', component: NotFoundComponent },
     { path: '**', component: NotFoundComponent }
 ];
+
 

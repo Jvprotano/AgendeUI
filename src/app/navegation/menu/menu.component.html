@@ -1,128 +1,159 @@
-<header *ngIf="mobile && !hideHeader">
-  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-    <div class="container flex-row justify-content-around">
-
-      <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" data-toggle="collapse"
-        data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngbCollapse]="isCollapsed">
-        <ul class="navbar-nav flex-grow-1">
-          <li class="nav-item">
-            <a class="nav-link text-dark" routerLink="/home">{{ 'NAV.MENU.PRICING' | translate }}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" routerLink="/home">{{ 'NAV.MENU.FEATURES' | translate }}</a>
-          </li>
-        </ul>
-      </div>
-
-      <a class="navbar-brand" routerLink="/home">Agende</a>
-
-      <div class="d-flex align-items-center">
-        <div class="dropdown me-3" ngbDropdown>
-          <button class="btn btn-link dropdown-toggle" ngbDropdownToggle type="button" id="languageDropdownMobile">
-            <img [src]="'assets/flags/' + currentLang + '.svg'" alt="Current language flag" width="24" height="16"
-              class="me-1">
-          </button>
-          <ul class="dropdown-menu" ngbDropdownMenu>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('pt')">
-                <img src="assets/flags/pt.svg" alt="Portuguese" width="24" height="16" class="me-2">
-                Português
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('en')">
-                <img src="assets/flags/en.svg" alt="English" width="24" height="16" class="me-2">
-                English
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('es')">
-                <img src="assets/flags/es.svg" alt="Spanish" width="24" height="16" class="me-2">
-                Español
-              </a>
-            </li>
-          </ul>
-        </div>
-        <app-menu-login></app-menu-login>
-      </div>
-
-    </div>
-  </nav>
-</header>
-
-<header *ngIf="!mobile && !hideHeader">
-  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-    <div class="container py-1 px-4">
+<header *ngIf="mobile && !hideHeader" class="navbar-mobile">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+    <div class="container-fluid px-3 px-md-4">
       <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="d-flex align-items-center">
-          <div class="icon-header align-items-center d-flex justify-center justify-content-center me-2 rounded-2">
-            <i class="text-white" data-fa-i2svg=""><svg class="svg-inline--fa fa-scissors" aria-hidden="true"
-                focusable="false" data-prefix="fas" data-icon="scissors" role="img" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512" data-fa-i2svg="">
-                <path fill="currentColor"
-                  d="M256 192l-39.5-39.5c4.9-12.6 7.5-26.2 7.5-40.5C224 50.1 173.9 0 112 0S0 50.1 0 112s50.1 112 112 112c14.3 0 27.9-2.7 40.5-7.5L192 256l-39.5 39.5c-12.6-4.9-26.2-7.5-40.5-7.5C50.1 288 0 338.1 0 400s50.1 112 112 112s112-50.1 112-112c0-14.3-2.7-27.9-7.5-40.5L499.2 76.8c7.1-7.1 7.1-18.5 0-25.6c-28.3-28.3-74.1-28.3-102.4 0L256 192zm22.6 150.6L396.8 460.8c28.3 28.3 74.1 28.3 102.4 0c7.1-7.1 7.1-18.5 0-25.6L342.6 278.6l-64 64zM64 112a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm48 240a48 48 0 1 1 0 96 48 48 0 1 1 0-96z">
-                </path>
-              </svg></i>
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/home">
+          <div class="icon-header-mobile d-flex align-items-center justify-content-center rounded-2">
+            <i class="bi bi-scissors text-white"></i>
           </div>
-          <a class="navbar-brand" routerLink="/home">Agende</a>
-        </div>
-        <div>
-          <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" data-toggle="collapse"
-            data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+          <span class="fw-bold">Agende</span>
+        </a>
 
-          <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngbCollapse]="isCollapsed"
-            *ngIf="!(isLoggedIn$ | async)">
-            <ul class="navbar-nav flex-grow-1 gap-4">
-              <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="/home">{{ 'NAV.MENU.HOME' | translate }}</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="/home">{{ 'NAV.MENU.SERVICES' | translate }}</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="/home">{{ 'NAV.MENU.PRICING' | translate }}</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="/home">{{ 'NAV.MENU.FEATURES' | translate }}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="d-flex align-items-center">
-          <div class="dropdown me-3" ngbDropdown>
-            <button class="btn btn-link dropdown-toggle" ngbDropdownToggle type="button" id="languageDropdown">
-              <img [src]="'assets/flags/' + currentLang + '.svg'" alt="Current language flag" width="24" height="16"
-                class="me-1">
+        <!-- Right side controls -->
+        <div class="d-flex align-items-center gap-2">
+          <!-- Language Selector -->
+          <div class="dropdown" ngbDropdown>
+            <button class="btn btn-sm btn-light dropdown-toggle p-2" ngbDropdownToggle type="button"
+              id="languageDropdownMobile" title="Idioma">
+              <img [src]="'assets/flags/' + currentLang + '.svg'" alt="Current language flag" width="20" height="14">
             </button>
-            <ul class="dropdown-menu" ngbDropdownMenu>
+            <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
               <li>
                 <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('pt')">
-                  <img src="assets/flags/pt.svg" alt="Portuguese" width="24" height="16" class="me-2">
+                  <img src="assets/flags/pt.svg" alt="Portuguese" width="20" height="14" class="me-2">
                   Português
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('en')">
-                  <img src="assets/flags/en.svg" alt="English" width="24" height="16" class="me-2">
+                  <img src="assets/flags/en.svg" alt="English" width="20" height="14" class="me-2">
                   English
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('es')">
-                  <img src="assets/flags/es.svg" alt="Spanish" width="24" height="16" class="me-2">
+                  <img src="assets/flags/es.svg" alt="Spanish" width="20" height="14" class="me-2">
                   Español
                 </a>
               </li>
             </ul>
           </div>
+
+          <!-- Menu Login Component -->
+          <app-menu-login></app-menu-login>
+
+          <!-- Hamburger Menu -->
+          <button class="navbar-toggler ms-2" type="button" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsible Menu -->
+      <div class="navbar-collapse collapse" [ngbCollapse]="isCollapsed">
+        <ul class="navbar-nav ms-auto mt-3 gap-2">
+          <li class="nav-item">
+            <a class="nav-link text-dark" routerLink="/home" (click)="isCollapsed = true">
+              {{ 'NAV.MENU.HOME' | translate }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" routerLink="/home" (click)="isCollapsed = true">
+              {{ 'NAV.MENU.SERVICES' | translate }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" routerLink="/home" (click)="isCollapsed = true">
+              {{ 'NAV.MENU.PRICING' | translate }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" routerLink="/home" (click)="isCollapsed = true">
+              {{ 'NAV.MENU.FEATURES' | translate }}
+            </a>
+          </li>
+          <li class="nav-item border-top pt-2 mt-2" *ngIf="isLoggedIn$ | async">
+            <a class="nav-link text-dark fw-bold" routerLink="user/companies" (click)="isCollapsed = true">
+              <i class="bi bi-building me-2"></i>{{ 'NAV.MENU.ACCESS_BUSINESS' | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<header *ngIf="!mobile && !hideHeader" class="navbar-desktop">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+    <div class="container-fluid px-4 px-lg-5">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <!-- Logo Section -->
+        <a class="navbar-brand d-flex align-items-center gap-3" routerLink="/home">
+          <div class="icon-header d-flex align-items-center justify-content-center rounded-2">
+            <i class="bi bi-scissors text-white"></i>
+          </div>
+          <span class="fw-bold fs-5">Agende</span>
+        </a>
+
+        <!-- Navigation Menu (only for non-logged-in users) -->
+        <div class="flex-grow-1 ms-5" *ngIf="!(isLoggedIn$ | async)">
+          <ul class="navbar-nav flex-row gap-4">
+            <li class="nav-item">
+              <a class="nav-link text-dark fw-500" routerLink="/home">
+                {{ 'NAV.MENU.HOME' | translate }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark fw-500" routerLink="/home">
+                {{ 'NAV.MENU.SERVICES' | translate }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark fw-500" routerLink="/home">
+                {{ 'NAV.MENU.PRICING' | translate }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark fw-500" routerLink="/home">
+                {{ 'NAV.MENU.FEATURES' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right Side Controls -->
+        <div class="d-flex align-items-center gap-3">
+          <!-- Language Selector -->
+          <div class="dropdown" ngbDropdown>
+            <button class="btn btn-sm btn-light dropdown-toggle p-2" ngbDropdownToggle type="button"
+              id="languageDropdown" title="Idioma">
+              <img [src]="'assets/flags/' + currentLang + '.svg'" alt="Current language flag" width="20" height="14">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('pt')">
+                  <img src="assets/flags/pt.svg" alt="Portuguese" width="20" height="14" class="me-2">
+                  Português
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('en')">
+                  <img src="assets/flags/en.svg" alt="English" width="20" height="14" class="me-2">
+                  English
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="switchLanguage('es')">
+                  <img src="assets/flags/es.svg" alt="Spanish" width="20" height="14" class="me-2">
+                  Español
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Menu Login Component -->
           <app-menu-login></app-menu-login>
         </div>
       </div>

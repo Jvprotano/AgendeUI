@@ -1,0 +1,39 @@
+<div class="professionals-container">
+  <!-- Header -->
+  <div class="professionals-header">
+    <div>
+      <h1>Profissionais</h1>
+      <p class="text-muted">Gerencie os profissionais da sua empresa</p>
+    </div>
+    <button class="btn btn-conci" (click)="openFormModal(null)">
+      <i class="bi bi-plus-circle me-2"></i>Adicionar Profissional
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="square-jelly-box" [fullScreen]="true">
+    <p style="color: white">Carregando profissionais...</p>
+  </ngx-spinner>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && professionals.length === 0" class="empty-state">
+    <i class="bi bi-person-slash"></i>
+    <h3>Nenhum profissional cadastrado</h3>
+    <p>Comece adicionando seu primeiro profissional</p>
+    <button class="btn btn-conci" (click)="openFormModal(null)">
+      <i class="bi bi-plus-circle me-2"></i>Adicionar Profissional
+    </button>
+  </div>
+
+  <!-- Professionals Grid -->
+  <div *ngIf="!isLoading && professionals.length > 0" class="professionals-grid">
+    <app-professional-card
+      *ngFor="let professional of professionals"
+      [professional]="professional"
+      (edit)="openFormModal(professional)"
+      (delete)="deleteProfessional(professional)"
+      (toggleActive)="toggleActive(professional)">
+    </app-professional-card>
+  </div>
+</div>
+

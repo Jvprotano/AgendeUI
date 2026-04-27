@@ -1,0 +1,115 @@
+<div class="modal-header border-bottom">
+  <h5 class="modal-title">
+    {{ service?.id ? 'Editar Serviço' : 'Adicionar Serviço' }}
+  </h5>
+  <button type="button" class="btn-close" (click)="onCancel()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="modal-body">
+    <!-- Name -->
+    <div class="form-group mb-3">
+      <label for="name" class="form-label">Nome do Serviço *</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        formControlName="name"
+        placeholder="Ex: Corte de Cabelo"
+        [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+        <span *ngIf="form.get('name')?.errors?.['required']">Nome é obrigatório</span>
+        <span *ngIf="form.get('name')?.errors?.['minlength']">Nome deve ter pelo menos 3 caracteres</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group mb-3">
+      <label for="description" class="form-label">Descrição *</label>
+      <textarea
+        class="form-control"
+        id="description"
+        formControlName="description"
+        placeholder="Descreva o serviço"
+        rows="3"
+        [class.is-invalid]="form.get('description')?.invalid && form.get('description')?.touched"
+      ></textarea>
+      <div class="invalid-feedback" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+        Descrição é obrigatória
+      </div>
+    </div>
+
+    <!-- Price and Duration -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="price" class="form-label">Preço (R$) *</label>
+          <input
+            type="number"
+            class="form-control"
+            id="price"
+            formControlName="price"
+            placeholder="0.00"
+            step="0.01"
+            [class.is-invalid]="form.get('price')?.invalid && form.get('price')?.touched"
+          />
+          <div class="invalid-feedback" *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+            <span *ngIf="form.get('price')?.errors?.['required']">Preço é obrigatório</span>
+            <span *ngIf="form.get('price')?.errors?.['min']">Preço deve ser maior que 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="duration" class="form-label">Duração (minutos) *</label>
+          <input
+            type="number"
+            class="form-control"
+            id="duration"
+            formControlName="duration"
+            placeholder="30"
+            [class.is-invalid]="form.get('duration')?.invalid && form.get('duration')?.touched"
+          />
+          <div class="invalid-feedback" *ngIf="form.get('duration')?.invalid && form.get('duration')?.touched">
+            <span *ngIf="form.get('duration')?.errors?.['required']">Duração é obrigatória</span>
+            <span *ngIf="form.get('duration')?.errors?.['min']">Duração deve ser pelo menos 5 minutos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="form-group mb-3">
+      <label for="icon" class="form-label">Ícone</label>
+      <select class="form-select" id="icon" formControlName="icon">
+        <option *ngFor="let icon of availableIcons" [value]="icon">
+          <i [class]="'bi bi-' + icon"></i> {{ icon }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Active -->
+    <div class="form-check mb-3">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="active"
+        formControlName="active"
+      />
+      <label class="form-check-label" for="active">
+        Serviço ativo
+      </label>
+    </div>
+  </div>
+
+  <div class="modal-footer border-top">
+    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-conci" [disabled]="form.invalid">
+      {{ service?.id ? 'Atualizar' : 'Adicionar' }}
+    </button>
+  </div>
+</form>
+

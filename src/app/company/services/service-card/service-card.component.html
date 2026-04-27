@@ -1,0 +1,43 @@
+<div class="service-card" [class.inactive]="!service.active">
+  <!-- Icon -->
+  <div class="service-icon">
+    <i [class]="'bi bi-' + (service.icon || 'briefcase')"></i>
+  </div>
+
+  <!-- Content -->
+  <div class="service-content">
+    <h5 class="service-name">{{ service.name }}</h5>
+    <p class="service-description">{{ service.description }}</p>
+
+    <!-- Details -->
+    <div class="service-details">
+      <div class="detail-item">
+        <span class="label">Duração:</span>
+        <span class="value">{{ service.duration }} min</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Preço:</span>
+        <span class="value price">R$ {{ service.price | number: '1.2-2' }}</span>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-badge" [class.active]="service.active">
+      {{ service.active ? 'Ativo' : 'Inativo' }}
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="service-actions">
+    <button class="btn btn-sm btn-outline-secondary" (click)="onToggleActive()" [title]="service.active ? 'Desativar' : 'Ativar'">
+      <i [class]="service.active ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+    </button>
+    <button class="btn btn-sm btn-outline-primary" (click)="onEdit()" title="Editar">
+      <i class="bi bi-pencil"></i>
+    </button>
+    <button class="btn btn-sm btn-outline-danger" (click)="onDelete()" title="Deletar">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+</div>
+

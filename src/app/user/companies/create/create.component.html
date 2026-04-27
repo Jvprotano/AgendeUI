@@ -3,18 +3,30 @@
 </ngx-spinner>
 
 <ng-template #modalContent let-close="close">
-  <div class="modal-header">
-    <h1 class="modal-title text-center mb-0">{{companyToEdit ? "Editar" : "Criar" }} Empresa</h1>
-    <button type="button" class="btn btn-close" (click)="close()">
-    </button>
+  <div class="modal-header border-bottom">
+    <div class="d-flex align-items-center gap-3 w-100">
+      <div class="step-indicator">
+        <span class="step" [class.active]="currentStep === 0">1</span>
+        <span class="step" [class.active]="currentStep === 1">2</span>
+        <span class="step" [class.active]="currentStep === 2">3</span>
+      </div>
+      <div class="flex-grow-1">
+        <h5 class="modal-title mb-0">
+          {{ currentStep === 0 ? 'Informações Básicas' : currentStep === 1 ? 'Horários' : 'Finalizar' }}
+        </h5>
+        <small class="text-muted">
+          {{ currentStep === 0 ? 'Passo 1 de 3' : currentStep === 1 ? 'Passo 2 de 3' : 'Passo 3 de 3' }}
+        </small>
+      </div>
+      <button type="button" class="btn btn-close" (click)="close()"></button>
+    </div>
   </div>
 
   <mat-progress-bar mode="determinate"
-    value="{{this.currentStep == 0 ? 33 : this.currentStep == 1 ? 66 : 100}}"></mat-progress-bar>
+    [value]="(currentStep + 1) * 33.33" class="progress-bar-custom"></mat-progress-bar>
 
   <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
     <div class="modal-body company-modal">
-
       <app-basic-info *ngIf="currentStep == 0" (next)="onNextStep($event)" [form]="createForm"></app-basic-info>
 
       <app-business-sector *ngIf="currentStep == 1" [form]="createForm" (previous)="onPreviousStep()"
@@ -22,148 +34,23 @@
 
       <app-share-info *ngIf="currentStep == 2" [form]="createForm" (previous)="onPreviousStep()"></app-share-info>
 
-      <!-- <div class="row">
-        <div class="d-flex form-group justify-content-center mb-4">
-          <div class="bg-light p-2 position-relative">
-            <input class="form-control d-none" id="company-image" type="file" (change)="onFileChange($event)" />
-            <img [src]="hasImage() ? createForm.get('image')?.value : 'assets/not-found.png'" alt="image" width="200"
-              height="160" />
-            <label for="company-image" class="image-label">
-              <i class="bi bi-camera-fill"></i>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="row" style="text-align: center;">
-        <div class="form-group">
-          <button type="button" class="btn btn-danger" (click)="removeImage()" *ngIf="hasImage()">Remove</button>
-        </div>
-      </div>
-
-      <div class="row mb-1">
-        <div class="form-group col-md-4">
-          <label class="form-label" for="name">Name:</label>
-          <input class="form-control" type="text" id="name" formControlName="name" />
-        </div>
-        <div class="form-group col-md-4">
-          <label class="form-label" for="email">Email:</label>
-          <input class="form-control" type="text" id="email" formControlName="email" />
-        </div>
-        <div class="form-group col-md-4">
-          <label class="form-label" for="cnpj">CNPJ:</label>
-          <input class="form-control" type="text" id="cnpj" formControlName="cnpj" placeholder="Opcional" />
-        </div>
-      </div> -->
-
-      <!-- <div class="row mb-1">
-        <div class="form-group col-md-6">
-          <label class="form-label">Site</label>
-          <input class="form-control" type="text" formControlName="site" placeholder="Opcional" />
-        </div>
-        <div class="form-group col-md-6">
-          <label class="form-label">Instagram</label>
-          <input class="form-control" type="text" formControlName="site" placeholder="@Opcional" />
-        </div>
-      </div>
-      <div class="row mb-1">
-        <div class="form-group col-md-12">
-          <label class="form-label">Description:</label>
-          <i style="font-size: small;">Fale um pouco sobre sua empresa ou serviços para seus clientes. Esta informação
-            estará visível em sua página de agendamento e nossas divulgações</i>
-          <textarea class="form-control" formControlName="description" rows="3"></textarea>
-        </div>
-      </div> -->
-
-      <!-- <div class="row mb-1">
-        <div class="form-group col-md-6">
-          <label class="form-label">Categories:</label>
-          <select class="form-select">
-            <option value="1">Categoria 1</option>
-            <option value="2">Categoria 2</option>
-          </select>
-        </div>
-        <div class="form-group col-md-6">
-          <label class="form-label">Services Offered:</label>
-          <select class="form-select">
-            <option value="1">Service 1</option>
-            <option value="2">Service 2</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row mb-1">
-          <div class="form-group col-md-6">
-            <label class="form-label">Horário de funcionamento</label>
-            <div class="row">
-              <div class="col-md-6">
-                <label class="form-label">Monday</label>
-                <input class="form-control" type="time" formControlName="mondayOpen" />
-              </div>
-              <div class="col-md-6">
-                <input class="form-control" type="time" formControlName="mondayClose" />
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-md-6">
-            <div class="row">
-              <div class="col-md-6">
-                <label class="form-label">Tuesday</label>
-                <input class="form-control" type="time" formControlName="tuesdayOpen" />
-              </div>
-              <div class="col-md-6">
-                <input class="form-control" type="time" formControlName="tuesdayClose" />
-              </div>
-            </div>
-          </div>
-      </div> -->
-
-      <!-- <div *ngIf="createForm.get('isPhysicalCompany')?.value">
-        <div class="row mb-1">
-          <div class="form-group col-md-3">
-            <label class="form-label" for="cep">CEP:</label>
-            <input class="form-control" type="text" (blur)="searchCEP()" id="cep" formControlName="cep" />
-          </div>
-          <div class="form-group col-md-3">
-            <label class="form-label" for="city">Cidade</label>
-            <input class="form-control" type="text" id="city" formControlName="city" />
-          </div>
-          <div class="form-group col-md-3">
-            <label class="form-label" for="state">Estado</label>
-            <input class="form-control" type="text" id="state" formControlName="state" />
-          </div>
-          <div class="form-group col-md-3">
-            <label class="form-label" for="neighborhood">Bairro</label>
-            <input class="form-control" type="text" id="neighborhood" formControlName="neighborhood" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-md-7">
-            <label class="form-label" for="street">Rua</label>
-            <input class="form-control" type="text" id="street" formControlName="street" />
-          </div>
-          <div class="form-group col-md-2">
-            <label class="form-label" for="number">Número</label>
-            <input class="form-control" type="text" id="number" formControlName="number" />
-          </div>
-          <div class="form-group col-md-3">
-            <label class="form-label" for="complement">Complemento</label>
-            <input class="form-control" type="text" id="complement" formControlName="complement" />
-          </div>
-        </div>
-      </div>
-
-      <div class="align-items-center col-md-12 d-flex form-check form-switch fs-6 ms-1 mt-2">
-        <input class="form-check-input me-2" type="checkbox" formControlName="isPhysicalCompany" />
-        <label class="form-check-label mb-0"> Possui local físico </label>
-      </div> -->
     </div>
-    <div class="float-end justify-content-between modal-footer w-100">
-      <div *ngIf="currentStep === 0"></div>
-      <button *ngIf="currentStep != 0" class="btn btn-outline-secondary"
-        (click)="currentStep = currentStep - 1">Anterior</button>
-      <button *ngIf="currentStep != 2" class="btn btn-success" (click)="currentStep = currentStep + 1">Próximo</button>
-      <div class="form-group m-0" style="text-align: center;" *ngIf="currentStep == 2">
-        <button class="btn btn-success" type="submit">Save</button>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer border-top">
+      <div class="d-flex gap-2 w-100">
+        <button *ngIf="currentStep > 0" type="button" class="btn btn-outline-secondary"
+          (click)="onPreviousStep()">
+          <i class="bi bi-chevron-left me-2"></i>Anterior
+        </button>
+        <div class="flex-grow-1"></div>
+        <button *ngIf="currentStep < 2" type="button" class="btn btn-conci"
+          (click)="onNextStep({})">
+          Próximo<i class="bi bi-chevron-right ms-2"></i>
+        </button>
+        <button *ngIf="currentStep === 2" type="submit" class="btn btn-success">
+          <i class="bi bi-check-circle me-2"></i>Salvar Empresa
+        </button>
       </div>
     </div>
   </form>

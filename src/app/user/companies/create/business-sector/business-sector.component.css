@@ -1,226 +1,130 @@
-.date-input {
-  height: 38px !important;
+/* ===== BUSINESS SECTOR CONTAINER ===== */
+.business-sector-container {
+  padding: 0.5rem 0;
 }
 
-::ng-deep.flatpickr-calendar {
-  background: transparent;
-  opacity: 0;
-  display: none;
-  text-align: center;
-  visibility: hidden;
-  padding: 0;
-  -webkit-animation: none;
-  animation: none;
-  direction: ltr;
-  border: 0;
-  font-size: 14px;
-  line-height: 24px;
-  border-radius: 5px;
-  position: absolute;
-  width: 307.875px;
-  box-sizing: border-box;
-  touch-action: manipulation;
-  background: #fff;
-  background: #fff;
-  box-shadow: 1px 0 #e9ebec, -1px 0 #e9ebec, 0 1px #e9ebec, 0 -1px #e9ebec, 0 3px 13px #00000014;
-  box-shadow: 1px 0 0 #e9ebec, -1px 0 0 #e9ebec, 0 1px 0 #e9ebec, 0 -1px 0 #e9ebec, 0 3px 13px #00000014;
+.business-sector-container h5 {
+  color: var(--dark-blue);
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
 }
 
-::ng-deep.flatpickr-time {
-  text-align: center;
-  outline: 0;
-  display: block;
-  height: 0;
-  line-height: 40px;
-  max-height: 40px;
-  box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
+/* ===== WEEKDAYS GRID ===== */
+.weekdays-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 }
 
-::ng-deep.flatpickr-calendar.hasTime .flatpickr-time {
-  height: 40px;
-  border-top: 1px solid #e9ebec;
-  border-top: 1px solid #e9ebec;
+.weekday-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
 }
 
-::ng-deep.flatpickr-time.time24hr .numInputWrapper {
-  width: 49%;
+.weekday-item:hover {
+  background-color: #f5f7fa;
+  border-color: var(--green-conci);
 }
 
-::ng-deep.flatpickr-time .numInputWrapper {
-  flex: 1;
-  width: 40%;
-  height: 40px;
-  float: left;
+/* ===== DAY HEADER ===== */
+.day-header {
+  margin-bottom: 0.75rem;
 }
 
-::ng-deep.flatpickr-time input.flatpickr-hour {
-  font-weight: 700;
-}
-
-::ng-deep.flatpickr-time input {
-  background: transparent;
-  box-shadow: none;
-  border: 0;
-  border-radius: 0;
-  text-align: center;
+.day-header .form-check {
   margin: 0;
-  padding: 0;
-  height: inherit;
-  line-height: inherit;
-  color: #212529;
-  color: #212529;
-  font-size: 14px;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-  appearance: textfield;
+}
+
+.day-header .form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.25rem;
+  cursor: pointer;
+  border-color: #ccc;
+}
+
+.day-header .form-check-input:checked {
+  background-color: var(--green-conci);
+  border-color: var(--green-conci);
+}
+
+.day-header .form-check-label {
+  font-weight: 600;
+  color: var(--dark-blue);
+  margin-left: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ===== DAY TIMES ===== */
+.day-times {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.time-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.time-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 0.4rem;
+}
+
+.time-group input[type="time"] {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.375rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.time-group input[type="time"]:focus {
+  border-color: var(--green-conci);
+  box-shadow: 0 0 0 3px rgba(63, 134, 156, 0.1);
   outline: none;
 }
 
-::ng-deep.numInputWrapper span.arrowUp {
-  top: 0;
-  border-bottom: 0;
-}
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .weekdays-grid {
+    gap: 0.75rem;
+  }
 
-::ng-deep.numInputWrapper span {
-  position: absolute;
-  right: 0;
-  width: 14px;
-  padding: 0 4px 0 2px;
-  height: 50%;
-  line-height: 50%;
-  opacity: 0;
-  cursor: pointer;
-  border: 1px solid rgba(33, 37, 41, .15);
-  border: 1px solid rgba(33, 37, 41, .15);
-  box-sizing: border-box;
-}
+  .weekday-item {
+    padding: 0.75rem;
+  }
 
-::ng-deep.numInputWrapper span.arrowDown {
-  top: 50%;
-}
+  .time-inputs {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
 
-::ng-deep.numInputWrapper span {
-  position: absolute;
-  right: 0;
-  width: 14px;
-  padding: 0 4px 0 2px;
-  height: 50%;
-  line-height: 50%;
-  opacity: 0;
-  cursor: pointer;
-  border: 1px solid rgba(33, 37, 41, .15);
-  border: 1px solid rgba(var(--vz-dark-rgb), .15);
-  box-sizing: border-box;
-}
-
-::ng-deep.flatpickr-time .flatpickr-time-separator,
-.flatpickr-time .flatpickr-am-pm {
-  height: inherit;
-  float: left;
-  line-height: inherit;
-  color: #212529;
-  color: var(--vz-body-color);
-  font-weight: 700;
-  width: 2%;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  align-self: center;
-}
-
-::ng-deep.flatpickr-calendar.animate.open {
-  -webkit-animation: fpFadeInDown .3s cubic-bezier(.23, 1, .32, 1);
-  animation: fpFadeInDown .3s cubic-bezier(.23, 1, .32, 1);
-}
-
-::ng-deep.flatpickr-calendar.open {
-  z-index: 1061;
-}
-
-::ng-deep.flatpickr-calendar.open {
-  display: inline-block;
-  z-index: 1056;
-}
-
-::ng-deep.flatpickr-calendar.open,
-.flatpickr-calendar.inline {
-  opacity: 1;
-  max-height: 640px;
-  visibility: visible;
-}
-
-::ng-deep.flatpickr-time .numInputWrapper span.arrowUp:after,
-.flatpickr-time .numInputWrapper span.arrowDown:after {
-  border-bottom-color: #e9ebec;
-  border-bottom-color: var(--vz-border-color);
-}
-
-::ng-deep.numInputWrapper span.arrowUp:after {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid rgba(57, 57, 57, .6);
-  top: 26%;
-}
-
-::ng-deep.numInputWrapper span:after {
-  display: block;
-  content: "";
-  position: absolute;
-}
-
-::ng-deep.numInputWrapper span.arrowDown:after {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid rgba(57, 57, 57, .6);
-  top: 40%;
-}
-
-::ng-deep.numInputWrapper input {
-  width: 100%;
-}
-
-::ng-deep.numInputWrapper input,
-.numInputWrapper span {
-  display: inline-block;
-}
-
-::ng-deep.flatpickr-calendar:before,
-.flatpickr-calendar:after {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-  border: solid transparent;
-  content: "";
-  height: 0;
-  width: 0;
-  left: 22px;
-}
-
-::ng-deep.input-group-text {
-  margin-left: -10px !important;
-  z-index: 9 !important;
-}
-
-.input-group {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  width: 100%;
-}
-
-.flatpickr-input {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: #ced4da !important;
-  cursor: pointer;
-}
-
-.day-closed {
-  color: #757676;
+  .day-header .form-check-label {
+    font-size: 0.95rem;
+  }
 }

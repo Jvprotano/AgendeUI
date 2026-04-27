@@ -1,84 +1,181 @@
-<div class="h-100 w-100 d-flex">
+<div class="schedule-container">
   <app-sidebar></app-sidebar>
-  <div class="row text-center company-area">
-    <div class="w-25">
-      <div class="border card pt-0 px-0">
-        <div class="card-body">
-          <button class="btn btn-conci w-100">
-            <i class="bi bi-plus me-1"></i>New Event
-          </button>
-          <div class="mt-4">
-            <div class="sub">
-              <ng-container>
-                <h4 class="fw-medium">Services</h4>
-                <div id="external-events" class="mb-3">
-                  <div
-                    class="bg-warning-subtle external-event fc-event mb-2 px-3 py-2 text-start text-warning"
-                    data-class="text-warning bg-warning-subtle border-0"
-                  >
-                    <i class="bi bi-circle-fill me-2 text-warning me-2"></i>
-                    Hair
-                  </div>
-                  <div data-class="text-info bg-info-subtle border-0"
-                    class="bg-info-subtle external-event fc-event mb-2 px-3 py-2 text-start text-info"
-                  >
-                    <i class="bi bi-circle-fill me-2 text-info me-2"></i>
-                    Beard
-                  </div>
-                </div>
-              </ng-container>
+
+  <div class="schedule-content">
+    <!-- Sidebar com Serviços e Próximos Agendamentos (Hidden on Mobile) -->
+    <div class="schedule-sidebar" *ngIf="!isMobile">
+      <div class="sidebar-card">
+        <button class="btn btn-conci w-100 mb-4" (click)="onDateSelected(selectedDay || $any(null))">
+          <i class="bi bi-plus me-2"></i>Novo Agendamento
+        </button>
+
+        <!-- Services Section -->
+        <div class="services-section">
+          <h5 class="fw-bold mb-3">Serviços</h5>
+          <div class="service-item">
+            <span class="service-badge" style="background-color: #ffc107;"></span>
+            <span>Cabelo</span>
+          </div>
+          <div class="service-item">
+            <span class="service-badge" style="background-color: #0d6efd;"></span>
+            <span>Barba</span>
+          </div>
+          <div class="service-item">
+            <span class="service-badge" style="background-color: #198754;"></span>
+            <span>Manicure</span>
+          </div>
+        </div>
+
+        <!-- Upcoming Appointments Section -->
+        <div class="upcoming-section">
+          <h5 class="fw-bold mb-3">Próximos Agendamentos</h5>
+          <div *ngFor="let event of getUpcomingEvents()" class="appointment-card" (click)="onEventClicked(event)">
+            <div class="appointment-header">
+              <span class="appointment-date">{{ event.start | date: 'dd MMM' }}</span>
+              <span class="appointment-time">{{ event.start | date: 'HH:mm' }}</span>
             </div>
-            <div class="upcoming">
-              <h4 class="fw-medium">Upcoming Appointments</h4>
-              <div class="border card mb-3 p-3">
-                <div class="card-body p-0">
-                  <div class="d-flex mb-3">
-                    <div class="flex-grow-1 text-start">
-                      <i class="bi bi-circle-fill me-2 text-warning"></i>
-                      <span class="fw-medium">October 18 </span>
-                    </div>
-                    <div class="flex-shrink-0">
-                      <small
-                        class="badge bg-body-secondary ms-auto text-info-emphasis"
-                        >08:00 - 09:00</small
-                      >
-                    </div>
-                  </div>
-                  <h4 class="card-title fs-6 fw-medium mb-0 text-start">
-                    Appointment
-                  </h4>
-                  <p class="text-muted text-truncate-two-lines mb-0"></p>
-                </div>
-              </div>
-            </div>
+            <h6 class="appointment-title">{{ event.title }}</h6>
+            <p class="appointment-description">{{ event.description || 'Sem descrição' }}</p>
+          </div>
+          <div *ngIf="getUpcomingEvents().length === 0" class="text-center text-muted py-3">
+            <p>Nenhum agendamento próximo</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="w-75" id="calendar"></div>
-  </div>
-</div>
 
-<ng-template #modalContent let-close="close">
-  <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- <div>
-        Action:
-        <pre>{{ modalData.action }}</pre>
-      </div> -->
-    <div>
-      Event:
-      <pre>{{ eventToEdit }}</pre>
+    <!-- Calendar Section -->
+    <div class="schedule-calendar">
+      <app-custom-calendar
+        [events]="events"
+        [locale]="locale"
+        (dateSelected)="onDateSelected($event)"
+        (eventClicked)="onEventClicked($event)">
+      </app-custom-calendar>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">
-      OK
+
+  <!-- Floating Action Button for Mobile -->
+  <button *ngIf="isMobile" class="fab" (click)="onDateSelected(selectedDay || $any(null))" title="Novo Agendamento">
+    <i class="bi bi-plus"></i>
+  </button>
+
+  <!-- Offcanvas for Mobile -->
+  <app-event-offcanvas
+    [isOpen]="offcanvasOpen"
+    [selectedDate]="selectedDay"
+    [selectedEvent]="selectedEvent"
+    [mode]="offcanvasMode"
+    (close)="closeOffcanvas()"
+    (save)="onOffcanvasSave($event)"
+    (delete)="onOffcanvasDelete($event)"
+    (edit)="onOffcanvasEdit()">
+  </app-event-offcanvas>
+</div>
+
+<!-- Day View Modal -->
+<ng-template #dayViewModal let-close="close">
+  <div class="modal-header border-bottom">
+    <h5 class="modal-title">{{ selectedDay | date: 'EEEE, dd MMMM yyyy' }}</h5>
+    <button type="button" class="btn-close" (click)="close()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="day-events">
+      <div *ngIf="getEventsForDay(selectedDay) && getEventsForDay(selectedDay).length > 0; else noEvents">
+        <div class="event-item" *ngFor="let event of getEventsForDay(selectedDay)" (click)="onEventClicked(event)">
+          <div class="event-time">
+            <span class="time-badge">{{ event.start | date: 'HH:mm' }}</span>
+          </div>
+          <div class="event-content">
+            <h6 class="event-title">{{ event.title }}</h6>
+            <p class="event-duration">{{ event.start | date: 'HH:mm' }} - {{ event.end | date: 'HH:mm' }}</p>
+            <p class="event-description" *ngIf="event.description">{{ event.description }}</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #noEvents>
+        <div class="text-center py-5">
+          <i class="bi bi-calendar-x" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="text-muted mt-3">Nenhum agendamento para este dia</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="modal-footer border-top">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">Fechar</button>
+    <button type="button" class="btn btn-conci" (click)="openCreateEventModal(); close()">
+      <i class="bi bi-plus me-2"></i>Novo Agendamento
+    </button>
+  </div>
+</ng-template>
+
+<!-- Event Detail Modal -->
+<ng-template #eventDetailModal let-close="close">
+  <div class="modal-header border-bottom">
+    <h5 class="modal-title">Detalhes do Agendamento</h5>
+    <button type="button" class="btn-close" (click)="close()"></button>
+  </div>
+  <div class="modal-body" *ngIf="selectedEvent">
+    <div class="event-detail">
+      <div class="detail-row">
+        <label>Título:</label>
+        <p>{{ selectedEvent.title }}</p>
+      </div>
+      <div class="detail-row">
+        <label>Data:</label>
+        <p>{{ selectedEvent.start | date: 'dd/MM/yyyy' }}</p>
+      </div>
+      <div class="detail-row">
+        <label>Horário:</label>
+        <p>{{ selectedEvent.start | date: 'HH:mm' }} - {{ selectedEvent.end | date: 'HH:mm' }}</p>
+      </div>
+      <div class="detail-row" *ngIf="selectedEvent.description">
+        <label>Descrição:</label>
+        <p>{{ selectedEvent.description }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer border-top">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">Fechar</button>
+    <button type="button" class="btn btn-conci" (click)="editEvent()">
+      <i class="bi bi-pencil me-2"></i>Editar
+    </button>
+  </div>
+</ng-template>
+
+<!-- Create Event Modal -->
+<ng-template #createEventModal let-close="close">
+  <div class="modal-header border-bottom">
+    <h5 class="modal-title">Novo Agendamento</h5>
+    <button type="button" class="btn-close" (click)="close()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group mb-3">
+      <label class="form-label">Data Selecionada</label>
+      <p class="form-control-plaintext">{{ selectedDay | date: 'dd/MM/yyyy' }}</p>
+    </div>
+    <div class="form-group mb-3">
+      <label class="form-label">Serviço</label>
+      <select class="form-select">
+        <option>Selecione um serviço</option>
+        <option>Cabelo</option>
+        <option>Barba</option>
+        <option>Manicure</option>
+      </select>
+    </div>
+    <div class="form-group mb-3">
+      <label class="form-label">Horário</label>
+      <input type="time" class="form-control">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição</label>
+      <textarea class="form-control" rows="3"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer border-top">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancelar</button>
+    <button type="button" class="btn btn-success" (click)="saveEvent()">
+      <i class="bi bi-check-circle me-2"></i>Salvar
     </button>
   </div>
 </ng-template>

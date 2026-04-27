@@ -1,0 +1,46 @@
+<div class="professional-card" [class.inactive]="!professional.active">
+  <!-- Photo -->
+  <div class="professional-photo">
+    <img [src]="professional.photo || 'assets/default-avatar.png'" [alt]="professional.name" />
+    <div class="status-badge" [class.active]="professional.active">
+      {{ professional.active ? 'Ativo' : 'Inativo' }}
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="professional-content">
+    <h5 class="professional-name">{{ professional.name }}</h5>
+    
+    <div class="professional-info">
+      <div class="info-item">
+        <i class="bi bi-envelope"></i>
+        <span>{{ professional.email }}</span>
+      </div>
+      <div class="info-item">
+        <i class="bi bi-telephone"></i>
+        <span>{{ professional.phone }}</span>
+      </div>
+    </div>
+
+    <!-- Specialties -->
+    <div class="specialties" *ngIf="professional.specialties && professional.specialties.length > 0">
+      <span class="specialty-badge" *ngFor="let specialty of professional.specialties">
+        {{ specialty }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="professional-actions">
+    <button class="btn btn-sm btn-outline-secondary" (click)="onToggleActive()" [title]="professional.active ? 'Desativar' : 'Ativar'">
+      <i [class]="professional.active ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+    </button>
+    <button class="btn btn-sm btn-outline-primary" (click)="onEdit()" title="Editar">
+      <i class="bi bi-pencil"></i>
+    </button>
+    <button class="btn btn-sm btn-outline-danger" (click)="onDelete()" title="Deletar">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+</div>
+

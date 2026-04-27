@@ -38,8 +38,6 @@ export class CreateComponent {
 
   ngOnInit(): void {
     this.openModal();
-    this.spinner.show();
-    this.spinner.hide();
     /**
      * Inicializa o form com os dados
      */

@@ -1,0 +1,74 @@
+<div class="custom-calendar">
+  <!-- Mobile Carousel (Hidden on Desktop) -->
+  <div class="mobile-carousel" *ngIf="isMobile">
+    <div class="carousel-container">
+      <div class="carousel-track" [style.transform]="'translateX(' + (-selectedDayIndex * 100) + '%)'">
+        <div class="carousel-item" *ngFor="let day of upcomingDays; let i = index"
+          [class.active]="selectedDayIndex === i"
+          (click)="selectDay(i)">
+          <div class="day-name">{{ day.date | date: 'EEE' }}</div>
+          <div class="day-date">{{ day.date | date: 'd' }}</div>
+          <div class="event-count" *ngIf="day.events.length > 0">
+            {{ day.events.length }} evento{{ day.events.length > 1 ? 's' : '' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Calendar (Hidden on Mobile) -->
+  <div *ngIf="!isMobile">
+    <!-- Calendar Header -->
+    <div class="calendar-header">
+      <button class="btn btn-sm btn-outline-secondary" (click)="previousMonth()" title="Mês anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="month-year">
+        <h5 class="mb-0">{{ monthYear }}</h5>
+      </div>
+
+      <button class="btn btn-sm btn-outline-secondary" (click)="nextMonth()" title="Próximo mês">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
+      <button class="btn btn-sm btn-outline-conci ms-auto" (click)="goToToday()" title="Hoje">
+        <i class="bi bi-calendar-check me-1"></i>Hoje
+      </button>
+    </div>
+
+    <!-- Week Days Header -->
+    <div class="weekdays-header">
+      <div class="weekday" *ngFor="let day of weekDays">
+        {{ day }}
+      </div>
+    </div>
+
+    <!-- Calendar Days Grid -->
+    <div class="calendar-grid">
+      <div class="calendar-day"
+        *ngFor="let day of calendarDays"
+        [class.other-month]="!day.isCurrentMonth"
+        [class.today]="day.isToday"
+        (click)="onDateClick(day)">
+
+        <div class="day-number">{{ day.dayOfMonth }}</div>
+
+        <div class="day-events">
+          <div class="event-item"
+            *ngFor="let event of day.events | slice:0:2"
+            [style.background-color]="getEventColor(event.color)"
+            (click)="onEventClick(event, $event)"
+            [title]="event.title">
+            {{ event.title }}
+          </div>
+
+          <div class="event-more" *ngIf="day.events.length > 2">
+            +{{ day.events.length - 2 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,119 @@
+<div class="modal-header border-bottom">
+  <h5 class="modal-title">
+    {{ professional?.id ? 'Editar Profissional' : 'Adicionar Profissional' }}
+  </h5>
+  <button type="button" class="btn-close" (click)="onCancel()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="modal-body">
+    <!-- Name -->
+    <div class="form-group mb-3">
+      <label for="name" class="form-label">Nome *</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        formControlName="name"
+        placeholder="Digite o nome do profissional"
+        [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+        <span *ngIf="form.get('name')?.errors?.['required']">Nome é obrigatório</span>
+        <span *ngIf="form.get('name')?.errors?.['minlength']">Nome deve ter pelo menos 3 caracteres</span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group mb-3">
+      <label for="email" class="form-label">Email *</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        formControlName="email"
+        placeholder="Digite o email"
+        [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+        <span *ngIf="form.get('email')?.errors?.['required']">Email é obrigatório</span>
+        <span *ngIf="form.get('email')?.errors?.['email']">Email inválido</span>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group mb-3">
+      <label for="phone" class="form-label">Telefone *</label>
+      <input
+        type="tel"
+        class="form-control"
+        id="phone"
+        formControlName="phone"
+        placeholder="(11) 98765-4321"
+        [class.is-invalid]="form.get('phone')?.invalid && form.get('phone')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">
+        Telefone é obrigatório
+      </div>
+    </div>
+
+    <!-- Specialties -->
+    <div class="form-group mb-3">
+      <label class="form-label">Especialidades</label>
+      <div class="specialty-input-group">
+        <select class="form-select" [(ngModel)]="specialtyInput" [ngModelOptions]="{standalone: true}">
+          <option value="">Selecione uma especialidade</option>
+          <option *ngFor="let specialty of availableSpecialties" [value]="specialty">
+            {{ specialty }}
+          </option>
+        </select>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="addSpecialty(specialtyInput)"
+          [disabled]="!specialtyInput"
+        >
+          <i class="bi bi-plus"></i>
+        </button>
+      </div>
+
+      <!-- Selected Specialties -->
+      <div class="specialties-list" *ngIf="professional?.specialties && professional?.specialties?.length && professional?.specialties!.length > 0">
+        <span class="specialty-tag" *ngFor="let specialty of professional?.specialties">
+          {{ specialty }}
+          <button
+            type="button"
+            class="btn-remove"
+            (click)="removeSpecialty(specialty)"
+            title="Remover"
+          >
+            <i class="bi bi-x"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Active -->
+    <div class="form-check mb-3">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="active"
+        formControlName="active"
+      />
+      <label class="form-check-label" for="active">
+        Profissional ativo
+      </label>
+    </div>
+  </div>
+
+  <div class="modal-footer border-top">
+    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-conci" [disabled]="form.invalid">
+      {{ professional?.id ? 'Atualizar' : 'Adicionar' }}
+    </button>
+  </div>
+</form>
+

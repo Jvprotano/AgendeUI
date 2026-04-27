@@ -1,0 +1,110 @@
+<div class="offcanvas-overlay" [class.show]="isOpen" (click)="onClose()"></div>
+
+<div class="offcanvas" [class.show]="isOpen">
+  <!-- Header -->
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">
+      {{ mode === 'view' ? 'Detalhes do Agendamento' : mode === 'edit' ? 'Editar Agendamento' : 'Novo Agendamento' }}
+    </h5>
+    <button type="button" class="btn-close-custom" (click)="onClose()" title="Fechar">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <!-- Body -->
+  <div class="offcanvas-body">
+    <!-- View Mode -->
+    <div *ngIf="mode === 'view' && selectedEvent" class="event-view">
+      <div class="event-detail-item">
+        <label>Título</label>
+        <p>{{ selectedEvent.title }}</p>
+      </div>
+
+      <div class="event-detail-item">
+        <label>Data</label>
+        <p>{{ selectedEvent.start | date: 'dd/MM/yyyy' }}</p>
+      </div>
+
+      <div class="event-detail-item">
+        <label>Horário</label>
+        <p>{{ selectedEvent.start | date: 'HH:mm' }} - {{ selectedEvent.end | date: 'HH:mm' }}</p>
+      </div>
+
+      <div class="event-detail-item" *ngIf="selectedEvent.description">
+        <label>Descrição</label>
+        <p>{{ selectedEvent.description }}</p>
+      </div>
+
+      <div class="event-color-indicator">
+        <span class="color-badge" [style.background-color]="getServiceColor(selectedEvent.title)"></span>
+        <span>{{ selectedEvent.title }}</span>
+      </div>
+    </div>
+
+    <!-- Create/Edit Mode -->
+    <form *ngIf="(mode === 'create' || mode === 'edit') && eventForm" [formGroup]="eventForm" class="event-form">
+      <div class="form-group">
+        <label class="form-label">Serviço *</label>
+        <select class="form-select" formControlName="service">
+          <option value="">Selecione um serviço</option>
+          <option *ngFor="let service of services" [value]="service.name">
+            {{ service.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Data *</label>
+        <input type="date" class="form-control" formControlName="date">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Início *</label>
+          <input type="time" class="form-control" formControlName="startTime">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fim *</label>
+          <input type="time" class="form-control" formControlName="endTime">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Descrição</label>
+        <textarea class="form-control" rows="3" formControlName="description" placeholder="Adicione detalhes..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Cor</label>
+        <div class="color-selector">
+          <div class="color-option" 
+            *ngFor="let color of ['blue', 'yellow', 'green', 'red', 'purple']"
+            [class.selected]="eventForm.get('color')?.value === color"
+            (click)="eventForm.patchValue({color: color})"
+            [style.background-color]="color === 'blue' ? '#0d6efd' : color === 'yellow' ? '#ffc107' : color === 'green' ? '#198754' : color === 'red' ? '#dc3545' : '#6f42c1'">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="offcanvas-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="onClose()">
+      Cancelar
+    </button>
+
+    <div class="button-group">
+      <button *ngIf="mode === 'view'" type="button" class="btn btn-danger" (click)="onDelete()">
+        <i class="bi bi-trash me-2"></i>Deletar
+      </button>
+      <button *ngIf="mode === 'view'" type="button" class="btn btn-conci" (click)="onEdit()">
+        <i class="bi bi-pencil me-2"></i>Editar
+      </button>
+      <button *ngIf="mode !== 'view'" type="button" class="btn btn-success" (click)="onSave()">
+        <i class="bi bi-check-circle me-2"></i>Salvar
+      </button>
+    </div>
+  </div>
+</div>
+

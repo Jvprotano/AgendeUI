@@ -29,6 +29,25 @@ export class ShareInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.prefix = 'agende.com/'
+    this.prefillUrlFromCompanyName();
+  }
+
+  private prefillUrlFromCompanyName(): void {
+    const companyName = this.form.get('name')?.value;
+    if (companyName && !this.form.get('schedulingUrl')?.value) {
+      const urlFriendlyName = this.convertToUrlFormat(companyName);
+      this.form.patchValue({ schedulingUrl: urlFriendlyName });
+    }
+  }
+
+  private convertToUrlFormat(text: string): string {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]/g, '')
+      .replace(/\-+/g, '-')
+      .replace(/^\-+|\-+$/g, '');
   }
 
   checkUrlIsValid() {

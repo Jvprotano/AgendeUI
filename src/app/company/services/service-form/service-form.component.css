@@ -1,0 +1,143 @@
+/* ===== MODAL STYLING ===== */
+::ng-deep .modal-content {
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .modal-header {
+  background: linear-gradient(135deg, var(--green-conci) 0%, var(--dark-blue) 100%);
+  color: white;
+  border-radius: 0.75rem 0.75rem 0 0;
+  padding: 1.5rem;
+}
+
+::ng-deep .modal-header .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+::ng-deep .modal-footer {
+  background-color: #f8f9fa;
+  border-radius: 0 0 0.75rem 0.75rem;
+  padding: 1.5rem;
+}
+
+/* ===== FORM STYLING ===== */
+.modal-body {
+  padding: 2rem 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--dark-blue);
+  font-size: 0.95rem;
+}
+
+.form-control,
+.form-select {
+  padding: 0.75rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--green-conci);
+  box-shadow: 0 0 0 3px rgba(63, 134, 156, 0.1);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ===== CHECKBOX ===== */
+.form-check {
+  padding-left: 0;
+}
+
+.form-check-input {
+  margin-top: 0.3rem;
+  cursor: pointer;
+}
+
+.form-check-label {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: var(--dark-blue);
+  font-weight: 500;
+}
+
+/* ===== BUTTONS ===== */
+.btn-conci {
+  background-color: var(--green-conci);
+  color: white;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-conci:hover:not(:disabled) {
+  background-color: var(--dark-blue);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 134, 156, 0.3);
+}
+
+.btn-conci:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-outline-secondary {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .modal-body {
+    padding: 1.5rem 1rem;
+    max-height: 70vh;
+  }
+
+  ::ng-deep .modal-header {
+    padding: 1rem;
+  }
+
+  ::ng-deep .modal-footer {
+    padding: 1rem;
+  }
+
+  .row {
+    margin-bottom: 0;
+  }
+
+  .col-md-6 {
+    margin-bottom: 1rem;
+  }
+}
+

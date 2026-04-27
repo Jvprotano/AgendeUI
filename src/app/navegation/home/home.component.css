@@ -5,6 +5,7 @@
   background: url('/assets/predios.jpg') center no-repeat fixed; */
   position: relative;
   height: 85vh;
+  min-height: 600px;
   overflow: hidden;
   background: linear-gradient(180deg, hsla(167, 35%, 24%, 1) 0%, hsla(167, 79%, 59%, 1) 90%);
 }
@@ -24,16 +25,19 @@
   /* transform: translate(-50%, -50%); */
   text-align: center;
   color: var(--dark-blue);
+  border-radius: 12px;
 }
 
 .header-text h1 {
   font-size: 3rem;
   margin-bottom: 20px;
   font-family: 'Abril Fatface', serif;
+  line-height: 1.2;
 }
 
 .header-text span {
   font-family: 'Pacifico', cursive;
+  font-size: 1.1rem;
 }
 
 .header-text p {
@@ -148,7 +152,72 @@ hr {
   font-size: xx-large;
 }
 
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .header {
+    height: 90vh;
+    min-height: 700px;
+  }
+
+  .header-text {
+    padding: 40px;
+  }
+
+  .header-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .home-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .home-buttons a {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .header {
+    height: auto;
+    min-height: 500px;
+    padding: 40px 0;
+  }
+
+  .header .row {
+    flex-direction: column;
+  }
+
+  .header-text {
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+
+  .header-text h1 {
+    font-size: 2rem;
+  }
+
+  .header-text span {
+    font-size: 1rem;
+  }
+
+  .home-img {
+    width: 100% !important;
+    max-width: 400px;
+  }
+
+  .header-style {
+    height: 3em;
+  }
+}
+
 @media (max-width: 768px) {
+  .header {
+    height: auto;
+    min-height: 400px;
+    padding: 30px 0;
+  }
+
   .column {
     flex: 1 0 100%;
     max-width: 100%;
@@ -156,6 +225,176 @@ hr {
 
   .card-functionalities {
     margin-bottom: 20px;
+  }
+
+  .header-text {
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+
+  .header-text h1 {
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+  }
+
+  .header-text span {
+    font-size: 0.9rem;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .home-buttons a {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 12px 20px;
+  }
+
+  .home-img {
+    width: 100% !important;
+    max-width: 350px;
+  }
+
+  .reservations-today {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  .functionalities {
+    padding: 20px 10px;
+  }
+
+  .container-price {
+    padding: 20px 10px;
+  }
+
+  #planos {
+    padding: 20px;
+    font-size: 1.5rem;
+  }
+
+  #price {
+    font-size: 1.5rem;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+
+  .services-animation {
+    padding: 1rem 0.5rem;
+  }
+
+  .header-style {
+    height: 2em;
+  }
+}
+
+@media (max-width: 576px) {
+  .header {
+    height: auto;
+    min-height: 350px;
+    padding: 20px 0;
+  }
+
+  .header-text {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .header-text span {
+    font-size: 0.8rem;
+  }
+
+  .home-buttons {
+    gap: 10px;
+  }
+
+  .home-buttons a {
+    font-size: 0.8rem;
+    padding: 10px 15px;
+  }
+
+  .home-buttons i {
+    font-size: 0.9rem;
+  }
+
+  .home-img {
+    width: 100% !important;
+    max-width: 300px;
+  }
+
+  .reservations-today {
+    font-size: 0.75rem;
+    padding: 8px;
+    bottom: -10px;
+    right: -10px;
+  }
+
+  .functionalities {
+    padding: 15px 5px;
+  }
+
+  .container-price {
+    padding: 15px 5px;
+  }
+
+  #planos {
+    padding: 15px;
+    font-size: 1.25rem;
+  }
+
+  #price {
+    font-size: 1.25rem;
+  }
+
+  .card-body {
+    padding: 12px;
+  }
+
+  .card-text {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .div-icons {
+    margin-bottom: 8px;
+  }
+
+  .card-icon {
+    font-size: 1.5rem;
+  }
+
+  .services-animation {
+    padding: 0.5rem;
+  }
+
+  .header-style {
+    height: 1.5em;
+  }
+
+  .row {
+    padding: 10px;
   }
 }
 

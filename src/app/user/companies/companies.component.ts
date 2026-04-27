@@ -58,7 +58,7 @@ export class CompaniesComponent implements OnInit {
     this.clickedEdit = true;
     this.setTimeout();
   }
-  createCompany(){
+  createCompany() {
     this.clickedEdit = true;
     this.setTimeout();
   }
@@ -70,47 +70,23 @@ export class CompaniesComponent implements OnInit {
   }
 
   generateTestCompanies(): void {
-    // this.companies = [{
-    //   id: '0',
-    //   name: 'Cartucho',
-    //   description: 'Melhor restaurante do vale',
-    //   email: '',
-    //   phone: '',
-    //   address: '',
-    //   city: '',
-    //   state: '',
-    //   zip: '',
-    //   status: 1,
-    //   scheduleStatus: 1,
-    //   schedulingUrl: 'cartucho'
-    // },
-    // {
-    //   id: '1',
-    //   name: 'Conciflex',
-    //   description: 'Conciliadora de cartões',
-    //   email: '',
-    //   phone: '',
-    //   address: '',
-    //   city: '',
-    //   state: '',
-    //   zip: '',
-    //   status: 1,
-    //   scheduleStatus: 1,
-    //   schedulingUrl: 'conciflex'
-    // },
-    // {
-    //   id: '2',
-    //   name: 'Ponta',
-    //   description: 'Soluções para o Agronegócio',
-    //   email: '',
-    //   phone: '',
-    //   address: '',
-    //   city: '',
-    //   state: '',
-    //   zip: '',
-    //   status: 1,
-    //   scheduleStatus: 1,
-    //   schedulingUrl: 'ponta'
-    // }];
+    this.companies = [{
+      id: '0',
+      name: 'Cartucho',
+      description: 'Melhor restaurante do vale',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: '',
+      status: 1,
+      scheduleStatus: 1,
+      schedulingUrl: 'cartucho',
+      employeers: [],
+      servicesOffered: [],
+      openingHours: []
+    }
+    ];
   }
 }

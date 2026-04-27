@@ -1,0 +1,39 @@
+<div class="services-container">
+  <!-- Header -->
+  <div class="services-header">
+    <div>
+      <h1>Serviços</h1>
+      <p class="text-muted">Gerencie os serviços oferecidos pela sua empresa</p>
+    </div>
+    <button class="btn btn-conci" (click)="openFormModal(null)">
+      <i class="bi bi-plus-circle me-2"></i>Adicionar Serviço
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff" type="square-jelly-box" [fullScreen]="true">
+    <p style="color: white">Carregando serviços...</p>
+  </ngx-spinner>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && services.length === 0" class="empty-state">
+    <i class="bi bi-briefcase"></i>
+    <h3>Nenhum serviço cadastrado</h3>
+    <p>Comece adicionando seu primeiro serviço</p>
+    <button class="btn btn-conci" (click)="openFormModal(null)">
+      <i class="bi bi-plus-circle me-2"></i>Adicionar Serviço
+    </button>
+  </div>
+
+  <!-- Services Grid -->
+  <div *ngIf="!isLoading && services.length > 0" class="services-grid">
+    <app-service-card
+      *ngFor="let service of services"
+      [service]="service"
+      (edit)="openFormModal(service)"
+      (delete)="deleteService(service)"
+      (toggleActive)="toggleActive(service)">
+    </app-service-card>
+  </div>
+</div>
+

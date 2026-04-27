@@ -1,55 +1,183 @@
 .container {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  height: 100vh;
+  margin: 0;
+}
+
+.container-info {
+  flex: 1;
+  background: linear-gradient(180deg, hsla(167, 35%, 24%, 1) 0%, hsla(167, 79%, 59%, 1) 90%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 40px;
+}
+
+.container-info h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-family: 'Abril Fatface', serif;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.container-info h2 {
+  text-align: center;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 15px;
+}
+
+.container-info h1 span {
+  color: #84DCC6;
+  font-family: 'Pacifico', cursive;
+}
+
+.container-info h2 span {
+  color: #84DCC6;
+  font-weight: 600;
+}
+
+.container-login {
+  flex: 1;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.container-login h1 {
+  text-align: center;
+  color: var(--dark-blue);
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.container-login form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.container-login .form-group {
+  margin-bottom: 20px;
+}
+
+.container-login label {
+  color: var(--dark-blue);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.container-login input[type="text"],
+.container-login input[type="password"],
+.container-login input[type="date"],
+.container-login input[type="email"] {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  width: 100%;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.container-login input[type="text"]:focus,
+.container-login input[type="password"]:focus,
+.container-login input[type="date"]:focus,
+.container-login input[type="email"]:focus {
+  outline: none;
+  border-color: var(--green-conci);
+  box-shadow: 0 0 0 3px rgba(63, 134, 156, 0.1);
+}
+
+.container-login .btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.btn-outline-primary {
+  background: white;
+  color: var(--dark-blue);
+  border: 2px solid var(--green-conci);
+}
+
+.btn-outline-primary:hover {
+  background: var(--green-conci);
+  color: white;
+  box-shadow: 0px 4px 15px rgba(63, 134, 156, 0.3);
+}
+
+.btn-outline-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.text-danger {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.alert {
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.alert-danger h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.alert-danger ul {
+  margin-bottom: 0;
+  padding-left: 20px;
+}
+
+img {
+  width: 100%;
+  max-height: 70%;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .container-info {
+    display: none;
+  }
+
+  .container-login {
     padding: 20px;
   }
-  
-  .container-login,
-  .container-info {
-    flex: 1;
-  }
-  
-  .container-login {
-    margin-left: 20px;
-  }
-  
-  .container-login h1,
-  .container-login h3 {
-    text-align: center;
-  }
-  
-  .container-login .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .container-login .btn {
-    width: 100%;
-  }
-  
-  .container-login input[type="text"],
-  .container-login input[type="password"] {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .container-info {
-    margin-right: 20px;
-  }
-  
-  .container-info h1,
-  .container-info h2 {
-    text-align: center;
-  }
 
-  img{
-    width: 100%;
-    /* height: 100%; */
-    max-height: 70%;
+  .container-login form {
+    max-width: 100%;
   }
-
-  @media screen and (max-width: 768px) {
-    .container-info {
-      display: none;
-    }
-  }
+}

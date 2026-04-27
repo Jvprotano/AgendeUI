@@ -1,15 +1,167 @@
-/* form {
-  max-width: 500px;
-  margin: 20px auto;
-} */
-
-label {
-  display: block;
-  margin-bottom: 5px;
+/* ===== MODAL STYLING ===== */
+::ng-deep .modal-content {
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
-.company-modal input.form-control {
-  padding: 7px !important;
-  max-width: none;
+::ng-deep .modal-header {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 0.75rem 0.75rem 0 0;
+  padding: 1.5rem;
+}
+
+::ng-deep .modal-footer {
+  background-color: #f8f9fa;
+  border-radius: 0 0 0.75rem 0.75rem;
+  padding: 1.5rem;
+}
+
+/* ===== STEP INDICATOR ===== */
+::ng-deep .step-indicator {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+::ng-deep .step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .step.active {
+  background: var(--gradient);
+  color: white;
+  box-shadow: 0 4px 12px rgba(63, 134, 156, 0.3);
+}
+
+/* ===== PROGRESS BAR ===== */
+::ng-deep .progress-bar-custom {
+  height: 4px;
+  background-color: var(--green-conci);
+}
+
+/* ===== FORM STYLING ===== */
+.company-modal {
+  padding: 2rem 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.company-modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--dark-blue);
+  font-size: 0.95rem;
+}
+
+.company-modal input.form-control,
+.company-modal textarea.form-control,
+.company-modal select.form-select {
+  padding: 0.75rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.company-modal input.form-control:focus,
+.company-modal textarea.form-control:focus,
+.company-modal select.form-select:focus {
+  border-color: var(--green-conci);
+  box-shadow: 0 0 0 3px rgba(63, 134, 156, 0.1);
+}
+
+.company-modal .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.company-modal .row {
+  margin-bottom: 1rem;
+}
+
+/* ===== BUTTONS ===== */
+.btn-conci {
+  background-color: var(--green-conci);
+  color: white;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-conci:hover {
+  background-color: var(--dark-blue);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 134, 156, 0.3);
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-outline-secondary {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .company-modal {
+    padding: 1.5rem 1rem;
+    max-height: 70vh;
+  }
+
+  ::ng-deep .modal-header {
+    padding: 1rem;
+  }
+
+  ::ng-deep .modal-footer {
+    padding: 1rem;
+  }
+
+  ::ng-deep .step-indicator {
+    gap: 0.25rem;
+  }
+
+  ::ng-deep .step {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+
+  .company-modal label {
+    font-size: 0.9rem;
+  }
+
+  .company-modal input.form-control,
+  .company-modal textarea.form-control,
+  .company-modal select.form-select {
+    font-size: 0.9rem;
+    padding: 0.6rem !important;
+  }
 }
 

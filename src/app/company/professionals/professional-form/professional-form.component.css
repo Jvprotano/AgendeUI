@@ -1,0 +1,191 @@
+/* ===== MODAL STYLING ===== */
+::ng-deep .modal-content {
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .modal-header {
+  background: linear-gradient(135deg, var(--green-conci) 0%, var(--dark-blue) 100%);
+  color: white;
+  border-radius: 0.75rem 0.75rem 0 0;
+  padding: 1.5rem;
+}
+
+::ng-deep .modal-header .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+::ng-deep .modal-footer {
+  background-color: #f8f9fa;
+  border-radius: 0 0 0.75rem 0.75rem;
+  padding: 1.5rem;
+}
+
+/* ===== FORM STYLING ===== */
+.modal-body {
+  padding: 2rem 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--dark-blue);
+  font-size: 0.95rem;
+}
+
+.form-control,
+.form-select {
+  padding: 0.75rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--green-conci);
+  box-shadow: 0 0 0 3px rgba(63, 134, 156, 0.1);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* ===== SPECIALTY INPUT ===== */
+.specialty-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.specialty-input-group .form-select {
+  flex: 1;
+}
+
+.specialty-input-group .btn {
+  padding: 0.75rem 1rem;
+  flex-shrink: 0;
+}
+
+/* ===== SPECIALTIES LIST ===== */
+.specialties-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.specialty-tag {
+  background: #f0f5f8;
+  color: var(--green-conci);
+  padding: 0.5rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--green-conci);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: var(--green-conci);
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+  color: #dc3545;
+}
+
+/* ===== CHECKBOX ===== */
+.form-check {
+  padding-left: 0;
+}
+
+.form-check-input {
+  margin-top: 0.3rem;
+  cursor: pointer;
+}
+
+.form-check-label {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: var(--dark-blue);
+  font-weight: 500;
+}
+
+/* ===== BUTTONS ===== */
+.btn-conci {
+  background-color: var(--green-conci);
+  color: white;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-conci:hover:not(:disabled) {
+  background-color: var(--dark-blue);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 134, 156, 0.3);
+}
+
+.btn-conci:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-outline-secondary {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .modal-body {
+    padding: 1.5rem 1rem;
+    max-height: 70vh;
+  }
+
+  ::ng-deep .modal-header {
+    padding: 1rem;
+  }
+
+  ::ng-deep .modal-footer {
+    padding: 1rem;
+  }
+
+  .specialty-input-group {
+    flex-direction: column;
+  }
+
+  .specialty-input-group .btn {
+    width: 100%;
+  }
+}
+
