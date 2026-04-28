@@ -1,50 +1,66 @@
 .not-found-container {
-  min-height: 80vh;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+}
+
+.not-found-card {
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 2rem;
-  color: var(--text-primary);
+  gap: 0.6rem;
+  padding: 1.3rem;
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(139, 92, 246, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(26, 20, 46, 0.97), rgba(16, 12, 31, 0.98));
+  box-shadow: var(--shadow-lg);
 }
 
 .not-found-code {
-  font-size: 6rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--accent);
+  font-size: clamp(3.2rem, 8vw, 5rem);
+  font-weight: 700;
+  font-family: var(--font-family-display);
+  color: #ddd6fe;
   line-height: 1;
-  margin-bottom: 1rem;
+  margin-bottom: 0.15rem;
 }
 
 .not-found-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 .not-found-text {
   color: var(--text-secondary);
-  margin-bottom: 2rem;
+  margin-bottom: 0.35rem;
 }
 
 .btn-home {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: 0.75rem 1.5rem;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0 1rem;
   background: var(--gradient-btn);
   color: #fff;
   border: none;
-  border-radius: var(--radius-md);
-  font-weight: var(--font-weight-semibold);
+  border-radius: 11px;
+  font-weight: 700;
+  font-size: 0.82rem;
   text-decoration: none;
-  transition: opacity var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .btn-home:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0, 200, 83, 0.3);
+  box-shadow: 0 10px 20px rgba(109, 40, 217, 0.4);
   color: #fff;
 }

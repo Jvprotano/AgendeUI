@@ -1,69 +1,140 @@
-<div class="h-100 w-100 d-flex vh-100">
-    <app-sidebar [companyId]="companyId"></app-sidebar>
-    <div class="row text-center company-area">
-        <div class="w-25">
-            <div class="border card pt-0 px-0">
-                <div class="card-body">
-                    <div class="mt-4">
-                        <div class="sub">
-                            <ng-container>
-                                <h4 class="fw-medium">Gráfico Entradas</h4>
-                                <div id="external-events" class="mb-3">
-                                    <div class="graficos">
-                                        <img alt="grafico barra horizontal" src="assets/grafico-barras.jpg">
-                                    </div>
-                                    <!-- <div
-                      class="bg-warning-subtle external-event fc-event mb-2 px-3 py-2 text-start text-warning"
-                      data-class="text-warning bg-warning-subtle border-0"
-                    >
-                      <i class="bi bi-circle-fill me-2 text-warning me-2"></i>
-                      Cabelo
-                    </div>
-                    <div data-class="text-info bg-info-subtle border-0"
-                      class="bg-info-subtle external-event fc-event mb-2 px-3 py-2 text-start text-info"
-                    >
-                      <i class="bi bi-circle-fill me-2 text-info me-2"></i>
-                      Barba
-                    </div> -->
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="h-100 w-100 d-flex">
+  <app-sidebar [companyId]="companyId"></app-sidebar>
+
+  <div class="company-area dashboard-page w-100">
+    <section class="dashboard-header">
+      <div>
+        <h2>Dashboard - {{ companyName }}</h2>
+        <p>Painel operacional com dados ficticios para acompanhar a performance diaria da empresa.</p>
+      </div>
+      <div class="header-badge">
+        <i class="bi bi-clock-history"></i>
+        Atualizado agora
+      </div>
+    </section>
+
+    <section class="kpi-grid">
+      <article class="kpi-card" *ngFor="let item of kpis">
+        <div class="kpi-card__icon">
+          <i class="bi" [ngClass]="item.icon"></i>
         </div>
-        <div class="w-25">
-            <div class="border card pt-0 px-0">
-                <div class="card-body">
-                    <div class="mt-4">
-                        <div class="sub">
-                            <ng-container>
-                                <h4 class="fw-medium">Gráfico Saídas</h4>
-                                <div id="external-events" class="mb-3">
-                                    <div class="graficos">
-                                        <img alt="grafico de pizza" src="assets/Grafico-pizza-de-pizza-10.png">
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="kpi-card__body">
+          <small>{{ item.label }}</small>
+          <h3>{{ item.value }}</h3>
+          <span class="kpi-card__delta" [class.negative]="!item.trendUp">
+            {{ item.delta }} vs. semana anterior
+          </span>
         </div>
-        <div class="w-25">
-            <div class="border card pt-0 px-0">
-                <div class="card-body">
-                    <div class="mt-4">
-                        <div class="sub">
-                            <ng-container>
-                                <h4 class="fw-medium">Saldo</h4>
-                                <div id="external-events" class="mb-3">
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </article>
+    </section>
+
+    <section class="dashboard-main-grid">
+      <article class="panel-card">
+        <div class="panel-card__header">
+          <h4>Agendamentos por dia</h4>
+          <span class="chip chip-teal">Ultimos 7 dias</span>
         </div>
-    </div>
+
+        <div class="week-bars">
+          <div class="week-bars__item" *ngFor="let item of weekPerformance; trackBy: trackByDay">
+            <span class="week-bars__value">{{ item.bookings }}</span>
+            <div class="week-bars__track">
+              <div class="week-bars__fill" [style.height.%]="(item.bookings / maxWeekBookings) * 100"></div>
+            </div>
+            <span class="week-bars__day">{{ item.day }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card">
+        <div class="panel-card__header">
+          <h4>Distribuicao de servicos</h4>
+          <span class="chip">Composicao atual</span>
+        </div>
+
+        <div class="service-share-list">
+          <div class="service-share-item" *ngFor="let item of serviceShare; trackBy: trackByService">
+            <div class="service-share-item__label">
+              <span class="dot" [style.background]="item.color"></span>
+              <span>{{ item.name }}</span>
+            </div>
+            <div class="service-share-item__bar">
+              <div class="service-share-item__fill" [style.width.%]="item.value" [style.background]="item.color"></div>
+            </div>
+            <span class="service-share-item__value">{{ item.value }}%</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card panel-card--wide">
+        <div class="panel-card__header">
+          <h4>Proximos atendimentos</h4>
+          <span class="chip chip-outline">{{ statusSummary }}</span>
+        </div>
+
+        <div class="upcoming-list">
+          <div class="upcoming-item" *ngFor="let item of upcomingAppointments; trackBy: trackByAppointment">
+            <div class="upcoming-item__time">{{ item.time }}</div>
+            <div class="upcoming-item__info">
+              <h6>{{ item.customer }}</h6>
+              <p>{{ item.service }} - {{ item.professional }}</p>
+            </div>
+            <span class="status-pill" [class.pending]="item.status === 'Pendente'">{{ item.status }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card">
+        <div class="panel-card__header">
+          <h4>Destaques da equipe</h4>
+          <span class="chip">Desempenho</span>
+        </div>
+
+        <div class="team-list">
+          <div class="team-item" *ngFor="let item of teamHighlights; trackBy: trackByProfessional">
+            <div>
+              <strong>{{ item.professional }}</strong>
+              <small>{{ item.completed }} atendimentos</small>
+            </div>
+            <div class="rating-badge">
+              <i class="bi bi-star-fill"></i>
+              {{ item.rating | number:'1.1-1' }}
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card">
+        <div class="panel-card__header">
+          <h4>Ocupacao por horario</h4>
+          <span class="chip">Hoje</span>
+        </div>
+
+        <div class="hourly-list">
+          <div class="hourly-item" *ngFor="let item of occupancyByHour">
+            <span class="hourly-item__hour">{{ item.hour }}</span>
+            <div class="hourly-item__bar">
+              <div class="hourly-item__fill" [style.width.%]="item.occupancy"></div>
+            </div>
+            <span class="hourly-item__value">{{ item.occupancy }}%</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="dashboard-actions">
+      <a class="action-btn" [routerLink]="['/company', companyId, 'schedule']">
+        <i class="bi bi-calendar2-week"></i>
+        Ir para Agenda
+      </a>
+      <a class="action-btn" [routerLink]="['/company', companyId, 'services']">
+        <i class="bi bi-scissors"></i>
+        Gerenciar Servicos
+      </a>
+      <a class="action-btn" [routerLink]="['/company', companyId, 'employees']">
+        <i class="bi bi-people"></i>
+        Gerenciar Profissionais
+      </a>
+    </section>
+  </div>
 </div>

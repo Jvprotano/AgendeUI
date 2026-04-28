@@ -31,7 +31,6 @@ export class StepConfirmComponent {
   @Input() isLoggedIn = false;
   @Input() skipProfessionalStep = false;
   @Output() confirmed = new EventEmitter<void>();
-  @Output() guestConfirmed = new EventEmitter<void>();
   @Output() loginRequested = new EventEmitter<void>();
   @Output() editStep = new EventEmitter<number>();
 
@@ -49,10 +48,6 @@ export class StepConfirmComponent {
 
   onConfirm() {
     this.confirmed.emit();
-  }
-
-  onGuestConfirm() {
-    this.guestConfirmed.emit();
   }
 
   onLogin() {

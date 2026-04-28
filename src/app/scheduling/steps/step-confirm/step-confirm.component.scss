@@ -203,28 +203,12 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 200, 83, 0.25);
   }
-}
 
-.login-divider {
-  color: var(--text-tertiary);
-  font-size: var(--font-size-xs);
-}
-
-.btn-guest {
-  padding: 0.625rem 1.25rem;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--text-secondary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-
-  &:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    border-color: var(--border-strong);
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 }
 
@@ -292,9 +276,10 @@
     flex-direction: column;
     width: 100%;
 
-    .btn-login,
-    .btn-guest {
+    .btn-login {
       width: 100%;
     }
   }
 }
+
+

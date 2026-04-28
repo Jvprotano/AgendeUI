@@ -1,41 +1,168 @@
 <div class="h-100 w-100 d-flex">
   <app-sidebar [companyId]="companyId"></app-sidebar>
 
-  <div class="company-area w-100">
-    <!-- Page Header -->
-    <div class="d-flex align-items-center justify-content-between mb-3 px-1">
+  <div class="company-area schedule-page w-100">
+    <section class="schedule-hero">
       <div>
-        <h4 class="fw-semibold mb-1" style="color: var(--text-primary);">
+        <h4 class="schedule-title">
           {{ companyName || ('COMPANY.CALENDAR.SCHEDULE' | translate) }}
         </h4>
-        <p class="text-muted mb-0 small">
+        <p class="schedule-subtitle">
           {{ 'COMPANY.CALENDAR.SCHEDULE_SUBTITLE' | translate }}
         </p>
       </div>
-    </div>
 
-    <!-- Status Legend -->
-    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 px-1">
-      <span
-        *ngFor="let item of statusItems"
-        class="d-inline-flex align-items-center gap-1 small text-muted"
-      >
-        <span class="legend-dot" [style.background-color]="item.color"></span>
-        <span>{{ item.labelKey | translate }}</span>
-      </span>
-    </div>
+      <div class="today-chip">
+        <i class="bi bi-calendar-check"></i>
+        {{ todayAppointments }} atendimentos hoje
+      </div>
+    </section>
 
-    <!-- Calendar Card -->
-    <div class="calendar-card rounded-3 shadow-sm position-relative">
-      <!-- Loading Bar -->
-      <mat-progress-bar
-        *ngIf="isLoading"
-        mode="indeterminate"
-        class="calendar-loading-bar"
-      ></mat-progress-bar>
+    <section class="schedule-summary">
+      <article class="summary-card">
+        <div class="summary-icon"><i class="bi bi-collection"></i></div>
+        <div>
+          <small>Total</small>
+          <strong>{{ totalAppointments }}</strong>
+        </div>
+      </article>
 
-      <!-- Calendar -->
-      <div #calendarEl class="p-3"></div>
-    </div>
+      <article class="summary-card">
+        <div class="summary-icon summary-icon--pending"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+          <small>Pendentes</small>
+          <strong>{{ pendingAppointments }}</strong>
+        </div>
+      </article>
+
+      <article class="summary-card">
+        <div class="summary-icon summary-icon--confirmed"><i class="bi bi-check2-circle"></i></div>
+        <div>
+          <small>Confirmados</small>
+          <strong>{{ confirmedAppointments }}</strong>
+        </div>
+      </article>
+
+      <article class="summary-card">
+        <div class="summary-icon summary-icon--done"><i class="bi bi-clipboard2-check"></i></div>
+        <div>
+          <small>Concluidos</small>
+          <strong>{{ completedAppointments }}</strong>
+        </div>
+      </article>
+
+      <article class="summary-card summary-card--danger">
+        <div class="summary-icon summary-icon--cancel"><i class="bi bi-x-circle"></i></div>
+        <div>
+          <small>Cancelados</small>
+          <strong>{{ cancelledAppointments }}</strong>
+        </div>
+      </article>
+    </section>
+
+    <section class="schedule-board" *ngIf="!isMobile; else mobileAgenda">
+      <div class="schedule-legend">
+        <span class="legend-item" *ngFor="let item of statusItems">
+          <span class="legend-dot" [style.background-color]="item.color"></span>
+          <span>{{ item.labelKey | translate }}</span>
+        </span>
+      </div>
+
+      <div class="calendar-card position-relative">
+        <mat-progress-bar
+          *ngIf="isLoading"
+          mode="indeterminate"
+          class="calendar-loading-bar"
+        ></mat-progress-bar>
+
+        <div #calendarEl class="calendar-host"></div>
+      </div>
+    </section>
+
+    <ng-template #mobileAgenda>
+      <section class="mobile-agenda">
+        <header class="mobile-agenda__header">
+          <div class="mobile-header-main">
+            <strong>{{ mobileMonthLabel }}</strong>
+            <span>{{ mobileWeekLabel }}</span>
+          </div>
+          <div class="mobile-header-actions">
+            <button type="button" class="mobile-link-btn" (click)="goToMobileToday()">Hoje</button>
+            <button type="button" class="mobile-link-btn" (click)="openMobileDatePicker(mobileDatePicker)">
+              Data
+            </button>
+            <input
+              #mobileDatePicker
+              type="date"
+              class="mobile-hidden-date-input"
+              [value]="selectedMobileDate"
+              (change)="onMobileDatePicked(mobileDatePicker.value)"
+            />
+          </div>
+        </header>
+
+        <div class="mobile-week-nav">
+          <button type="button" class="mobile-nav-btn" (click)="previousMobileWeek()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button type="button" class="mobile-nav-btn" (click)="nextMobileWeek()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div #mobileDaysScroller class="mobile-days">
+          <button
+            *ngFor="let day of mobileDays"
+            type="button"
+            class="mobile-day"
+            [class.mobile-day--active]="day.date === selectedMobileDate"
+            [class.mobile-day--today]="day.isToday"
+            (click)="selectMobileDate(day.date)"
+            [attr.data-date]="day.date"
+          >
+            <span>{{ day.dayShort }}</span>
+            <strong>{{ day.dayNumber }}</strong>
+          </button>
+        </div>
+
+        <div *ngIf="isLoading" class="mobile-loading">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+
+        <div *ngIf="!isLoading && selectedMobileAppointments.length === 0" class="mobile-empty">
+          <i class="bi bi-calendar-x"></i>
+          <p>Nenhum atendimento neste dia</p>
+        </div>
+
+        <div class="mobile-selected-date" *ngIf="!isLoading">
+          {{ selectedMobileDateLabel }}
+        </div>
+
+        <div
+          *ngIf="!isLoading && selectedMobileAppointments.length > 0"
+          class="mobile-list"
+          [class.mobile-list--animate]="mobileListAnimating"
+        >
+          <button
+            type="button"
+            class="mobile-card"
+            *ngFor="let item of selectedMobileAppointments"
+            (click)="openMobileAppointment(item)"
+          >
+            <div class="mobile-card__time">{{ item.time.substring(0,5) }}</div>
+            <div class="mobile-card__content">
+              <h6>{{ item.customerName || 'Cliente' }}</h6>
+              <p>
+                {{ item.serviceName || 'Servico' }}
+                <span *ngIf="item.professionalName">- {{ item.professionalName }}</span>
+              </p>
+            </div>
+            <span class="mobile-status" [ngClass]="getStatusClass(item.status)">
+              {{ getStatusLabel(item.status) }}
+            </span>
+          </button>
+        </div>
+      </section>
+    </ng-template>
   </div>
 </div>

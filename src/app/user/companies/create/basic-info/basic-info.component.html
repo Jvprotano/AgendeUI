@@ -11,14 +11,13 @@
 
   <ng-template #formContent>
     <div [class.horizontal-layout]="horizontal">
-      <!-- Image Upload -->
       <div class="image-upload-container" [class.image-compact]="horizontal">
         <div class="image-preview" [class.has-image]="hasImage()">
           <input class="d-none" id="company-image" type="file" (change)="onFileChange($event)" accept="image/*" />
-          <img [src]="hasImage() ? imageValue : 'assets/not-found.png'" [alt]="hasImage() ? 'Company Logo' : 'No Image'" />
+          <img [src]="hasImage() ? imageValue : 'assets/not-found.png'" [alt]="hasImage() ? 'Logo da empresa' : 'Sem logo'" />
           <label for="company-image" class="upload-overlay" matRipple>
             <mat-icon>{{ hasImage() ? 'edit' : 'add_a_photo' }}</mat-icon>
-            <span>{{ hasImage() ? 'Alterar' : 'Adicionar Logo' }}</span>
+            <span>{{ hasImage() ? 'Alterar' : 'Adicionar logo' }}</span>
           </label>
         </div>
         <button *ngIf="hasImage()" mat-stroked-button color="warn" (click)="removeImage()" class="remove-image-btn">
@@ -27,26 +26,24 @@
         </button>
       </div>
 
-      <!-- Fields column -->
       <div class="fields-column">
-        <!-- Company Details -->
         <div class="form-section">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nome da Empresa</mat-label>
+            <mat-label>Nome da empresa</mat-label>
             <input matInput formControlName="name" required>
             <mat-error *ngIf="form.get('name')?.hasError('required')">
-              Nome da empresa é obrigatório
+              Nome da empresa e obrigatorio
             </mat-error>
           </mat-form-field>
 
           <div class="fields-row" *ngIf="horizontal && form.get('timeZoneId'); else cnpjOnly">
             <mat-form-field appearance="outline" class="half-width">
-              <mat-label>CNPJ (Opcional)</mat-label>
+              <mat-label>CNPJ (opcional)</mat-label>
               <input matInput formControlName="cnpj" [mask]="'00.000.000/0000-00'" placeholder="00.000.000/0000-00">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="half-width">
-              <mat-label>Fuso Horário</mat-label>
+              <mat-label>Fuso horario</mat-label>
               <mat-select formControlName="timeZoneId">
                 <mat-option *ngFor="let tz of timezoneOptions" [value]="tz.value">
                   {{ tz.label }}
@@ -57,16 +54,15 @@
 
           <ng-template #cnpjOnly>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>CNPJ (Opcional)</mat-label>
+              <mat-label>CNPJ (opcional)</mat-label>
               <input matInput formControlName="cnpj" [mask]="'00.000.000/0000-00'" placeholder="00.000.000/0000-00">
             </mat-form-field>
           </ng-template>
         </div>
 
-        <!-- Timezone (vertical layout only) -->
         <div class="form-section" *ngIf="!horizontal && form.get('timeZoneId')">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Fuso Horário</mat-label>
+            <mat-label>Fuso horario</mat-label>
             <mat-select formControlName="timeZoneId">
               <mat-option *ngFor="let tz of timezoneOptions" [value]="tz.value">
                 {{ tz.label }}
@@ -75,21 +71,20 @@
           </mat-form-field>
         </div>
 
-        <!-- Scheduling URL -->
         <div class="form-section" [class.url-section-compact]="horizontal">
-          <h3 class="section-title" *ngIf="!horizontal">URL de Agendamento</h3>
+          <h3 class="section-title" *ngIf="!horizontal">URL de agendamento</h3>
           <p class="section-description" *ngIf="!horizontal">
-            Este é o link que seus clientes usarão para agendar.
+            Este e o link que os clientes usarao para marcar horarios.
           </p>
 
           <div class="url-input-group">
             <mat-form-field appearance="outline" class="prefix-field">
-              <mat-label *ngIf="horizontal">URL de Agendamento</mat-label>
+              <mat-label *ngIf="horizontal">URL de agendamento</mat-label>
               <input matInput [value]="prefix" readonly>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="url-field">
-              <mat-label>URL</mat-label>
+              <mat-label>Slug</mat-label>
               <input matInput formControlName="schedulingUrl"
                      (keyup)="checkUrlIsValid()"
                      placeholder="sua-empresa">
@@ -100,7 +95,7 @@
               </mat-hint>
               <mat-error *ngIf="form.get('schedulingUrl')?.hasError('required')" class="url-status error">
                 <mat-icon class="status-icon">error</mat-icon>
-                URL de agendamento é obrigatória
+                URL de agendamento e obrigatoria
               </mat-error>
               <mat-error *ngIf="urlErrorMessage && !form.get('schedulingUrl')?.hasError('required')" class="url-status error">
                 <mat-icon class="status-icon">error</mat-icon>

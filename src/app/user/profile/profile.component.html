@@ -1,43 +1,62 @@
-<div class="container d-flex justify-content-center align-items-center">
-    <form [formGroup]="profileForm" class="w-50" (ngSubmit)="onSubmit()">
-        <div class="text-center mb-4">
-            <input class="form-control d-none" id="fileInput" type="file" *ngIf="!hasImage()"
-                (change)="onFileChange($event)" />
-            <img [src]="hasImage() ? this.profileForm.get('imageUrl')?.value : 'assets/user-icon.svg'"
-                onclick="fileInput.click()" alt="image" class="mb-3" />
-            <a class="btn btn-danger" (click)="removeImage()" *ngIf="hasImage()">Remover imagem</a>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="firstName" disabled class="form-label">Nome</label>
-                <input class="form-control" type="text" formControlName="firstName" />
-            </div>
-            <div class="col-md-6">
-                <label for="lastName" disabled class="form-label">Sobrenome</label>
-                <input class="form-control" type="text" formControlName="lastName" />
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="email" class="form-label">Email</label>
-                <input class="form-control" [readOnly]="true" type="email" formControlName="email" />
-            </div>
-            <div class="col-md-4">
-                <label for="phoneNumber" class="form-label">Telefone</label>
-                <input class="form-control" type="phoneNumber" formControlName="phoneNumber"
-                    placeholder="(99) 9 9999-9999" />
-            </div>
-            <div class="col-md-4">
-                <button class="btn btn-md btn-outline-success" style="margin-top: 30px;">Confirmar telefone</button>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <button class="btn btn-light">Change password</button>
-            </div>
-        </div>
+<div class="profile-page">
+  <section class="profile-card">
+    <header class="profile-header">
+      <div>
+        <h1>Meu perfil</h1>
+        <p>Atualize seus dados de contato e imagem de exibicao.</p>
+      </div>
+    </header>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+      <div class="avatar-section">
+        <input class="d-none" id="fileInput" type="file" (change)="onFileChange($event)" accept="image/*" />
+        <label for="fileInput" class="avatar-wrapper" aria-label="Alterar imagem">
+          <img [src]="hasImage() ? profileForm.get('imageUrl')?.value : 'assets/user-icon.svg'" alt="Foto de perfil" />
+          <span class="avatar-overlay">
+            <i class="bi bi-camera"></i>
+            Alterar foto
+          </span>
+        </label>
+
+        <button type="button" class="btn-remove-photo" (click)="removeImage()" *ngIf="hasImage()">
+          <i class="bi bi-trash"></i>
+          Remover imagem
+        </button>
+      </div>
+
+      <div class="fields-grid">
         <div class="form-group">
-            <button type="submit" class="btn btn-conci">Salvar</button>
+          <label class="form-label">Nome</label>
+          <input class="form-control" type="text" formControlName="firstName" />
         </div>
+
+        <div class="form-group">
+          <label class="form-label">Sobrenome</label>
+          <input class="form-control" type="text" formControlName="lastName" />
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label">Email</label>
+          <input class="form-control" [readOnly]="true" type="email" formControlName="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Telefone</label>
+          <input class="form-control" type="text" formControlName="phoneNumber" placeholder="(99) 9 9999-9999" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Data de nascimento</label>
+          <input class="form-control" type="date" formControlName="birthDate" />
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button type="submit" class="btn-save">
+          <i class="bi bi-check2"></i>
+          Salvar alteracoes
+        </button>
+      </div>
     </form>
+  </section>
 </div>

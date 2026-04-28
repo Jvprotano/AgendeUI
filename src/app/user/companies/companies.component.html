@@ -1,17 +1,15 @@
 <div class="companies-page">
-  <!-- Page header -->
   <div class="page-header">
     <div>
-      <h1 class="page-title">Minhas Empresas</h1>
-      <p class="page-subtitle">Gerencie suas empresas e agendamentos</p>
+      <h1 class="page-title">Minhas empresas</h1>
+      <p class="page-subtitle">Gerencie suas empresas e links de agendamento</p>
     </div>
     <button class="btn-new" (click)="openCreateModal()">
       <i class="bi bi-plus-lg"></i>
-      Nova Empresa
+      Nova empresa
     </button>
   </div>
 
-  <!-- Loading skeleton -->
   <div *ngIf="isLoading" class="grid">
     <div *ngFor="let _ of [1, 2, 3]" class="skeleton-card">
       <div class="skeleton sk-logo"></div>
@@ -21,14 +19,13 @@
     </div>
   </div>
 
-  <!-- Empty state -->
   <div *ngIf="!isLoading && companies.length === 0" class="empty-state">
     <div class="empty-icon">
       <i class="bi bi-building"></i>
     </div>
     <h2 class="empty-title">Nenhuma empresa ainda</h2>
     <p class="empty-text">
-      Crie sua primeira empresa para começar a gerenciar agendamentos.
+      Crie sua primeira empresa para comecar a gerenciar agendamentos.
     </p>
     <button class="btn-new" (click)="openCreateModal()">
       <i class="bi bi-plus-lg"></i>
@@ -36,7 +33,6 @@
     </button>
   </div>
 
-  <!-- Company grid -->
   <div *ngIf="!isLoading && companies.length > 0" class="grid">
     <article
       *ngFor="let item of companies; let i = index"
@@ -44,10 +40,8 @@
       [class.card-inactive]="item.status !== 1"
       [style.animation-delay]="(i * 0.06) + 's'"
     >
-      <!-- Status strip -->
       <div class="card-status-strip" [ngClass]="statusStripClass(item)"></div>
 
-      <!-- Card top row -->
       <div class="card-top">
         <div class="logo-wrap">
           <img
@@ -75,7 +69,7 @@
                 <i class="bi bi-pencil"></i> Editar empresa
               </a>
               <button ngbDropdownItem (click)="copyLink(item)">
-                <i class="bi bi-link-45deg"></i> Copiar link de agendamento
+                <i class="bi bi-link-45deg"></i> Copiar pagina de agendamento
               </button>
               <div class="menu-divider"></div>
               <button ngbDropdownItem (click)="openCloseSchedule(item.id)">
@@ -104,7 +98,6 @@
         </div>
       </div>
 
-      <!-- Company info -->
       <div class="card-info">
         <h3 class="company-name">{{ item.name }}</h3>
         <p *ngIf="item.description" class="company-desc">
@@ -114,11 +107,11 @@
         <div class="company-url" *ngIf="item.schedulingUrl">
           <div class="company-url-meta">
             <i class="bi bi-globe2"></i>
-            <span class="url-label">Link de agendamento</span>
+            <span class="url-label">Pagina de agendamento</span>
           </div>
           <button type="button" class="url-copy-btn" (click)="copyLink(item)">
             <i class="bi bi-clipboard"></i>
-            Copiar
+            Copiar link
           </button>
         </div>
         <div class="company-url-value" *ngIf="item.schedulingUrl">
@@ -126,7 +119,6 @@
         </div>
       </div>
 
-      <!-- Stats row -->
       <div class="card-stats">
         <div class="stat">
           <i class="bi bi-people"></i>
@@ -137,11 +129,10 @@
         <div class="stat">
           <i class="bi bi-scissors"></i>
           <span>{{ item?.servicesOffered?.length ?? 0 }}</span>
-          <small>serviços</small>
+          <small>servicos</small>
         </div>
       </div>
 
-      <!-- Card footer -->
       <div class="card-footer-actions">
         <ng-container *ngIf="item.status === 1; else inactiveFooter">
           <a
@@ -149,7 +140,7 @@
             class="btn-primary-action"
           >
             <i class="bi bi-calendar3"></i>
-            Ver Agenda
+            Ver agenda
           </a>
         </ng-container>
         <ng-template #inactiveFooter>

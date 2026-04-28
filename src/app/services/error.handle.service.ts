@@ -26,19 +26,24 @@ export const authInterceptor: HttpInterceptorFn = (
   // Attach Bearer token if present and valid
   const token = localStorageUtils.getUserToken();
   let authReq = req;
+  const isPublicSchedulingRequest = req.url.includes('/scheduling');
 
   if (token && !isTokenExpired(token)) {
     authReq = req.clone({
       headers: req.headers.set('Authorization', `Bearer ${token}`),
     });
   } else if (token && isTokenExpired(token)) {
-    // Token exists but is expired - trigger session expired flow
-    accountService.handleSessionExpired();
-    translate.get('AUTH.SESSION_EXPIRED').subscribe((msg) => {
-      toastr.warning(msg, '', { positionClass: 'toast-top-center' });
-    });
-    router.navigate(['/account/login']);
-    return EMPTY;
+    // Clear stale token first. Public scheduling flows must continue anonymously.
+    localStorageUtils.clearUserLocalData();
+
+    if (!isPublicSchedulingRequest) {
+      accountService.handleSessionExpired();
+      translate.get('AUTH.SESSION_EXPIRED').subscribe((msg) => {
+        toastr.warning(msg, '', { positionClass: 'toast-top-center' });
+      });
+      router.navigate(['/account/login']);
+      return EMPTY;
+    }
   }
 
   return next(authReq).pipe(

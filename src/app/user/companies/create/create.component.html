@@ -1,7 +1,15 @@
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
-    <h1 class="modal-title">Criar Empresa</h1>
+    <div>
+      <h1 class="modal-title">Criar empresa</h1>
+      <p class="modal-subtitle">Configure os dados principais e o horario inicial da agenda.</p>
+    </div>
     <button type="button" class="btn btn-close" (click)="close()"></button>
+  </div>
+
+  <div class="step-meta">
+    <span class="step-pill" [class.active]="currentStep === 0">1. Dados da empresa</span>
+    <span class="step-pill" [class.active]="currentStep === 1">2. Horarios</span>
   </div>
 
   <mat-progress-bar mode="determinate" [value]="currentStep === 0 ? 50 : 100"></mat-progress-bar>
@@ -9,10 +17,10 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="modal-body company-modal">
       <div class="step-description" *ngIf="currentStep === 0">
-        <p>Preencha os dados da empresa e defina o link de agendamento.</p>
+        <p>Defina nome, identidade visual e link de agendamento.</p>
       </div>
       <div class="step-description" *ngIf="currentStep === 1">
-        <p>Configure os horários de atendimento iniciais.</p>
+        <p>Defina os horarios iniciais de atendimento para cada dia.</p>
       </div>
 
       <app-basic-info
@@ -45,7 +53,7 @@
           color="primary"
           type="button"
           (click)="onNextStep()">
-          Próximo
+          Proximo
           <mat-icon>arrow_forward</mat-icon>
         </button>
         <button
@@ -53,7 +61,7 @@
           class="btn btn-success"
           type="submit"
           [disabled]="!form.valid">
-          Criar
+          Criar empresa
         </button>
       </div>
     </div>

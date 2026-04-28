@@ -1,20 +1,20 @@
 :host {
   display: block;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .page-title {
   color: var(--text-primary);
+  font-family: var(--font-family-display);
 }
 
 .loading-area {
-  min-height: 300px;
+  min-height: 280px;
 }
 
-// Search
 .search-box {
   position: relative;
-  max-width: 320px;
+  max-width: 340px;
 }
 
 .search-icon {
@@ -23,42 +23,52 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-tertiary);
-  font-size: var(--font-size-sm);
+  font-size: 0.82rem;
 }
 
 .search-input {
+  min-height: 44px;
   padding-left: 36px !important;
+  border-radius: 14px;
 }
 
-// Empty state
 .empty-state {
-  padding: 4rem 1rem;
+  padding: 4.4rem 1rem;
+  border: 1px dashed var(--border-default);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, rgba(139, 92, 246, 0.12), transparent 44%),
+    rgba(255, 255, 255, 0.02);
 }
 
 .empty-icon {
-  font-size: 3.5rem;
-  color: var(--text-tertiary);
+  font-size: 3.1rem;
+  color: #c4b5fd;
 }
 
-// Service cards
 .service-card {
-  background-color: var(--bg-surface);
+  background:
+    radial-gradient(circle at top right, rgba(139, 92, 246, 0.17), transparent 36%),
+    linear-gradient(180deg, rgba(24, 19, 45, 0.95), rgba(15, 11, 30, 0.98));
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
+  border-radius: 18px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  transition: border-color var(--transition-fast);
+  gap: 0.65rem;
+  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   height: 100%;
+}
 
-  &:hover {
-    border-color: var(--accent-muted);
-  }
+.service-card:hover {
+  border-color: rgba(167, 139, 250, 0.5);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .service-name {
   color: var(--text-primary);
-  font-size: var(--font-size-base);
+  font-size: 0.95rem;
 }
 
 .service-desc {
@@ -71,17 +81,16 @@
 }
 
 .service-price {
-  color: var(--accent);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-base);
+  color: #ddd6fe;
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .service-duration {
   color: var(--text-secondary);
-  font-size: var(--font-size-sm);
+  font-size: 0.78rem;
 }
 
-// Icon buttons
 .btn-icon {
   width: 32px;
   height: 32px;
@@ -89,21 +98,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-default);
-  background-color: transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(193, 174, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-secondary);
   transition: all var(--transition-fast);
+}
 
-  &:hover {
-    background-color: var(--bg-hover);
-    color: var(--text-primary);
-    border-color: var(--border-strong);
-  }
+.btn-icon:hover {
+  background: rgba(139, 92, 246, 0.16);
+  color: #ede9fe;
+  border-color: rgba(167, 139, 250, 0.45);
 }
 
 .btn-icon-danger:hover {
-  background-color: rgba(239, 68, 68, 0.08);
-  color: var(--error);
-  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.14);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
 }

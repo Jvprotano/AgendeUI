@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   ViewChild,
   ElementRef,
   HostListener,
@@ -24,7 +25,16 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import esLocale from '@fullcalendar/core/locales/es';
-import { format, addMinutes, parse } from 'date-fns';
+import {
+  format,
+  addMinutes,
+  parse,
+  addDays,
+  startOfWeek,
+  startOfDay,
+  isToday,
+} from 'date-fns';
+import { ptBR, es, enUS } from 'date-fns/locale';
 
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SchedulingService } from '../../scheduling/services/scheduling.service';
@@ -45,12 +55,19 @@ import { AppointmentDetailComponent } from './appointment-detail/appointment-det
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.scss',
 })
-export class ScheduleComponent implements OnInit, AfterViewInit {
+export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('calendarEl') calendarEl!: ElementRef;
+  @ViewChild('mobileDaysScroller') mobileDaysScroller?: ElementRef<HTMLElement>;
 
   companyId = '';
   companyName = '';
   isLoading = false;
+  totalAppointments = 0;
+  pendingAppointments = 0;
+  confirmedAppointments = 0;
+  cancelledAppointments = 0;
+  completedAppointments = 0;
+  todayAppointments = 0;
 
   readonly statusItems = [
     { color: '#F59E0B', labelKey: 'COMPANY.CALENDAR.STATUS_PENDING' },
@@ -59,11 +76,27 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     { color: '#3B82F6', labelKey: 'COMPANY.CALENDAR.STATUS_COMPLETED' },
   ];
 
+  mobileDays: Array<{
+    date: string;
+    dayShort: string;
+    dayNumber: string;
+    isToday: boolean;
+  }> = [];
+  selectedMobileDate = '';
+  mobileWeekLabel = '';
+  mobileMonthLabel = '';
+  selectedMobileDateLabel = '';
+  mobileListAnimating = false;
+  selectedMobileAppointments: Appointment[] = [];
+
   private calendar!: Calendar;
   private destroyRef = inject(DestroyRef);
-  private isMobile = window.innerWidth < 768;
+  isMobile = window.innerWidth < 768;
+  private calendarInitialized = false;
   private currentFrom = '';
   private currentTo = '';
+  private appointmentsCache: Appointment[] = [];
+  private mobileListAnimTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private schedulingService: SchedulingService,
@@ -77,28 +110,58 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.params['id'];
+    this.selectedMobileDate = format(new Date(), 'yyyy-MM-dd');
     this.loadCompanyName();
   }
 
   ngAfterViewInit(): void {
+    if (this.isMobile) {
+      this.initMobileAgenda();
+      return;
+    }
+
     this.initCalendar();
+  }
+
+  ngOnDestroy(): void {
+    if (this.mobileListAnimTimer) {
+      clearTimeout(this.mobileListAnimTimer);
+    }
   }
 
   @HostListener('window:resize')
   onResize(): void {
     const nowMobile = window.innerWidth < 768;
-    if (nowMobile !== this.isMobile && this.calendar) {
-      this.isMobile = nowMobile;
-      this.calendar.changeView(nowMobile ? 'listWeek' : 'timeGridWeek');
+    if (nowMobile === this.isMobile) {
+      return;
     }
+
+    this.isMobile = nowMobile;
+
+    if (nowMobile) {
+      if (this.calendarInitialized) {
+        this.calendar.destroy();
+        this.calendarInitialized = false;
+      }
+      this.initMobileAgenda();
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.cdr.detectChanges();
+    setTimeout(() => this.initCalendar(), 0);
   }
 
   private initCalendar(): void {
+    if (!this.calendarEl?.nativeElement || this.calendarInitialized) {
+      return;
+    }
+
     const lang = this.translate.currentLang || 'pt';
 
     this.calendar = new Calendar(this.calendarEl.nativeElement, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      initialView: this.isMobile ? 'listWeek' : 'timeGridWeek',
+      initialView: 'timeGridWeek',
       locale: this.getCalendarLocale(lang),
       firstDay: 1,
       editable: false,
@@ -126,6 +189,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     });
 
     this.calendar.render();
+    this.calendarInitialized = true;
   }
 
   private onDatesSet(info: { start: Date; end: Date }): void {
@@ -149,11 +213,18 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (result) => {
           const appointments = result?.items ?? [];
-          const events = this.mapToEvents(appointments);
-          this.calendar.removeAllEvents();
-          if (events.length) {
-            this.calendar.addEventSource(events);
+          this.appointmentsCache = appointments;
+          this.updateSummary(appointments);
+          this.updateMobileSelection();
+
+          if (this.calendarInitialized) {
+            const events = this.mapToEvents(appointments);
+            this.calendar.removeAllEvents();
+            if (events.length) {
+              this.calendar.addEventSource(events);
+            }
           }
+
           this.isLoading = false;
           this.cdr.markForCheck();
         },
@@ -162,6 +233,110 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  private initMobileAgenda(anchorDate: Date = new Date()): void {
+    const normalizedAnchor = startOfDay(anchorDate);
+    const weekStart = startOfWeek(normalizedAnchor, { weekStartsOn: 1 });
+    const rangeStart = addDays(weekStart, -7);
+    const rangeEnd = addDays(weekStart, 34);
+
+    this.mobileWeekLabel = `${format(weekStart, 'dd/MM')} - ${format(addDays(weekStart, 6), 'dd/MM')}`;
+    this.mobileMonthLabel = this.capitalize(format(normalizedAnchor, 'MMMM yyyy', { locale: this.getDateFnsLocale() }));
+
+    this.mobileDays = Array.from({ length: 42 }).map((_, index) => {
+      const date = addDays(rangeStart, index);
+      const dateStr = format(date, 'yyyy-MM-dd');
+
+      return {
+        date: dateStr,
+        dayShort: format(date, 'EEE', { locale: this.getDateFnsLocale() }).replace('.', ''),
+        dayNumber: format(date, 'dd'),
+        isToday: isToday(date),
+      };
+    });
+
+    if (!this.mobileDays.some((item) => item.date === this.selectedMobileDate)) {
+      this.selectedMobileDate = format(normalizedAnchor, 'yyyy-MM-dd');
+    }
+
+    const from = format(rangeStart, 'yyyy-MM-dd');
+    const to = format(rangeEnd, 'yyyy-MM-dd');
+
+    if (this.currentFrom === from && this.currentTo === to && this.appointmentsCache.length) {
+      this.updateMobileSelection();
+      this.scrollSelectedMobileDayIntoView();
+      return;
+    }
+
+    this.currentFrom = from;
+    this.currentTo = to;
+    this.loadAppointments(from, to);
+    this.scrollSelectedMobileDayIntoView();
+  }
+
+  previousMobileWeek(): void {
+    const current = parse(`${this.selectedMobileDate} 00:00:00`, 'yyyy-MM-dd HH:mm:ss', new Date());
+    this.initMobileAgenda(addDays(current, -7));
+  }
+
+  nextMobileWeek(): void {
+    const current = parse(`${this.selectedMobileDate} 00:00:00`, 'yyyy-MM-dd HH:mm:ss', new Date());
+    this.initMobileAgenda(addDays(current, 7));
+  }
+
+  selectMobileDate(date: string): void {
+    this.selectedMobileDate = date;
+    this.updateMobileSelection();
+    this.mobileMonthLabel = this.capitalize(
+      format(parse(`${date} 00:00:00`, 'yyyy-MM-dd HH:mm:ss', new Date()), 'MMMM yyyy', { locale: this.getDateFnsLocale() }),
+    );
+    this.scrollSelectedMobileDayIntoView();
+    this.cdr.markForCheck();
+  }
+
+  goToMobileToday(): void {
+    const today = new Date();
+    this.selectedMobileDate = format(today, 'yyyy-MM-dd');
+    this.initMobileAgenda(today);
+  }
+
+  onMobileDatePicked(value: string): void {
+    if (!value) {
+      return;
+    }
+
+    const picked = parse(`${value} 00:00:00`, 'yyyy-MM-dd HH:mm:ss', new Date());
+    this.selectedMobileDate = value;
+    this.initMobileAgenda(picked);
+  }
+
+  openMobileDatePicker(input: HTMLInputElement): void {
+    const pickerInput = input as HTMLInputElement & { showPicker?: () => void };
+    if (typeof pickerInput.showPicker === 'function') {
+      pickerInput.showPicker();
+      return;
+    }
+
+    pickerInput.click();
+  }
+
+  openMobileAppointment(appointment: Appointment): void {
+    const modalRef = this.modal.open(AppointmentDetailComponent, {
+      centered: true,
+      size: 'md',
+    });
+
+    modalRef.componentInstance.appointment = appointment;
+
+    modalRef.result.then(
+      (result) => {
+        if (result?.action === 'cancel') {
+          this.cancelAppointment(result.appointmentId);
+        }
+      },
+      () => {},
+    );
   }
 
   private loadCompanyName(): void {
@@ -217,24 +392,67 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private cancelAppointment(appointmentId: string, calendarEvent: any): void {
+  private cancelAppointment(appointmentId: string, calendarEvent?: any): void {
     this.schedulingService
       .cancel(appointmentId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          const cancelledColor = this.getStatusColor(SchedulingStatus.Cancelled);
-          calendarEvent.setProp('backgroundColor', cancelledColor);
-          calendarEvent.setProp('borderColor', cancelledColor);
-          calendarEvent.setExtendedProp('appointment', {
-            ...calendarEvent.extendedProps['appointment'],
-            status: SchedulingStatus.Cancelled,
-          });
+          this.appointmentsCache = this.appointmentsCache.map((item) =>
+            item.id === appointmentId
+              ? { ...item, status: SchedulingStatus.Cancelled }
+              : item,
+          );
+
+          this.updateSummary(this.appointmentsCache);
+          this.updateMobileSelection();
+
+          if (calendarEvent) {
+            const cancelledColor = this.getStatusColor(SchedulingStatus.Cancelled);
+            calendarEvent.setProp('backgroundColor', cancelledColor);
+            calendarEvent.setProp('borderColor', cancelledColor);
+            calendarEvent.setExtendedProp('appointment', {
+              ...calendarEvent.extendedProps['appointment'],
+              status: SchedulingStatus.Cancelled,
+            });
+          }
+
           this.toastr.success(
             this.translate.instant('COMPANY.CALENDAR.CANCEL_SUCCESS'),
           );
+          this.cdr.markForCheck();
         },
       });
+  }
+
+  getStatusLabel(status: SchedulingStatus): string {
+    switch (status) {
+      case SchedulingStatus.Pending:
+        return this.translate.instant('COMPANY.CALENDAR.STATUS_PENDING');
+      case SchedulingStatus.Confirmed:
+        return this.translate.instant('COMPANY.CALENDAR.STATUS_CONFIRMED');
+      case SchedulingStatus.Cancelled:
+        return this.translate.instant('COMPANY.CALENDAR.STATUS_CANCELLED');
+      case SchedulingStatus.Completed:
+        return this.translate.instant('COMPANY.CALENDAR.STATUS_COMPLETED');
+      default:
+        return '-';
+    }
+  }
+
+  getStatusClass(status: SchedulingStatus): string {
+    switch (status) {
+      case SchedulingStatus.Pending:
+        return 'mobile-status--pending';
+      case SchedulingStatus.Confirmed:
+        return 'mobile-status--confirmed';
+      case SchedulingStatus.Cancelled:
+        return 'mobile-status--cancelled';
+      case SchedulingStatus.Completed:
+        return 'mobile-status--completed';
+      default:
+        return '';
+    }
   }
 
   private getStatusColor(status: SchedulingStatus): string {
@@ -253,5 +471,89 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       case 'en': return undefined;
       default: return ptBrLocale;
     }
+  }
+
+  private getDateFnsLocale() {
+    const lang = this.translate.currentLang || 'pt';
+    switch (lang) {
+      case 'en':
+        return enUS;
+      case 'es':
+        return es;
+      default:
+        return ptBR;
+    }
+  }
+
+  private updateSummary(appointments: Appointment[]): void {
+    this.totalAppointments = appointments.length;
+    this.pendingAppointments = appointments.filter((item) => item.status === SchedulingStatus.Pending).length;
+    this.confirmedAppointments = appointments.filter((item) => item.status === SchedulingStatus.Confirmed).length;
+    this.cancelledAppointments = appointments.filter((item) => item.status === SchedulingStatus.Cancelled).length;
+    this.completedAppointments = appointments.filter((item) => item.status === SchedulingStatus.Completed).length;
+
+    const today = format(new Date(), 'yyyy-MM-dd');
+    this.todayAppointments = appointments.filter((item) => item.date === today).length;
+  }
+
+  private updateMobileSelection(): void {
+    this.selectedMobileAppointments = this.appointmentsCache
+      .filter((item) => item.date === this.selectedMobileDate)
+      .sort((a, b) => a.time.localeCompare(b.time));
+
+    const selectedDate = parse(
+      `${this.selectedMobileDate} 00:00:00`,
+      'yyyy-MM-dd HH:mm:ss',
+      new Date(),
+    );
+    this.selectedMobileDateLabel = this.capitalize(
+      format(selectedDate, "EEEE, dd 'de' MMMM", { locale: this.getDateFnsLocale() }),
+    );
+    this.animateMobileList();
+  }
+
+  private animateMobileList(): void {
+    this.mobileListAnimating = false;
+    if (this.mobileListAnimTimer) {
+      clearTimeout(this.mobileListAnimTimer);
+    }
+
+    this.mobileListAnimTimer = setTimeout(() => {
+      this.mobileListAnimating = true;
+      this.cdr.markForCheck();
+
+      this.mobileListAnimTimer = setTimeout(() => {
+        this.mobileListAnimating = false;
+        this.cdr.markForCheck();
+      }, 260);
+    }, 0);
+  }
+
+  private scrollSelectedMobileDayIntoView(): void {
+    setTimeout(() => {
+      const scroller = this.mobileDaysScroller?.nativeElement;
+      if (!scroller) {
+        return;
+      }
+
+      const selected = scroller.querySelector<HTMLElement>(`[data-date='${this.selectedMobileDate}']`);
+      if (!selected) {
+        return;
+      }
+
+      selected.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
+    }, 0);
+  }
+
+  private capitalize(text: string): string {
+    if (!text) {
+      return text;
+    }
+
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 }

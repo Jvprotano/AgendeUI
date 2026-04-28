@@ -1,18 +1,21 @@
 <div class="stepper">
   <div class="stepper-track">
-    <div class="stepper-progress" [style.width]="(currentStep / (steps.length - 1)) * 100 + '%'"></div>
+    <div class="stepper-progress" [style.width]="(currentStep / (steps.length - 1)) * 100 + '%'" *ngIf="steps.length > 1"></div>
   </div>
+
   <div class="stepper-steps">
-    <button *ngFor="let step of steps; let i = index"
-            class="stepper-step"
-            [class.active]="i === currentStep"
-            [class.completed]="i < currentStep"
-            [class.upcoming]="i > currentStep"
-            (click)="onStepClick(i)"
-            [attr.aria-current]="i === currentStep ? 'step' : null">
+    <button
+      *ngFor="let step of steps; let i = index"
+      class="stepper-step"
+      [class.active]="i === currentStep"
+      [class.completed]="i < currentStep"
+      [class.upcoming]="i > currentStep"
+      (click)="onStepClick(i)"
+      [attr.aria-current]="i === currentStep ? 'step' : null"
+    >
       <span class="step-indicator">
         <i *ngIf="i < currentStep" class="bi bi-check-lg"></i>
-        <span *ngIf="i >= currentStep">{{ i + 1 }}</span>
+        <i *ngIf="i >= currentStep" class="bi" [ngClass]="step.icon"></i>
       </span>
       <span class="step-label">{{ step.label | translate }}</span>
     </button>

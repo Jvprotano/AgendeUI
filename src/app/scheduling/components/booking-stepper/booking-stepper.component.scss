@@ -1,107 +1,109 @@
 .stepper {
   position: relative;
-  padding: var(--space-md) 0 var(--space-lg);
+  padding: 0.8rem 0 0.95rem;
 }
 
 .stepper-track {
   position: absolute;
-  top: calc(var(--space-md) + 16px);
-  left: 32px;
-  right: 32px;
+  top: 1.95rem;
+  left: 20px;
+  right: 20px;
   height: 2px;
-  background: var(--border-default);
-  border-radius: 1px;
+  border-radius: 999px;
+  background: rgba(193, 174, 255, 0.28);
   z-index: 0;
 }
 
 .stepper-progress {
   height: 100%;
-  background: var(--accent);
-  border-radius: 1px;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+  transition: width 260ms ease;
 }
 
 .stepper-steps {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .stepper-step {
+  border: 0;
+  background: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: default;
+  gap: 0.38rem;
   min-width: 0;
+  cursor: default;
+  padding: 0;
+}
 
-  &.completed {
-    cursor: pointer;
-  }
+.stepper-step.completed {
+  cursor: pointer;
 }
 
 .step-indicator {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
-  display: flex;
+  position: relative;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  transition: all var(--transition-base);
-  background: var(--bg-elevated);
+  border: 1px solid rgba(193, 174, 255, 0.3);
+  background: var(--bg-surface);
   color: var(--text-tertiary);
-  border: 2px solid var(--border-default);
+  transition: all var(--transition-fast);
+}
 
-  .active & {
-    background: var(--accent);
-    color: var(--text-inverse);
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-subtle);
-  }
+.active .step-indicator {
+  background: linear-gradient(180deg, #8b5cf6, #7c3aed);
+  border-color: rgba(196, 181, 253, 0.65);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(91, 33, 182, 0.4);
+}
 
-  .completed & {
-    background: var(--accent);
-    color: var(--text-inverse);
-    border-color: var(--accent);
-  }
-
-  .upcoming & {
-    background: var(--bg-surface);
-    color: var(--text-tertiary);
-    border-color: var(--border-default);
-  }
+.completed .step-indicator {
+  background: rgba(139, 92, 246, 0.26);
+  border-color: rgba(167, 139, 250, 0.5);
+  color: #ede9fe;
 }
 
 .step-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-size: 0.72rem;
   color: var(--text-tertiary);
+  font-weight: 600;
   white-space: nowrap;
-  transition: color var(--transition-base);
-
-  .active & {
-    color: var(--accent);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .completed & {
-    color: var(--text-secondary);
-  }
+  transition: color var(--transition-fast);
 }
 
-@media (max-width: 480px) {
-  .step-label {
-    display: none;
+.active .step-label {
+  color: #ddd6fe;
+}
+
+.completed .step-label {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 767.98px) {
+  .stepper-track {
+    top: 1.7rem;
+    left: 17px;
+    right: 17px;
   }
 
-  .stepper-track {
-    left: 24px;
-    right: 24px;
+  .step-indicator {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+  }
+
+  .step-label {
+    display: none;
   }
 }

@@ -14,11 +14,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { environment } from '../../../../../environments/environment';
 
 export const TIMEZONE_OPTIONS = [
-  { label: 'Brasília (São Paulo)', value: 'America/Sao_Paulo' },
+  { label: 'BrasAlia (SAo Paulo)', value: 'America/Sao_Paulo' },
   { label: 'Fortaleza', value: 'America/Fortaleza' },
   { label: 'Manaus', value: 'America/Manaus' },
-  { label: 'Cuiabá', value: 'America/Cuiaba' },
-  { label: 'Belém', value: 'America/Belem' },
+  { label: 'CuiabA', value: 'America/Cuiaba' },
+  { label: 'BelAm', value: 'America/Belem' },
   { label: 'Recife', value: 'America/Recife' },
 ];
 

@@ -117,7 +117,9 @@
       <button class="btn btn-gradient w-100 mt-3" type="submit" [disabled]="!registerForm.valid">{{ 'REGISTER.BUTTONS.REGISTER' | translate }}</button>
 
       <p class="text-center mt-3 small text-muted">
-        <a routerLink="/account/login" class="register-link">{{ 'REGISTER.BUTTONS.LOGIN' | translate }}</a>
+        <button type="button" class="register-link btn-link-clean" (click)="backToLogin()">
+          {{ 'REGISTER.BUTTONS.LOGIN' | translate }}
+        </button>
       </p>
     </form>
   </div>

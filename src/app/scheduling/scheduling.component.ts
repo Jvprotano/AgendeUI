@@ -116,6 +116,53 @@ export class SchedulingComponent implements OnInit {
     return this.stepMap[this.currentStep] ?? 0;
   }
 
+  get progressPercent(): number {
+    if (!this.steps.length) {
+      return 0;
+    }
+
+    if (this.currentStep === 3) {
+      return 100;
+    }
+
+    const maxIndex = Math.max(this.steps.length - 1, 1);
+    return Math.round((this.displayStep / maxIndex) * 100);
+  }
+
+  get selectedDateLabel(): string {
+    if (!this.selectedDate) {
+      return '-';
+    }
+
+    const date = new Date(`${this.selectedDate}T00:00:00`);
+    return Number.isNaN(date.getTime())
+      ? this.selectedDate
+      : new Intl.DateTimeFormat('pt-BR', {
+          weekday: 'short',
+          day: '2-digit',
+          month: 'short',
+        }).format(date);
+  }
+
+  get selectedDurationLabel(): string {
+    const durationRaw = this.selectedService?.duration;
+    const duration = Number(durationRaw);
+    if (!duration || Number.isNaN(duration) || duration <= 0) {
+      return '-';
+    }
+
+    if (duration < 60) {
+      return `${duration} min`;
+    }
+
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+
+    return minutes > 0
+      ? `${hours}h ${minutes}min`
+      : `${hours}h`;
+  }
+
   // ─── Step navigation ───
 
   goToStep(displayIndex: number) {
@@ -204,10 +251,6 @@ export class SchedulingComponent implements OnInit {
       this.openLoginModal();
       return;
     }
-    this.submitBooking();
-  }
-
-  onGuestConfirmed() {
     this.submitBooking();
   }
 
@@ -300,6 +343,10 @@ export class SchedulingComponent implements OnInit {
   // ─── Booking submission ───
 
   private submitBooking() {
+    if (this.isSubmitting) {
+      return;
+    }
+
     this.isSubmitting = true;
     this.cdr.markForCheck();
 
@@ -319,6 +366,7 @@ export class SchedulingComponent implements OnInit {
       .subscribe({
         next: () => {
           this.isSubmitting = false;
+          this.cdr.markForCheck();
           this.router.navigate(['scheduling/success']).then(() => {
             this.toastr.success(
               this.translate.instant('SCHEDULING.SUCCESS.MESSAGE'),
@@ -332,6 +380,10 @@ export class SchedulingComponent implements OnInit {
           const msg = err?.error
             ?? this.translate.instant('SCHEDULING.ERRORS.BOOKING_FAILED');
           this.toastr.error(msg);
+        },
+        complete: () => {
+          this.isSubmitting = false;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -367,8 +419,8 @@ export class SchedulingComponent implements OnInit {
 
     const modalRef = this.modalService.open(LoginComponent, {
       centered: true,
-      backdrop: 'static',
-      keyboard: false,
+      backdrop: true,
+      keyboard: true,
     });
 
     modalRef.result.then(
@@ -380,8 +432,7 @@ export class SchedulingComponent implements OnInit {
         this.cdr.markForCheck();
       },
       () => {
-        // Modal dismissed (guest login)
-        this.submitBooking();
+        // Modal dismissed without authentication - do not submit.
         this.cdr.markForCheck();
       },
     );

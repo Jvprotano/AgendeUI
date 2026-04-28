@@ -1,8 +1,8 @@
 <form [formGroup]="form" class="business-hours-form">
   <mat-card class="mb-4 day-schedule-card">
     <mat-card-header>
-      <mat-card-title>Horário de Funcionamento</mat-card-title>
-      <mat-card-subtitle>Configure os horários de atendimento da sua empresa</mat-card-subtitle>
+      <mat-card-title>Horario de funcionamento</mat-card-title>
+      <mat-card-subtitle>Configure os horarios de atendimento da sua empresa</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="day-schedule-card">
       <div *ngIf="scheduleError" class="error-message mat-error mb-3">
@@ -27,11 +27,11 @@
                    class="time-interval">
                 <app-time-picker
                   formControlName="start"
-                  label="Início"
+                  label="Inicio"
                   placeholder="00:00">
                 </app-time-picker>
 
-                <span class="time-separator">até</span>
+                <span class="time-separator">ate</span>
 
                 <app-time-picker
                   formControlName="end"
@@ -60,7 +60,7 @@
               <button mat-stroked-button type="button"
                       *ngIf="hasFilledIntervals(dayIndex)"
                       (click)="applyToOtherDays(dayIndex)"
-                      matTooltip="Aplicar este horário para todos os outros dias"
+                      matTooltip="Aplicar este horario para os outros dias"
                       class="apply-all-btn">
                 <mat-icon>content_copy</mat-icon>
                 Aplicar para os demais dias

@@ -87,12 +87,8 @@
       <i class="bi bi-info-circle"></i>
       <span>{{ 'SCHEDULING.STEP_CONFIRM.LOGIN_NOTICE' | translate }}</span>
       <div class="login-actions">
-        <button class="btn-login" (click)="onLogin()">
+        <button type="button" class="btn-login" [disabled]="isSubmitting" (click)="onLogin()">
           {{ 'LOGIN.SIGN_IN' | translate }}
-        </button>
-        <span class="login-divider">{{ 'LOGIN.OR' | translate }}</span>
-        <button class="btn-guest" (click)="onGuestConfirm()">
-          {{ 'LOGIN.CONTINUE_AS_GUEST' | translate }}
         </button>
       </div>
     </div>

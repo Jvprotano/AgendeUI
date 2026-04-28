@@ -26,7 +26,10 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-base);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(139, 92, 246, 0.18), transparent 38%),
+    radial-gradient(circle at 88% 0%, rgba(56, 189, 248, 0.12), transparent 30%),
+    var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-family);
   font-size: var(--font-size-base);
@@ -129,7 +132,7 @@ label,
   &:hover {
     opacity: 0.95;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(0, 200, 83, 0.3);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
   }
 }
 
@@ -185,7 +188,7 @@ select.form-control option {
 .card {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 0;
   margin-bottom: var(--space-lg);
   transition: border-color var(--transition-base), box-shadow var(--transition-base);

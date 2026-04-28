@@ -1,21 +1,19 @@
 <div class="h-100 w-100 d-flex">
   <app-sidebar [companyId]="companyId"></app-sidebar>
 
-  <main class="edit-page">
-    <!-- Page Header -->
+  <main class="company-area edit-page">
     <header class="edit-header">
       <div class="header-left">
         <button mat-icon-button (click)="goBack()" class="back-btn" aria-label="Voltar">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <div>
-          <h1 class="edit-title">Editar Empresa</h1>
+          <h1 class="edit-title">Editar empresa</h1>
           <p class="edit-subtitle" *ngIf="company">{{ company.name }}</p>
         </div>
       </div>
     </header>
 
-    <!-- Loading Skeleton -->
     <div *ngIf="isLoading" class="edit-skeleton">
       <div class="skeleton-section">
         <div class="skeleton sk-header"></div>
@@ -28,18 +26,15 @@
       </div>
     </div>
 
-    <!-- Edit Form -->
     <form *ngIf="!isLoading && form" [formGroup]="form" (ngSubmit)="onSubmit()" class="edit-form">
-
-      <!-- Section: Basic Info + Image (horizontal) -->
       <section class="edit-section">
         <div class="section-header">
           <div class="section-icon-wrap">
             <mat-icon>business</mat-icon>
           </div>
           <div>
-            <h2 class="section-title">Informações da Empresa</h2>
-            <p class="section-desc">Logo, dados cadastrais, fuso horário e URL de agendamento</p>
+            <h2 class="section-title">Informacoes da empresa</h2>
+            <p class="section-desc">Logo, dados cadastrais, fuso horario e URL de agendamento</p>
           </div>
         </div>
         <div class="section-body">
@@ -53,15 +48,14 @@
         </div>
       </section>
 
-      <!-- Section: Business Hours -->
       <section class="edit-section">
         <div class="section-header">
           <div class="section-icon-wrap">
             <mat-icon>schedule</mat-icon>
           </div>
           <div>
-            <h2 class="section-title">Horário de Funcionamento</h2>
-            <p class="section-desc">Configure os dias e horários de atendimento</p>
+            <h2 class="section-title">Horario de funcionamento</h2>
+            <p class="section-desc">Configure os dias e horarios de atendimento</p>
           </div>
         </div>
         <div class="section-body">
@@ -69,7 +63,6 @@
         </div>
       </section>
 
-      <!-- Sticky Save Bar -->
       <div class="save-bar">
         <button
           mat-flat-button
@@ -78,7 +71,7 @@
           class="save-btn">
           <mat-icon *ngIf="!isSaving">check</mat-icon>
           <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-          {{ isSaving ? 'Salvando...' : 'Salvar Alterações' }}
+          {{ isSaving ? 'Salvando...' : 'Salvar alteracoes' }}
         </button>
       </div>
     </form>

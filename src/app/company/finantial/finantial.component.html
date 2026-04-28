@@ -1,71 +1,151 @@
-<div class="h-100 w-100 d-flex vh-100">
-    <app-sidebar [companyId]="companyId"></app-sidebar>
-    <div class="row text-center company-area">
-        <div class="w-25">
-            <div class="border card pt-0 px-0">
-                <div class="card-body">
-                    <button class="btn btn-conci w-100">
-                        <i class="bi bi-plus me-1"></i>Adicionar
-                    </button>
-                    <div class="mt-4">
-                        <div class="sub">
-                            <ng-container>
-                                <h4 class="fw-medium">Entradas</h4>
-                                <div id="external-events" class="mb-3">
-                                    <!-- <div
-                      class="bg-warning-subtle external-event fc-event mb-2 px-3 py-2 text-start text-warning"
-                      data-class="text-warning bg-warning-subtle border-0"
-                    >
-                      <i class="bi bi-circle-fill me-2 text-warning me-2"></i>
-                      Cabelo
-                    </div>
-                    <div data-class="text-info bg-info-subtle border-0"
-                      class="bg-info-subtle external-event fc-event mb-2 px-3 py-2 text-start text-info"
-                    >
-                      <i class="bi bi-circle-fill me-2 text-info me-2"></i>
-                      Barba
-                    </div> -->
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="w-25">
-            <div class="border card pt-0 px-0">
-                <div class="card-body">
-                    <button class="btn btn-conci w-100">
-                        <i class="bi bi-plus me-1"></i>Adicionar
-                    </button>
-                    <div class="mt-4">
-                        <div class="sub">
-                            <ng-container>
-                                <h4 class="fw-medium">Saídas</h4>
-                                <div id="external-events" class="mb-3">
+﻿<div class="h-100 w-100 d-flex">
+  <app-sidebar [companyId]="companyId"></app-sidebar>
 
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="w-25">
-            <div class="border card pt-0 px-0">
-                <div class="card-body">
-                    <div class="mt-4">
-                        <div class="sub">
-                            <ng-container>
-                                <h4 class="fw-medium">Saldo</h4>
-                                <div id="external-events" class="mb-3">
+  <div class="company-area financial-page w-100">
+    <section class="financial-header">
+      <div>
+        <h2>Financeiro - {{ companyName }}</h2>
+        <p>Painel financeiro ficticio para acompanhar entradas, saidas e previsao de caixa.</p>
+      </div>
+      <div class="period-chip">
+        <i class="bi bi-calendar3"></i>
+        Junho/2026
+      </div>
+    </section>
 
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <section class="kpi-grid">
+      <article class="kpi-card" *ngFor="let item of kpis">
+        <div class="kpi-icon">
+          <i class="bi" [ngClass]="item.icon"></i>
         </div>
-    </div>
+        <div>
+          <small>{{ item.label }}</small>
+          <h3>{{ item.value }}</h3>
+          <span class="kpi-delta" [class.kpi-delta--negative]="!item.positive">
+            {{ item.delta }} vs. mes anterior
+          </span>
+        </div>
+      </article>
+    </section>
+
+    <section class="financial-grid">
+      <article class="panel-card panel-card--wide">
+        <div class="panel-header">
+          <h4>Fluxo mensal</h4>
+          <div class="legend">
+            <span><i class="dot dot-in"></i>Entradas</span>
+            <span><i class="dot dot-out"></i>Saidas</span>
+          </div>
+        </div>
+
+        <div class="flow-chart">
+          <div class="flow-item" *ngFor="let item of monthlyFlow; trackBy: trackByMonth">
+            <div class="flow-bars">
+              <div class="flow-bar flow-bar--in" [style.height.%]="(item.income / maxFlowValue) * 100"></div>
+              <div class="flow-bar flow-bar--out" [style.height.%]="(item.expense / maxFlowValue) * 100"></div>
+            </div>
+            <span>{{ item.month }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card">
+        <div class="panel-header">
+          <h4>Composicao de despesas</h4>
+          <span class="chip">Mes atual</span>
+        </div>
+
+        <div class="expense-overview">
+          <div class="expense-donut" [style.background]="donutStyle"></div>
+
+          <div class="expense-list">
+            <div class="expense-item" *ngFor="let item of expenseCategories; trackBy: trackByCategory">
+              <div class="expense-label">
+                <span class="dot" [style.background]="item.color"></span>
+                <span>{{ item.name }}</span>
+              </div>
+              <div class="expense-values">
+                <strong>{{ item.percent }}%</strong>
+                <small>{{ item.amount }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card panel-card--wide">
+        <div class="panel-header">
+          <h4>Lancamentos recentes</h4>
+          <span class="chip chip-outline">Ultimas movimentacoes</span>
+        </div>
+
+        <div class="transactions-table">
+          <div class="tx-row tx-row--header">
+            <span>Data</span>
+            <span>Descricao</span>
+            <span>Categoria</span>
+            <span>Valor</span>
+            <span>Status</span>
+          </div>
+
+          <div class="tx-row" *ngFor="let item of recentTransactions; trackBy: trackByTx">
+            <span>{{ item.date }}</span>
+            <span>{{ item.description }}</span>
+            <span>{{ item.category }}</span>
+            <span [class.tx-out]="item.type === 'out'" [class.tx-in]="item.type === 'in'">{{ item.amount }}</span>
+            <span class="status-pill" [class.status-pill--pending]="item.status === 'Pendente'">{{ item.status }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card">
+        <div class="panel-header">
+          <h4>A vencer / a receber</h4>
+          <span class="chip">Proximos dias</span>
+        </div>
+
+        <div class="due-list">
+          <div class="due-item" *ngFor="let item of dueItems; trackBy: trackByDue">
+            <div>
+              <strong>{{ item.title }}</strong>
+              <small>Vencimento: {{ item.dueDate }}</small>
+            </div>
+            <div class="due-amount" [class.due-amount--payable]="item.type === 'payable'">
+              {{ item.amount }}
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel-card">
+        <div class="panel-header">
+          <h4>Previsao de caixa</h4>
+          <span class="chip">Cenario base</span>
+        </div>
+
+        <div class="projection-list">
+          <div class="projection-item" *ngFor="let item of projection">
+            <span>{{ item.label }}</span>
+            <strong>{{ item.balance }}</strong>
+            <small>{{ item.trend }}</small>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="financial-actions">
+      <a class="action-btn" [routerLink]="['/company', companyId, 'dashboard']">
+        <i class="bi bi-bar-chart"></i>
+        Ver Dashboard
+      </a>
+      <a class="action-btn" [routerLink]="['/company', companyId, 'schedule']">
+        <i class="bi bi-calendar2-week"></i>
+        Ver Agenda
+      </a>
+      <a class="action-btn" [routerLink]="['/company', companyId, 'services']">
+        <i class="bi bi-scissors"></i>
+        Ver Servicos
+      </a>
+    </section>
+  </div>
 </div>

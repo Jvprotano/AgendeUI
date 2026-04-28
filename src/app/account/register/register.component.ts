@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef, OnDestroy, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormControlName, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, fromEvent, merge, take, takeUntil } from 'rxjs';
@@ -9,6 +9,8 @@ import { ValidationMessages, GenericValidator, DisplayMessage } from '../../util
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PasswordMatcher } from '../../utils/password-matcher';
+import { RedirectService } from '../../services/redirect.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -34,12 +36,15 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   private destroy$ = new Subject<void>();
 
   unsavedChanges: boolean = true;
+  isScheduling: boolean = false;
 
   constructor(private fb: FormBuilder,
     private accountService: AccountService,
     private router: Router,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private redirectService: RedirectService,
+    @Optional() private activeModal?: NgbActiveModal,
   ) {
 
     this.validationMessages = {};
@@ -47,6 +52,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.isScheduling =
+      this.redirectService.getReturnRoute()?.includes('scheduling') ?? false;
+
     this.loadValidationMessages();
     this.translate.onLangChange
       .pipe(takeUntil(this.destroy$))
@@ -129,12 +137,30 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.registerForm.reset();
     this.errors = [];
 
+    if (this.activeModal && this.isScheduling) {
+      this.toastr.success(
+        this.translate.instant('REGISTER.SUCCESS.MESSAGE'),
+        this.translate.instant('REGISTER.SUCCESS.TITLE')
+      );
+      this.activeModal.close('registered');
+      return;
+    }
+
     this.router.navigate(['account/login']).then(() => {
       this.toastr.success(
         this.translate.instant('REGISTER.SUCCESS.MESSAGE'),
         this.translate.instant('REGISTER.SUCCESS.TITLE')
       );
     });
+  }
+
+  backToLogin() {
+    if (this.activeModal && this.isScheduling) {
+      this.activeModal.dismiss('back-to-login');
+      return;
+    }
+
+    this.router.navigate(['account/login']);
   }
 
   ngOnDestroy(): void {

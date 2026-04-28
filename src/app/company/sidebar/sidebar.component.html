@@ -1,68 +1,97 @@
 <div class="sidebar-menu">
-  <div class="user-img d-flex justify-content-center">
-    <a [routerLink]="['/user/profile']">
-      <img src="assets/default-user.jpg" width="40" height="40" />
+  <a class="sidebar-brand" [routerLink]="['/user/companies']">
+    <span class="brand-mark">A</span>
+    <div class="brand-text">
+      <strong>Agende</strong>
+      <small>Painel</small>
+    </div>
+  </a>
+
+  <div class="sidebar-user">
+    <a [routerLink]="['/user/profile']" class="user-avatar" aria-label="Perfil">
+      <img src="assets/default-user.jpg" width="40" height="40" alt="Perfil" />
     </a>
+    <div class="user-copy">
+      <span>Conta</span>
+      <small>Gerenciar perfil</small>
+    </div>
   </div>
-  <a class="agende-logo" routerLink="/user/companies">Agende</a>
-  <ul class="align-items-center d-flex flex-column list-unstyled mt-4">
-    <li
+
+  <nav class="nav-list" aria-label="Menu da empresa">
+    <a
+      ngbTooltip="Dashboard"
+      placement="right"
+      [routerLink]="['/company', companyId, 'dashboard']"
+      routerLinkActive="active"
+      class="menu-item"
+    >
+      <i class="bi bi-bar-chart-line"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a
       ngbTooltip="Agenda"
       placement="right"
       [routerLink]="['/company', companyId, 'schedule']"
       routerLinkActive="active"
       class="menu-item"
     >
-      <i class="bi-calendar-date menu-icon fs-3"></i>
-    </li>
-    <li
-      ngbTooltip="Serviços"
+      <i class="bi bi-calendar-date"></i>
+      <span>Agenda</span>
+    </a>
+
+    <a
+      ngbTooltip="Servicos"
       placement="right"
       [routerLink]="['/company', companyId, 'services']"
       routerLinkActive="active"
       class="menu-item"
     >
-      <i class="bi-briefcase menu-icon fs-3"></i>
-    </li>
-    <li
+      <i class="bi bi-briefcase"></i>
+      <span>Servicos</span>
+    </a>
+
+    <a
       ngbTooltip="Profissionais"
       placement="right"
       [routerLink]="['/company', companyId, 'employees']"
       routerLinkActive="active"
       class="menu-item"
     >
-      <i class="bi-people menu-icon fs-3"></i>
-    </li>
-    <li
+      <i class="bi bi-people"></i>
+      <span>Profissionais</span>
+    </a>
+
+    <a
       ngbTooltip="Editar Empresa"
       placement="right"
       [routerLink]="['/company', companyId, 'edit']"
       routerLinkActive="active"
       class="menu-item"
     >
-      <i class="bi-pencil menu-icon fs-3"></i>
-    </li>
-    <li
-      ngbTooltip="Dashboard (em breve)"
+      <i class="bi bi-pencil-square"></i>
+      <span>Empresa</span>
+    </a>
+
+    <a
+      ngbTooltip="Financeiro"
       placement="right"
-      class="menu-item menu-item-disabled"
+      [routerLink]="['/company', companyId, 'finantial']"
+      routerLinkActive="active"
+      class="menu-item"
     >
-      <i class="bi-bar-chart-line menu-icon fs-3"></i>
-    </li>
-    <li
-      ngbTooltip="Financeiro (em breve)"
-      placement="right"
-      class="menu-item menu-item-disabled"
-    >
-      <i class="bi-cash-coin menu-icon fs-3"></i>
-    </li>
-    <li
-      ngbTooltip="Sair"
-      placement="right"
-      class="menu-item menu-item-exit"
-      [routerLink]="['/user/companies']"
-    >
-      <i class="bi-box-arrow-right menu-icon fs-3"></i>
-    </li>
-  </ul>
+      <i class="bi bi-cash-coin"></i>
+      <span>Financeiro</span>
+    </a>
+  </nav>
+
+  <a
+    ngbTooltip="Voltar para minhas empresas"
+    placement="right"
+    class="menu-item menu-item-exit"
+    [routerLink]="['/user/companies']"
+  >
+    <i class="bi bi-box-arrow-left"></i>
+    <span>Minhas empresas</span>
+  </a>
 </div>

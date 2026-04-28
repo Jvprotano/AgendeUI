@@ -80,25 +80,14 @@
         </span>
       </button>
 
-      <div class="divider">
-        <span>{{ 'LOGIN.OR' | translate }}</span>
-      </div>
-
-      <button *ngIf="isScheduling" type="button" class="btn btn-outline w-100" (click)="guestLogin()" [disabled]="isDisabledGuest">
-        <span *ngIf="!isDisabledGuest" class="d-flex align-items-center justify-content-center">
-          <i class="bi bi-person me-2"></i>
-          {{ 'LOGIN.GUEST_LOGIN' | translate }}
-        </span>
-        <span *ngIf="isDisabledGuest" class="d-flex align-items-center justify-content-center">
-          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-          {{ 'LOGIN.ACCESSING' | translate }}
-        </span>
-      </button>
     </form>
 
     <p class="text-center mt-4">
       {{ 'LOGIN.NO_ACCOUNT' | translate }}
-      <a class="register-link" routerLink="/account/register">
+      <button *ngIf="isScheduling" type="button" class="register-link btn-link-clean" (click)="openRegisterModal()">
+        {{ 'LOGIN.REGISTER' | translate }}
+      </button>
+      <a *ngIf="!isScheduling" class="register-link" routerLink="/account/register">
         {{ 'LOGIN.REGISTER' | translate }}
       </a>
     </p>

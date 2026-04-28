@@ -1,123 +1,168 @@
 <div class="booking-page">
-  <!-- Loading skeleton -->
-  <div *ngIf="isLoading" class="booking-container">
-    <div class="skeleton-header">
-      <div class="skeleton skeleton-logo"></div>
-      <div class="skeleton skeleton-title"></div>
+  <div *ngIf="isLoading" class="booking-shell loading-shell">
+    <div class="booking-main-panel">
+      <div class="skeleton-header">
+        <div class="skeleton skeleton-logo"></div>
+        <div class="skeleton skeleton-title"></div>
+      </div>
+      <div class="skeleton skeleton-stepper"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card short"></div>
     </div>
-    <div class="skeleton skeleton-stepper"></div>
-    <div class="skeleton skeleton-card"></div>
-    <div class="skeleton skeleton-card short"></div>
+    <aside class="booking-aside-panel">
+      <div class="skeleton skeleton-aside"></div>
+    </aside>
   </div>
 
-  <!-- Main booking flow -->
-  <div *ngIf="!isLoading && !companyNotFound" class="booking-container">
-    <!-- Company header -->
-    <div class="booking-header">
-      <img *ngIf="company?.image" class="header-logo" [src]="company!.image" [alt]="company!.name">
-      <div *ngIf="!company?.image" class="header-logo-placeholder">
-        <i class="bi bi-building"></i>
-      </div>
-      <div class="header-info">
-        <h1 class="header-company-name">{{ company?.name }}</h1>
-        <span class="header-powered">{{ 'SCHEDULING.POWERED_BY' | translate }}</span>
-      </div>
-    </div>
+  <div *ngIf="!isLoading && !companyNotFound" class="booking-shell">
+    <section class="booking-main-panel">
+      <header class="booking-header">
+        <div class="booking-brand">
+          <img *ngIf="company?.image" class="header-logo" [src]="company!.image" [alt]="company!.name">
+          <div *ngIf="!company?.image" class="header-logo-placeholder">
+            <i class="bi bi-building"></i>
+          </div>
+          <div class="header-info">
+            <h1 class="header-company-name">{{ company?.name }}</h1>
+            <span class="header-powered">{{ 'SCHEDULING.POWERED_BY' | translate }}</span>
+          </div>
+        </div>
 
-    <!-- Schedule closed message -->
-    <div *ngIf="scheduleClosed" class="schedule-closed">
-      <div class="schedule-closed-icon">
-        <i class="bi bi-calendar-x"></i>
-      </div>
-      <h2 class="schedule-closed-title">{{ 'SCHEDULING.CLOSED.TITLE' | translate }}</h2>
-      <p class="schedule-closed-message">{{ 'SCHEDULING.CLOSED.MESSAGE' | translate }}</p>
-    </div>
+        <div class="progress-chip">
+          <span>Etapa {{ displayStep + 1 }} de {{ steps.length }}</span>
+          <strong>{{ progressPercent }}%</strong>
+        </div>
+      </header>
 
-    <!-- Stepper -->
-    <app-booking-stepper *ngIf="!scheduleClosed"
-      [steps]="steps"
-      [currentStep]="displayStep"
-      (stepClicked)="goToStep($event)">
-    </app-booking-stepper>
-
-    <!-- Step content with animation -->
-    <div *ngIf="!scheduleClosed" class="booking-content">
-      <!-- Step 0: Service -->
-      <div *ngIf="currentStep === 0" class="step-wrapper animate-in">
-        <app-step-service
-          [services]="services"
-          [selectedService]="selectedService"
-          (serviceSelected)="onServiceSelected($event)">
-        </app-step-service>
+      <div *ngIf="scheduleClosed" class="schedule-closed">
+        <div class="schedule-closed-icon">
+          <i class="bi bi-calendar-x"></i>
+        </div>
+        <h2 class="schedule-closed-title">{{ 'SCHEDULING.CLOSED.TITLE' | translate }}</h2>
+        <p class="schedule-closed-message">{{ 'SCHEDULING.CLOSED.MESSAGE' | translate }}</p>
       </div>
 
-      <!-- Step 1: Professional -->
-      <div *ngIf="currentStep === 1 && !skipProfessionalStep" class="step-wrapper animate-in">
-        <app-step-professional
-          [professionals]="availableProfessionals"
-          [selectedProfessional]="selectedProfessional"
-          [noPreferenceSelected]="noPreferenceSelected"
-          (professionalSelected)="onProfessionalSelected($event)">
-        </app-step-professional>
+      <ng-container *ngIf="!scheduleClosed">
+        <app-booking-stepper
+          [steps]="steps"
+          [currentStep]="displayStep"
+          (stepClicked)="goToStep($event)">
+        </app-booking-stepper>
+
+        <div class="booking-content">
+          <div *ngIf="currentStep === 0" class="step-wrapper animate-in">
+            <app-step-service
+              [services]="services"
+              [selectedService]="selectedService"
+              (serviceSelected)="onServiceSelected($event)">
+            </app-step-service>
+          </div>
+
+          <div *ngIf="currentStep === 1 && !skipProfessionalStep" class="step-wrapper animate-in">
+            <app-step-professional
+              [professionals]="availableProfessionals"
+              [selectedProfessional]="selectedProfessional"
+              [noPreferenceSelected]="noPreferenceSelected"
+              (professionalSelected)="onProfessionalSelected($event)">
+            </app-step-professional>
+          </div>
+
+          <div *ngIf="currentStep === 2" class="step-wrapper animate-in">
+            <app-step-datetime
+              [professionalId]="noPreferenceSelected ? '' : selectedProfessional?.userId ?? ''"
+              [serviceId]="selectedService?.id ?? ''"
+              [companyId]="companyId"
+              [openingHours]="openingHours"
+              [selectedDate]="selectedDate"
+              [selectedTime]="selectedTime"
+              (dateTimeSelected)="onDateTimeSelected($event)">
+            </app-step-datetime>
+          </div>
+
+          <div *ngIf="currentStep === 3" class="step-wrapper animate-in">
+            <app-step-confirm
+              [company]="company"
+              [service]="selectedService"
+              [professional]="selectedProfessional"
+              [noPreference]="noPreferenceSelected"
+              [date]="selectedDate"
+              [time]="selectedTime"
+              [isSubmitting]="isSubmitting"
+              [isLoggedIn]="isLoggedIn"
+              [skipProfessionalStep]="skipProfessionalStep"
+              (confirmed)="onConfirmed()"
+              (loginRequested)="onLoginRequested()"
+              (editStep)="onEditStep($event)">
+            </app-step-confirm>
+          </div>
+        </div>
+
+        <div class="booking-footer" *ngIf="currentStep !== 3">
+          <button *ngIf="displayStep > 0" class="btn-back" (click)="goToPreviousStep()">
+            <i class="bi bi-arrow-left"></i>
+            {{ 'SCHEDULING.BACK' | translate }}
+          </button>
+
+          <button
+            class="btn-continue"
+            [class.disabled]="!canAdvance()"
+            [disabled]="!canAdvance()"
+            (click)="goToNextStep()">
+            {{ 'SCHEDULING.CONTINUE' | translate }}
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="booking-footer" *ngIf="currentStep === 3">
+          <button class="btn-back" (click)="goToPreviousStep()">
+            <i class="bi bi-arrow-left"></i>
+            {{ 'SCHEDULING.BACK' | translate }}
+          </button>
+        </div>
+      </ng-container>
+    </section>
+
+    <aside class="booking-aside-panel" *ngIf="!scheduleClosed">
+      <div class="aside-card">
+        <h3>Resumo do agendamento</h3>
+
+        <div class="aside-item">
+          <span>Servico</span>
+          <strong>{{ selectedService?.name || 'Selecione um servico' }}</strong>
+        </div>
+
+        <div class="aside-item">
+          <span>Profissional</span>
+          <strong>
+            {{
+              noPreferenceSelected
+                ? 'Sem preferencia'
+                : (selectedProfessional?.userName || 'Selecione um profissional')
+            }}
+          </strong>
+        </div>
+
+        <div class="aside-item two-cols">
+          <div>
+            <span>Data</span>
+            <strong>{{ selectedDateLabel }}</strong>
+          </div>
+          <div>
+            <span>Horario</span>
+            <strong>{{ selectedTime || '-' }}</strong>
+          </div>
+        </div>
+
+        <div class="aside-item">
+          <span>Duracao estimada</span>
+          <strong>{{ selectedDurationLabel }}</strong>
+        </div>
+
+        <div class="aside-note">
+          <i class="bi bi-shield-check"></i>
+          <p>Seu horario sera confirmado assim que finalizar as etapas.</p>
+        </div>
       </div>
-
-      <!-- Step 2: Date & Time -->
-      <div *ngIf="currentStep === 2" class="step-wrapper animate-in">
-        <app-step-datetime
-          [professionalId]="noPreferenceSelected ? '' : selectedProfessional?.userId ?? ''"
-          [serviceId]="selectedService?.id ?? ''"
-          [companyId]="companyId"
-          [openingHours]="openingHours"
-          [selectedDate]="selectedDate"
-          [selectedTime]="selectedTime"
-          (dateTimeSelected)="onDateTimeSelected($event)">
-        </app-step-datetime>
-      </div>
-
-      <!-- Step 3: Confirm -->
-      <div *ngIf="currentStep === 3" class="step-wrapper animate-in">
-        <app-step-confirm
-          [company]="company"
-          [service]="selectedService"
-          [professional]="selectedProfessional"
-          [noPreference]="noPreferenceSelected"
-          [date]="selectedDate"
-          [time]="selectedTime"
-          [isSubmitting]="isSubmitting"
-          [isLoggedIn]="isLoggedIn"
-          [skipProfessionalStep]="skipProfessionalStep"
-          (confirmed)="onConfirmed()"
-          (guestConfirmed)="onGuestConfirmed()"
-          (loginRequested)="onLoginRequested()"
-          (editStep)="onEditStep($event)">
-        </app-step-confirm>
-      </div>
-    </div>
-
-    <!-- Navigation footer -->
-    <div class="booking-footer" *ngIf="!scheduleClosed && currentStep !== 3">
-      <button *ngIf="displayStep > 0"
-              class="btn-back"
-              (click)="goToPreviousStep()">
-        <i class="bi bi-arrow-left"></i>
-        {{ 'SCHEDULING.BACK' | translate }}
-      </button>
-
-      <button class="btn-continue"
-              [class.disabled]="!canAdvance()"
-              [disabled]="!canAdvance()"
-              (click)="goToNextStep()">
-        {{ 'SCHEDULING.CONTINUE' | translate }}
-        <i class="bi bi-arrow-right"></i>
-      </button>
-    </div>
-
-    <!-- Back button on confirm step -->
-    <div class="booking-footer" *ngIf="!scheduleClosed && currentStep === 3">
-      <button class="btn-back" (click)="goToPreviousStep()">
-        <i class="bi bi-arrow-left"></i>
-        {{ 'SCHEDULING.BACK' | translate }}
-      </button>
-    </div>
+    </aside>
   </div>
 </div>

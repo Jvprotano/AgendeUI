@@ -16,6 +16,7 @@ import { Login } from '../models/login';
 import { RedirectService } from '../../services/redirect.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   textInterval: any;
   @ViewChild('textLogin') textLogin!: HTMLElement;
   isDisabledLogin: boolean = false;
-  isDisabledGuest: boolean = false;
   isScheduling: boolean = false;
   showPassword: boolean = false;
 
@@ -84,12 +84,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   get isLockedOut(): boolean {
     return this.lockoutSeconds > 0;
-  }
-
-  guestLogin() {
-    this.isDisabledGuest = true;
-
-    this.modalService.dismissAll();
   }
 
   login() {
@@ -166,6 +160,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  openRegisterModal() {
+    this.modalService.open(RegisterComponent, {
+      centered: true,
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      scrollable: true,
+    });
   }
 
   private startLockout() {
