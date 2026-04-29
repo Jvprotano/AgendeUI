@@ -1,7 +1,9 @@
 export interface TokenPayload {
-  sub: string;
-  email: string;
-  name: string;
+  sub?: string;
+  email?: string;
+  name?: string;
+  userId?: string;
+  userName?: string;
   jti?: string;
   iat?: number;
   exp: number;
@@ -14,9 +16,14 @@ export function decodeToken(token: string): TokenPayload | null {
     if (parts.length !== 3) {
       return null;
     }
-    const payload = parts[1];
-    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decoded) as TokenPayload;
+
+    const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = payload.padEnd(
+      payload.length + ((4 - (payload.length % 4)) % 4),
+      '=',
+    );
+    const decoded = atob(padded);
+    return normalizePayload(JSON.parse(decoded) as TokenPayload);
   } catch {
     return null;
   }
@@ -47,4 +54,41 @@ export function getTimeUntilExpiration(token: string): number {
   const nowMs = Date.now();
   const expMs = payload.exp * 1000;
   return Math.max(0, expMs - nowMs);
+}
+
+function normalizePayload(payload: TokenPayload): TokenPayload {
+  const claim = (key: string): string | undefined => {
+    const value = payload[key];
+    return typeof value === 'string' && value.trim() ? value : undefined;
+  };
+
+  const userId =
+    payload.userId ??
+    payload.sub ??
+    claim('nameid') ??
+    claim('uid') ??
+    claim('id') ??
+    claim('http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier');
+
+  const email =
+    payload.email ??
+    claim('unique_name') ??
+    claim('upn') ??
+    claim('http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress');
+
+  const name =
+    payload.name ??
+    claim('given_name') ??
+    claim('preferred_username') ??
+    claim('http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name') ??
+    email;
+
+  return {
+    ...payload,
+    sub: payload.sub ?? userId,
+    userId,
+    email,
+    name,
+    userName: payload.userName ?? name,
+  };
 }

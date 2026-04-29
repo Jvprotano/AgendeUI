@@ -28,8 +28,8 @@
           </div>
         </div>
 
-        <div class="progress-chip">
-          <span>Etapa {{ displayStep + 1 }} de {{ steps.length }}</span>
+        <div class="progress-chip" *ngIf="!scheduleClosed">
+          <span>{{ 'SCHEDULING.PROGRESS_STEP' | translate:{ current: displayStep + 1, total: steps.length } }}</span>
           <strong>{{ progressPercent }}%</strong>
         </div>
       </header>
@@ -124,43 +124,43 @@
 
     <aside class="booking-aside-panel" *ngIf="!scheduleClosed">
       <div class="aside-card">
-        <h3>Resumo do agendamento</h3>
+        <h3>{{ 'SCHEDULING.SUMMARY.TITLE' | translate }}</h3>
 
         <div class="aside-item">
-          <span>Servico</span>
-          <strong>{{ selectedService?.name || 'Selecione um servico' }}</strong>
+          <span>{{ 'SCHEDULING.SUMMARY.SERVICE' | translate }}</span>
+          <strong>{{ selectedService?.name || ('SCHEDULING.SUMMARY.SELECT_SERVICE' | translate) }}</strong>
         </div>
 
         <div class="aside-item">
-          <span>Profissional</span>
+          <span>{{ 'SCHEDULING.SUMMARY.PROFESSIONAL' | translate }}</span>
           <strong>
             {{
               noPreferenceSelected
-                ? 'Sem preferencia'
-                : (selectedProfessional?.userName || 'Selecione um profissional')
+                ? ('SCHEDULING.STEP_PROFESSIONAL.NO_PREFERENCE' | translate)
+                : (selectedProfessional?.userName || ('SCHEDULING.SUMMARY.SELECT_PROFESSIONAL' | translate))
             }}
           </strong>
         </div>
 
         <div class="aside-item two-cols">
           <div>
-            <span>Data</span>
+            <span>{{ 'SCHEDULING.SUMMARY.DATE' | translate }}</span>
             <strong>{{ selectedDateLabel }}</strong>
           </div>
           <div>
-            <span>Horario</span>
+            <span>{{ 'SCHEDULING.SUMMARY.TIME' | translate }}</span>
             <strong>{{ selectedTime || '-' }}</strong>
           </div>
         </div>
 
         <div class="aside-item">
-          <span>Duracao estimada</span>
+          <span>{{ 'SCHEDULING.SUMMARY.DURATION' | translate }}</span>
           <strong>{{ selectedDurationLabel }}</strong>
         </div>
 
         <div class="aside-note">
           <i class="bi bi-shield-check"></i>
-          <p>Seu horario sera confirmado assim que finalizar as etapas.</p>
+          <p>{{ 'SCHEDULING.SUMMARY.NOTE' | translate }}</p>
         </div>
       </div>
     </aside>

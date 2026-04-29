@@ -15,7 +15,7 @@ export interface Company {
     isVirtual?: boolean;
     image?: string;
     status?: number;
-    scheduleStatus: ScheduleStatus;
+    scheduleStatus: ScheduleStatusValue;
     schedulingUrl?: string;
     timeZoneId: string;
     servicesOffered?: ServiceOffered[];
@@ -27,4 +27,22 @@ export interface Company {
 export const enum ScheduleStatus {
     CLOSED = 0,
     OPEN = 1,
+}
+
+export type ScheduleStatusValue = ScheduleStatus | string | number;
+
+export function normalizeScheduleStatus(status: ScheduleStatusValue | null | undefined): ScheduleStatus {
+    if (typeof status === 'number') {
+        return status === ScheduleStatus.OPEN ? ScheduleStatus.OPEN : ScheduleStatus.CLOSED;
+    }
+
+    if (typeof status === 'string') {
+        const normalized = status.trim().toLowerCase();
+        if (normalized === '1' || normalized === 'open' || normalized === 'opened' || normalized === 'active') {
+            return ScheduleStatus.OPEN;
+        }
+        return ScheduleStatus.CLOSED;
+    }
+
+    return ScheduleStatus.CLOSED;
 }

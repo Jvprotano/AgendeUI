@@ -86,9 +86,8 @@
     "BUTTONS": {
       "CONTINUE": "Continue",
       "BACK": "Back",
-      "REGISTER": "Register"
-    ,
-    "LOGIN": "Already have an account? Login"
+      "REGISTER": "Register",
+      "LOGIN": "Already have an account? Login"
     },
     "ERRORS": {
       "TITLE": "Oops! Something went wrong:",
@@ -98,9 +97,8 @@
     "SUCCESS": {
       "TITLE": "Welcome!",
       "MESSAGE": "Registration completed successfully!"
-    }
-  ,
-  "HAVE_ACCOUNT": "Already have an account?"
+    },
+    "HAVE_ACCOUNT": "Already have an account?"
   },
   "LOGIN": {
     "TITLE": "Login",
@@ -125,7 +123,7 @@
     "GUEST_LOGIN": "Continue as guest",
     "NO_ACCOUNT": "Don't have an account?",
     "REMEMBER_ME": "Remember me",
-  "OR": "or",
+    "OR": "or",
     "FORGOT_PASSWORD": "Forgot your password?",
     "SIGN_IN": "Sign in",
     "REGISTER": "Create an account",
@@ -152,18 +150,45 @@
       "SIMPLE_DESC": "Your clients don't want to waste time with excessive information. Offer them a simple and straightforward platform that also provides you with complete management of your business."
     },
     "PRICING": {
-      "TITLE": "Plans",
-      "PER_MONTH": "per month",
-      "FEATURES": {
-        "BOOKING_LINK": "Unique booking link",
-        "NOTIFICATIONS": "Send notifications to your clients",
-        "REPORTS": "Booking reports",
-        "FINANCIAL": "Financial report including earnings, expenses, and forecasts",
-        "UNLIMITED": "Unlimited bookings",
-        "RECURRING": "Recurring appointments"
+      "EYEBROW": "Special launch pricing",
+      "TITLE": "Simple plans to start and grow",
+      "SUBTITLE": "Start by moving bookings out of WhatsApp and grow into management with reports, dashboards, and reminders.",
+      "PER_MONTH": "/month",
+      "LAUNCH_BADGE": "Founding customers",
+      "LAUNCH_PRICE": "Launch price",
+      "FUTURE_PRICE": "{{price}}/month",
+      "START_TRIAL": "Start 14-day trial",
+      "TRIAL_TITLE": "14 days free, no card",
+      "TRIAL_TEXT": "Try Agende before choosing a plan.",
+      "ESSENTIAL": {
+        "NAME": "Essential",
+        "DESCRIPTION": "For small businesses that want to stop scheduling everything manually.",
+        "LAUNCH_PRICE": "R$29.90",
+        "FUTURE_PRICE": "R$39.90",
+        "FEATURE_1": "1 business",
+        "FEATURE_2": "Up to 2 professionals",
+        "FEATURE_3": "Public booking page",
+        "FEATURE_4": "Services and business hours",
+        "FEATURE_5": "Basic calendar with cancellations",
+        "FEATURE_6": "Up to 500 bookings per month"
       },
-      "SIGN_UP": "Sign up now",
-      "FREE_TRIAL": "7-day free trial with no upfront credit card registration"
+      "PROFESSIONAL": {
+        "NAME": "Professional",
+        "BADGE": "Best fit",
+        "DESCRIPTION": "For businesses that want management, financial visibility, and a more organized operation.",
+        "LAUNCH_PRICE": "R$59.90",
+        "FUTURE_PRICE": "R$79.90",
+        "FEATURE_1": "Everything in Essential",
+        "FEATURE_2": "Unlimited bookings",
+        "FEATURE_3": "Management dashboard",
+        "FEATURE_4": "Financial reports",
+        "FEATURE_5": "Reports by service and professional",
+        "FEATURE_6": "Email notifications and basic reminders"
+      },
+      "WHATSAPP": {
+        "TITLE": "WhatsApp",
+        "DESCRIPTION": "Email notifications are included in the Professional plan. For an additional R$19.90/month, you can also notify customers automatically on WhatsApp."
+      }
     },
     "GET_STARTED": "Get Started",
     "VIEW_PLANS": "View plans",
@@ -184,6 +209,7 @@
     "POWERED_BY": "Powered by Agende",
     "BACK": "Back",
     "CONTINUE": "Continue",
+    "PROGRESS_STEP": "Step {{current}} of {{total}}",
     "STEPPER": {
       "SERVICE": "Service",
       "PROFESSIONAL": "Professional",
@@ -236,6 +262,17 @@
     "CLOSED": {
       "TITLE": "Schedule closed",
       "MESSAGE": "This company is not accepting appointments at the moment. Please try again later."
+    },
+    "SUMMARY": {
+      "TITLE": "Booking summary",
+      "SERVICE": "Service",
+      "SELECT_SERVICE": "Select a service",
+      "PROFESSIONAL": "Professional",
+      "SELECT_PROFESSIONAL": "Select a professional",
+      "DATE": "Date",
+      "TIME": "Time",
+      "DURATION": "Estimated duration",
+      "NOTE": "Your time will be confirmed when you finish the steps."
     },
     "NO_TIMES_AVAILABLE": "No available time slots for the selected date.",
     "LOADING": "Loading available times...",

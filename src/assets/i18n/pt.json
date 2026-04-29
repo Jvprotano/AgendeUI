@@ -154,18 +154,45 @@
       "SIMPLE_DESC": "Seus clientes não querem perder tempo com informações excessivas. Ofereça a eles uma plataforma simples e direta que também fornece a você uma gestão completa do seu negócio."
     },
     "PRICING": {
-      "TITLE": "Planos",
-      "PER_MONTH": "por mês",
-      "FEATURES": {
-        "BOOKING_LINK": "Link único de agendamento",
-        "NOTIFICATIONS": "Envie notificações para seus clientes",
-        "REPORTS": "Relatórios de agendamentos",
-        "FINANCIAL": "Relatório financeiro incluindo ganhos, despesas e previsões",
-        "UNLIMITED": "Agendamentos ilimitados",
-        "RECURRING": "Agendamentos recorrentes"
+      "EYEBROW": "Preço especial de lançamento",
+      "TITLE": "Planos simples para começar e crescer",
+      "SUBTITLE": "Comece tirando os agendamentos do WhatsApp e evolua para gestão com relatórios, dashboard e lembretes.",
+      "PER_MONTH": "/mês",
+      "LAUNCH_BADGE": "Clientes fundadores",
+      "LAUNCH_PRICE": "Preço de lançamento",
+      "FUTURE_PRICE": "{{price}}/mês",
+      "START_TRIAL": "Começar 14 dias grátis",
+      "TRIAL_TITLE": "14 dias grátis, sem cartão",
+      "TRIAL_TEXT": "Teste o Agende antes de escolher o plano.",
+      "ESSENTIAL": {
+        "NAME": "Essencial",
+        "DESCRIPTION": "Para pequenos negócios que querem parar de marcar tudo manualmente.",
+        "LAUNCH_PRICE": "R$29,90",
+        "FUTURE_PRICE": "R$39,90",
+        "FEATURE_1": "1 empresa",
+        "FEATURE_2": "Até 2 profissionais",
+        "FEATURE_3": "Página pública de agendamento",
+        "FEATURE_4": "Serviços e horários de funcionamento",
+        "FEATURE_5": "Agenda básica com cancelamentos",
+        "FEATURE_6": "Até 500 agendamentos por mês"
       },
-      "SIGN_UP": "Cadastre-se agora",
-      "FREE_TRIAL": "7 dias de teste grátis sem necessidade de cartão de crédito"
+      "PROFESSIONAL": {
+        "NAME": "Profissional",
+        "BADGE": "Mais indicado",
+        "DESCRIPTION": "Para negócios que querem gestão, visão financeira e operação mais organizada.",
+        "LAUNCH_PRICE": "R$59,90",
+        "FUTURE_PRICE": "R$79,90",
+        "FEATURE_1": "Tudo do Essencial",
+        "FEATURE_2": "Agendamentos ilimitados",
+        "FEATURE_3": "Dashboard de gestão",
+        "FEATURE_4": "Relatórios financeiros",
+        "FEATURE_5": "Relatórios por serviço e profissional",
+        "FEATURE_6": "Notificações por e-mail e lembretes básicos"
+      },
+      "WHATSAPP": {
+        "TITLE": "WhatsApp",
+        "DESCRIPTION": "No plano Profissional, notificações por e-mail estão inclusas. Por mais R$19,90/mês, você também notifica seus clientes automaticamente pelo WhatsApp."
+      }
     },
     "GET_STARTED": "Comece Agora",
     "VIEW_PLANS": "Ver planos",
@@ -186,6 +213,7 @@
     "POWERED_BY": "Desenvolvido por Agende",
     "BACK": "Voltar",
     "CONTINUE": "Continuar",
+    "PROGRESS_STEP": "Etapa {{current}} de {{total}}",
     "STEPPER": {
       "SERVICE": "Serviço",
       "PROFESSIONAL": "Profissional",
@@ -238,6 +266,17 @@
     "CLOSED": {
       "TITLE": "Agenda fechada",
       "MESSAGE": "Esta empresa está com a agenda fechada no momento. Não é possível realizar agendamentos. Por favor, tente novamente mais tarde."
+    },
+    "SUMMARY": {
+      "TITLE": "Resumo do agendamento",
+      "SERVICE": "Serviço",
+      "SELECT_SERVICE": "Selecione um serviço",
+      "PROFESSIONAL": "Profissional",
+      "SELECT_PROFESSIONAL": "Selecione um profissional",
+      "DATE": "Data",
+      "TIME": "Horário",
+      "DURATION": "Duração estimada",
+      "NOTE": "Seu horário será confirmado assim que finalizar as etapas."
     },
     "NO_TIMES_AVAILABLE": "Nenhum horário disponível para a data selecionada.",
     "LOADING": "Buscando horários...",

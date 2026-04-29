@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
   readonly kpis: KpiCard[] = [
     { label: 'Agendamentos da Semana', value: '126', delta: '+14%', trendUp: true, icon: 'bi-calendar2-check' },
     { label: 'Faturamento Estimado', value: 'R$ 7.840', delta: '+9%', trendUp: true, icon: 'bi-cash-stack' },
-    { label: 'Taxa de OcupaAAo', value: '78%', delta: '+5 pts', trendUp: true, icon: 'bi-speedometer2' },
+    { label: 'Taxa de Ocupação', value: '78%', delta: '+5 pts', trendUp: true, icon: 'bi-speedometer2' },
     { label: 'Cancelamentos', value: '6', delta: '-2', trendUp: true, icon: 'bi-x-circle' },
   ];
 
@@ -63,21 +63,21 @@ export class DashboardComponent implements OnInit {
     { day: 'Qua', bookings: 22 },
     { day: 'Qui', bookings: 20 },
     { day: 'Sex', bookings: 24 },
-    { day: 'SAb', bookings: 19 },
+    { day: 'Sáb', bookings: 19 },
     { day: 'Dom', bookings: 11 },
   ];
 
   readonly serviceShare: ServiceShare[] = [
     { name: 'Corte', value: 42, color: '#14b8a6' },
     { name: 'Barba', value: 24, color: '#0ea5e9' },
-    { name: 'HidrataAAo', value: 19, color: '#f59e0b' },
+    { name: 'Hidratação', value: 19, color: '#f59e0b' },
     { name: 'Sobrancelha', value: 15, color: '#a855f7' },
   ];
 
   readonly upcomingAppointments: UpcomingItem[] = [
-    { time: '09:30', customer: 'JoAo Lucas', service: 'Corte + Barba', professional: 'Rafael', status: 'Confirmado' },
+    { time: '09:30', customer: 'João Lucas', service: 'Corte + Barba', professional: 'Rafael', status: 'Confirmado' },
     { time: '10:10', customer: 'Carlos Souza', service: 'Corte', professional: 'Marcos', status: 'Pendente' },
-    { time: '11:00', customer: 'Bruno Dias', service: 'HidrataAAo', professional: 'Rafael', status: 'Confirmado' },
+    { time: '11:00', customer: 'Bruno Dias', service: 'Hidratação', professional: 'Rafael', status: 'Confirmado' },
     { time: '14:20', customer: 'Pedro Melo', service: 'Corte', professional: 'Ana', status: 'Confirmado' },
     { time: '15:40', customer: 'Thiago Alves', service: 'Barba', professional: 'Marcos', status: 'Pendente' },
   ];
@@ -113,7 +113,7 @@ export class DashboardComponent implements OnInit {
 
   get statusSummary(): string {
     const confirmed = this.upcomingAppointments.filter((item) => item.status === 'Confirmado').length;
-    return `${confirmed} confirmados de ${this.upcomingAppointments.length} prAximos atendimentos`;
+    return `${confirmed} confirmados de ${this.upcomingAppointments.length} próximos atendimentos`;
   }
 
   trackByDay(_: number, item: WeekPoint): string {

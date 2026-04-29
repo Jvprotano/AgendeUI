@@ -44,7 +44,7 @@ export class CompanyService extends BaseService {
     return this.get(`company/${companyId}/employees`);
   }
 
-  create(company: Company): Observable<Company> {
+  create(company: Partial<Company>): Observable<Partial<Company> | void> {
     return this.post('company', company);
   }
 

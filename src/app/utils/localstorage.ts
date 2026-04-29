@@ -8,16 +8,17 @@ export class LocalStorageUtils {
   private inMemoryToken: string | null = null;
 
   public saveUserLocalData(response: any, rememberMe: boolean) {
-    this.saveUserToken(response.bearer, rememberMe);
+    const token = this.extractToken(response);
+    if (token) {
+      this.saveUserToken(token, rememberMe);
+    }
   }
 
   public getUserToken(): string | null {
-    // 1. Check in-memory first (fastest)
     if (this.inMemoryToken && !isTokenExpired(this.inMemoryToken)) {
       return this.inMemoryToken;
     }
 
-    // 2. Check sessionStorage (survives page refresh, clears on tab close)
     if (typeof sessionStorage !== 'undefined') {
       const sessionToken = sessionStorage.getItem('access_token');
       if (sessionToken && !isTokenExpired(sessionToken)) {
@@ -29,20 +30,9 @@ export class LocalStorageUtils {
       }
     }
 
-    // 3. Check localStorage ("Remember me" — survives browser close)
     if (typeof localStorage !== 'undefined') {
-      const localToken = localStorage.getItem('access_token');
-      if (localToken && !isTokenExpired(localToken)) {
-        this.inMemoryToken = localToken;
-        // Re-populate sessionStorage for faster access
-        if (typeof sessionStorage !== 'undefined') {
-          sessionStorage.setItem('access_token', localToken);
-        }
-        return localToken;
-      }
-      if (localToken) {
-        localStorage.removeItem('access_token');
-      }
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('access_user');
     }
 
     this.inMemoryToken = null;
@@ -52,14 +42,17 @@ export class LocalStorageUtils {
   public saveUserToken(token: string, rememberMe: boolean) {
     this.inMemoryToken = token;
 
-    // Always store in sessionStorage (survives page refresh, clears on tab close)
     if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('access_token', token);
+      if (rememberMe) {
+        sessionStorage.setItem('access_token', token);
+      } else {
+        sessionStorage.removeItem('access_token');
+      }
     }
 
-    // With "Remember me", also store in localStorage (survives browser close)
-    if (rememberMe && typeof localStorage !== 'undefined') {
-      localStorage.setItem('access_token', token);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('access_user');
     }
   }
 
@@ -85,5 +78,16 @@ export class LocalStorageUtils {
       localStorage.removeItem('access_token');
       localStorage.removeItem('access_user');
     }
+  }
+
+  private extractToken(response: any): string | null {
+    const token =
+      response?.bearer ??
+      response?.token ??
+      response?.accessToken ??
+      response?.access_token ??
+      response?.jwt;
+
+    return typeof token === 'string' && token.trim() ? token : null;
   }
 }

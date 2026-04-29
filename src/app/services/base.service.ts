@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '../shared/interfaces/api-response.interface';
 import { ErrorHandlingService } from '../shared/services/error-handling.service';
@@ -78,6 +78,10 @@ export abstract class BaseService {
   }
 
   protected extractData<T>(response: ApiResponse<T>): T {
-    return response.data;
+    if (response && typeof response === 'object' && 'data' in response) {
+      return response.data;
+    }
+
+    return response as T;
   }
 }

@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './navegation/home/home.component';
+import { HomeComponent } from './navigation/home/home.component';
 import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
-import { NotFoundComponent } from './navegation/not-found/not-found.component';
+import { NotFoundComponent } from './navigation/not-found/not-found.component';
+import { AccessDeniedComponent } from './navigation/access-denied/access-denied.component';
 import { AccountAppComponent } from './account/account-app.component';
 import { UserComponent } from './user/user.component';
 import { CompaniesComponent } from './user/companies/companies.component';
@@ -11,7 +12,7 @@ import { CompanyComponent } from './company/company.component';
 import { authGuard, protectedGuard } from './account/services/auth.guard';
 import { ProfileComponent } from './user/profile/profile.component';
 import { SchedulingComponent } from './scheduling/scheduling.component';
-import { FinantialComponent } from './company/finantial/finantial.component';
+import { FinancialComponent } from './company/financial/financial.component';
 import { SuccessComponent } from './scheduling/success/success.component';
 import { DashboardComponent } from './company/dashboard/dashboard.component';
 import { CompanyEditComponent } from './company/edit/company-edit.component';
@@ -46,11 +47,13 @@ export const routes: Routes = [
             { path: ':id/services', component: ServicesManagementComponent, canActivate: [protectedGuard] },
             { path: ':id/employees', component: EmployeesManagementComponent, canActivate: [protectedGuard] },
             { path: ':id/edit', component: CompanyEditComponent, canActivate: [protectedGuard] },
-            { path: ':id/finantial', component: FinantialComponent, canActivate: [protectedGuard] },
+            { path: ':id/financial', component: FinancialComponent, canActivate: [protectedGuard] },
+            { path: ':id/finantial', redirectTo: ':id/financial', pathMatch: 'full' },
             { path: ':id/dashboard', component: DashboardComponent, canActivate: [protectedGuard] }
         ]
     },
 
+    { path: 'access-denied', component: AccessDeniedComponent },
     { path: 'not-found', component: NotFoundComponent },
     { path: '**', component: NotFoundComponent },
 ];

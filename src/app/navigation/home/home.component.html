@@ -1,0 +1,332 @@
+<div class="header">
+  <div class="row h-100">
+    <div
+      class="col-md-6 d-flex align-items-center justify-content-center px-5 flex-column gap-4"
+    >
+      <div #headerText class="header-text rounded-4">
+        <h1>{{ "HOME.TITLE" | translate }}</h1>
+        <span id="typed"></span>
+      </div>
+      <div #homeButtons class="home-buttons d-flex align-items-center gap-4">
+        <a
+          class="btn btn-gradient btn-lg rounded-5"
+          [routerLink]="'/account/register'"
+          ><i class="bi bi-calendar-plus me-2"></i
+          >{{ "HOME.GET_STARTED" | translate }}</a
+        >
+        <a
+          class="btn btn-hero-secondary btn-lg rounded-5"
+          [routerLink]="['/home']"
+          fragment="pricing"
+        >
+          <i class="bi bi-tags me-2"></i>{{ "HOME.VIEW_PLANS" | translate }}
+        </a>
+      </div>
+    </div>
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+      <div
+        #homeImg
+        class="align-items-center d-flex header-image justify-content-center position-relative"
+      >
+        <img
+          src="assets/home-image.webp"
+          alt="Header Image"
+          class="img-fluid rounded-4 home-img"
+        />
+        <div class="reservations-today">
+          <div class="green-pulse animate-pulse"></div>
+          +1.2k agendamentos hoje
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-style"></div>
+</div>
+
+<div class="container functionalities" id="features">
+  <div class="row">
+    <div class="col-12 text-center mb-4">
+      <h2 class="fs-1 mb-4">{{ "HOME.FEATURES.TITLE" | translate }}</h2>
+      <p class="fs-5 subtitle">{{ "HOME.FEATURES.SUBTITLE" | translate }}</p>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="card card-functionalities">
+        <div class="div-icons">
+          <i class="card-icon bi bi-phone"></i>
+          <i class="card-icon bi bi-android2"></i>
+          <i class="card-icon bi bi-apple"></i>
+          <i class="card-icon bi bi-laptop"></i>
+        </div>
+        <div class="card-body functionalities pb-0">
+          <h3 class="card-title fs-3 text-center">
+            {{ "HOME.FEATURES.ACCESS_ANYWHERE" | translate }}
+          </h3>
+          <p class="card-text text-center">
+            {{ "HOME.FEATURES.ACCESS_ANYWHERE_DESC" | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="card card-functionalities">
+        <div class="div-icons">
+          <i class="card-icon bi bi-bell"></i>
+        </div>
+        <div class="card-body functionalities pb-0">
+          <h3 class="card-title fs-3 text-center">
+            {{ "HOME.FEATURES.NOTIFICATIONS" | translate }}
+          </h3>
+          <p class="card-text text-center">
+            {{ "HOME.FEATURES.NOTIFICATIONS_DESC" | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="card card-functionalities">
+        <div class="div-icons">
+          <i class="card-icon bi bi-calendar2-check"></i>
+        </div>
+        <div class="card-body functionalities pb-0">
+          <h3 class="card-title fs-3 text-center">
+            {{ "HOME.FEATURES.SIMPLE" | translate }}
+          </h3>
+          <p class="card-text text-center">
+            {{ "HOME.FEATURES.SIMPLE_DESC" | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container services my-5" id="services">
+  <h2 class="fs-1 my-4 text-center">{{ "HOME.SERVICES.TITLE" | translate }}</h2>
+  <p class="fs-5 subtitle text-center">
+    {{ "HOME.SERVICES.SUBTITLE" | translate }}
+  </p>
+  <div class="services-animation d-flex justify-content-center">
+    <div class="services-circle position-relative mx-auto">
+      <div
+        class="center d-flex align-items-center justify-content-center text-white fw-semibold"
+      >
+        Agende
+      </div>
+      <div class="align-items-center d-flex flex-column node" data-angle="-90">
+        <img
+          src="assets/gifs/barber.gif"
+          alt="Barbearia Icon"
+          class="service-icon"
+        />
+        <span class="node-label">{{ "HOME.SERVICES.ITEM_1" | translate }}</span>
+      </div>
+      <div class="align-items-center d-flex flex-column node" data-angle="-30">
+        <img
+          src="assets/gifs/nails.gif"
+          alt="Manicure Icon"
+          class="service-icon"
+        />
+        <span class="node-label">{{ "HOME.SERVICES.ITEM_2" | translate }}</span>
+      </div>
+      <div class="align-items-center d-flex flex-column node" data-angle="30">
+        <img
+          src="assets/gifs/massage.gif"
+          alt="Massagem Icon"
+          class="service-icon"
+        />
+        <span class="node-label">{{ "HOME.SERVICES.ITEM_3" | translate }}</span>
+      </div>
+      <div class="align-items-center d-flex flex-column node" data-angle="90">
+        <img
+          src="assets/gifs/aesthetic.gif"
+          alt="Estética Icon"
+          class="service-icon"
+        />
+        <span class="node-label">{{ "HOME.SERVICES.ITEM_4" | translate }}</span>
+      </div>
+      <div class="align-items-center d-flex flex-column node" data-angle="150">
+        <img src="assets/gifs/spa.gif" alt="Spa Icon" class="service-icon" />
+        <span class="node-label">{{ "HOME.SERVICES.ITEM_5" | translate }}</span>
+      </div>
+      <div class="align-items-center d-flex flex-column node" data-angle="210">
+        <img
+          src="assets/gifs/makeup.gif"
+          alt="Maquiagem Icon"
+          class="service-icon"
+        />
+        <span class="node-label">{{ "HOME.SERVICES.ITEM_6" | translate }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="pricing-header">
+      <span class="pricing-eyebrow">{{
+        "HOME.PRICING.EYEBROW" | translate
+      }}</span>
+      <h2>{{ "HOME.PRICING.TITLE" | translate }}</h2>
+      <p>{{ "HOME.PRICING.SUBTITLE" | translate }}</p>
+    </div>
+
+    <div class="pricing-grid">
+      <article class="pricing-card">
+        <div class="pricing-card__top">
+          <span class="plan-badge">{{
+            "HOME.PRICING.LAUNCH_BADGE" | translate
+          }}</span>
+          <h3>{{ "HOME.PRICING.ESSENTIAL.NAME" | translate }}</h3>
+          <p>{{ "HOME.PRICING.ESSENTIAL.DESCRIPTION" | translate }}</p>
+        </div>
+
+        <div class="price-block">
+          <span class="price-label">{{
+            "HOME.PRICING.LAUNCH_PRICE" | translate
+          }}</span>
+          <div class="price-row">
+            <strong>{{
+              "HOME.PRICING.ESSENTIAL.LAUNCH_PRICE" | translate
+            }}</strong>
+            <span>{{ "HOME.PRICING.PER_MONTH" | translate }}</span>
+          </div>
+          <small
+            ><s>{{
+              "HOME.PRICING.FUTURE_PRICE"
+                | translate
+                  : {
+                      price:
+                        ("HOME.PRICING.ESSENTIAL.FUTURE_PRICE" | translate),
+                    }
+            }}</s></small
+          >
+        </div>
+
+        <ul class="feature-list">
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.ESSENTIAL.FEATURE_1" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.ESSENTIAL.FEATURE_2" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.ESSENTIAL.FEATURE_3" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.ESSENTIAL.FEATURE_4" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.ESSENTIAL.FEATURE_5" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.ESSENTIAL.FEATURE_6" | translate }}
+          </li>
+        </ul>
+
+        <a
+          class="btn pricing-button pricing-button--secondary"
+          [routerLink]="'/account/register'"
+        >
+          {{ "HOME.PRICING.START_TRIAL" | translate }}
+        </a>
+      </article>
+
+      <article class="pricing-card pricing-card--featured">
+        <div class="popular-ribbon">
+          {{ "HOME.PRICING.PROFESSIONAL.BADGE" | translate }}
+        </div>
+
+        <div class="pricing-card__top">
+          <span class="plan-badge plan-badge--featured">{{
+            "HOME.PRICING.LAUNCH_BADGE" | translate
+          }}</span>
+          <h3>{{ "HOME.PRICING.PROFESSIONAL.NAME" | translate }}</h3>
+          <p>{{ "HOME.PRICING.PROFESSIONAL.DESCRIPTION" | translate }}</p>
+        </div>
+
+        <div class="price-block">
+          <span class="price-label">{{
+            "HOME.PRICING.LAUNCH_PRICE" | translate
+          }}</span>
+          <div class="price-row">
+            <strong>{{
+              "HOME.PRICING.PROFESSIONAL.LAUNCH_PRICE" | translate
+            }}</strong>
+            <span>{{ "HOME.PRICING.PER_MONTH" | translate }}</span>
+          </div>
+          <small>
+            <s>
+              {{
+                "HOME.PRICING.FUTURE_PRICE"
+                  | translate
+                    : {
+                        price:
+                          ("HOME.PRICING.PROFESSIONAL.FUTURE_PRICE"
+                          | translate),
+                      }
+              }}
+            </s>
+          </small>
+        </div>
+
+        <ul class="feature-list">
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.PROFESSIONAL.FEATURE_1" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.PROFESSIONAL.FEATURE_2" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.PROFESSIONAL.FEATURE_3" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.PROFESSIONAL.FEATURE_4" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.PROFESSIONAL.FEATURE_5" | translate }}
+          </li>
+          <li>
+            <i class="bi bi-check2"></i
+            >{{ "HOME.PRICING.PROFESSIONAL.FEATURE_6" | translate }}
+          </li>
+        </ul>
+
+        <a
+          class="btn pricing-button pricing-button--primary"
+          [routerLink]="'/account/register'"
+        >
+          {{ "HOME.PRICING.START_TRIAL" | translate }}
+        </a>
+      </article>
+    </div>
+
+    <div class="pricing-notes">
+      <div class="pricing-note">
+        <i class="bi bi-credit-card-2-front"></i>
+        <div>
+          <strong>{{ "HOME.PRICING.TRIAL_TITLE" | translate }}</strong>
+          <span>{{ "HOME.PRICING.TRIAL_TEXT" | translate }}</span>
+        </div>
+      </div>
+
+      <div class="pricing-note pricing-note--whatsapp">
+        <i class="bi bi-whatsapp"></i>
+        <div>
+          <strong>{{ "HOME.PRICING.WHATSAPP.TITLE" | translate }}</strong>
+          <span>{{ "HOME.PRICING.WHATSAPP.DESCRIPTION" | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

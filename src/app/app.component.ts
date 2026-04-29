@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { HomeComponent } from './navegation/home/home.component';
-import { MenuComponent } from './navegation/menu/menu.component';
-import { FooterComponent } from './navegation/footer/footer.component';
+import { HomeComponent } from './navigation/home/home.component';
+import { MenuComponent } from './navigation/menu/menu.component';
+import { FooterComponent } from './navigation/footer/footer.component';
 import { WhatsappSupportComponent } from './shared/components/whatsapp-support/whatsapp-support.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalStorageUtils } from './utils/localstorage';

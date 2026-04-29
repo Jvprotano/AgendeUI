@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
-import { Company, ScheduleStatus } from '../../company/models/company';
+import {
+  Company,
+  normalizeScheduleStatus,
+  ScheduleStatus,
+} from '../../company/models/company';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateComponent } from './create/create.component';
 import { CompanyService } from '../../company/services/company.service';
@@ -55,15 +59,21 @@ export class CompaniesComponent implements OnInit {
   }
 
   statusStripClass(item: Company): string {
-    return item.scheduleStatus === ScheduleStatus.OPEN ? 'strip-active' : 'strip-closed';
+    return normalizeScheduleStatus(item.scheduleStatus) === ScheduleStatus.OPEN
+      ? 'strip-active'
+      : 'strip-closed';
   }
 
   statusBadgeClass(item: Company): string {
-    return item.scheduleStatus === ScheduleStatus.OPEN ? 'badge-active' : 'badge-closed';
+    return normalizeScheduleStatus(item.scheduleStatus) === ScheduleStatus.OPEN
+      ? 'badge-active'
+      : 'badge-closed';
   }
 
   statusLabel(item: Company): string {
-    return item.scheduleStatus === ScheduleStatus.OPEN ? 'Aberta' : 'Fechada';
+    return normalizeScheduleStatus(item.scheduleStatus) === ScheduleStatus.OPEN
+      ? 'Aberta'
+      : 'Fechada';
   }
 
   buildSchedulingUrl(schedulingUrl?: string): string {
@@ -89,7 +99,7 @@ export class CompaniesComponent implements OnInit {
     if (!company) return;
 
     const newStatus =
-      company.scheduleStatus === ScheduleStatus.CLOSED
+      normalizeScheduleStatus(company.scheduleStatus) === ScheduleStatus.CLOSED
         ? ScheduleStatus.OPEN
         : ScheduleStatus.CLOSED;
 

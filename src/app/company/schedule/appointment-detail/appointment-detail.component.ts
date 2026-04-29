@@ -8,7 +8,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { format, parse } from 'date-fns';
 import { ptBR, es, enUS } from 'date-fns/locale';
 
-import { Appointment, SchedulingStatus } from '../../../scheduling/models/appointment';
+import {
+  Appointment,
+  normalizeSchedulingStatus,
+  SchedulingStatus,
+} from '../../../scheduling/models/appointment';
 
 @Component({
   selector: 'app-appointment-detail',
@@ -36,13 +40,13 @@ export class AppointmentDetailComponent {
 
   get canCancel(): boolean {
     return (
-      this.appointment.status === SchedulingStatus.Pending ||
-      this.appointment.status === SchedulingStatus.Confirmed
+      normalizeSchedulingStatus(this.appointment.status) === SchedulingStatus.Pending ||
+      normalizeSchedulingStatus(this.appointment.status) === SchedulingStatus.Confirmed
     );
   }
 
   get statusColor(): string {
-    switch (this.appointment.status) {
+    switch (normalizeSchedulingStatus(this.appointment.status)) {
       case SchedulingStatus.Pending: return '#F59E0B';
       case SchedulingStatus.Confirmed: return '#10B981';
       case SchedulingStatus.Cancelled: return '#EF4444';
@@ -52,7 +56,7 @@ export class AppointmentDetailComponent {
   }
 
   get statusKey(): string {
-    return this.statusKeyMap[this.appointment.status] || 'COMPANY.CALENDAR.STATUS_PENDING';
+    return this.statusKeyMap[normalizeSchedulingStatus(this.appointment.status)] || 'COMPANY.CALENDAR.STATUS_PENDING';
   }
 
   get formattedDate(): string {

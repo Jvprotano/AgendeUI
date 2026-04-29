@@ -39,7 +39,12 @@ import { ptBR, es, enUS } from 'date-fns/locale';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SchedulingService } from '../../scheduling/services/scheduling.service';
 import { CompanyService } from '../services/company.service';
-import { Appointment, SchedulingStatus } from '../../scheduling/models/appointment';
+import {
+  Appointment,
+  normalizeSchedulingStatus,
+  SchedulingStatus,
+  SchedulingStatusValue,
+} from '../../scheduling/models/appointment';
 import { AppointmentDetailComponent } from './appointment-detail/appointment-detail.component';
 
 @Component({
@@ -425,8 +430,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  getStatusLabel(status: SchedulingStatus): string {
-    switch (status) {
+  getStatusLabel(status: SchedulingStatusValue): string {
+    switch (normalizeSchedulingStatus(status)) {
       case SchedulingStatus.Pending:
         return this.translate.instant('COMPANY.CALENDAR.STATUS_PENDING');
       case SchedulingStatus.Confirmed:
@@ -440,8 +445,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getStatusClass(status: SchedulingStatus): string {
-    switch (status) {
+  getStatusClass(status: SchedulingStatusValue): string {
+    switch (normalizeSchedulingStatus(status)) {
       case SchedulingStatus.Pending:
         return 'mobile-status--pending';
       case SchedulingStatus.Confirmed:
@@ -455,8 +460,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private getStatusColor(status: SchedulingStatus): string {
-    switch (status) {
+  private getStatusColor(status: SchedulingStatusValue): string {
+    switch (normalizeSchedulingStatus(status)) {
       case SchedulingStatus.Pending: return '#F59E0B';
       case SchedulingStatus.Confirmed: return '#10B981';
       case SchedulingStatus.Cancelled: return '#EF4444';
@@ -487,10 +492,10 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateSummary(appointments: Appointment[]): void {
     this.totalAppointments = appointments.length;
-    this.pendingAppointments = appointments.filter((item) => item.status === SchedulingStatus.Pending).length;
-    this.confirmedAppointments = appointments.filter((item) => item.status === SchedulingStatus.Confirmed).length;
-    this.cancelledAppointments = appointments.filter((item) => item.status === SchedulingStatus.Cancelled).length;
-    this.completedAppointments = appointments.filter((item) => item.status === SchedulingStatus.Completed).length;
+    this.pendingAppointments = appointments.filter((item) => normalizeSchedulingStatus(item.status) === SchedulingStatus.Pending).length;
+    this.confirmedAppointments = appointments.filter((item) => normalizeSchedulingStatus(item.status) === SchedulingStatus.Confirmed).length;
+    this.cancelledAppointments = appointments.filter((item) => normalizeSchedulingStatus(item.status) === SchedulingStatus.Cancelled).length;
+    this.completedAppointments = appointments.filter((item) => normalizeSchedulingStatus(item.status) === SchedulingStatus.Completed).length;
 
     const today = format(new Date(), 'yyyy-MM-dd');
     this.todayAppointments = appointments.filter((item) => item.date === today).length;

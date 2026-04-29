@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { switchMap, throwError } from 'rxjs';
 
 import { SchedulingService } from './services/scheduling.service';
 import { CompanyService } from '../company/services/company.service';
@@ -19,7 +20,7 @@ import { AccountService } from '../account/services/account.service';
 import { RedirectService } from '../services/redirect.service';
 import { LoginComponent } from '../account/login/login.component';
 
-import { Company, ScheduleStatus } from '../company/models/company';
+import { Company, normalizeScheduleStatus, ScheduleStatus } from '../company/models/company';
 import { ServiceOffered } from './models/service_offered';
 import { CompanyEmployee } from '../company/models/company-employee';
 import { Scheduling } from './models/scheduling';
@@ -166,6 +167,10 @@ export class SchedulingComponent implements OnInit {
   // ─── Step navigation ───
 
   goToStep(displayIndex: number) {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     const logicalStep = this.reverseStepMap[displayIndex];
     if (logicalStep < this.currentStep || this.canAdvance()) {
       this.currentStep = logicalStep;
@@ -173,6 +178,10 @@ export class SchedulingComponent implements OnInit {
   }
 
   goToNextStep() {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     if (this.canAdvance()) {
       const nextDisplay = this.displayStep + 1;
       if (nextDisplay < this.steps.length) {
@@ -182,6 +191,10 @@ export class SchedulingComponent implements OnInit {
   }
 
   goToPreviousStep() {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     if (this.displayStep > 0) {
       const prevDisplay = this.displayStep - 1;
       this.currentStep = this.reverseStepMap[prevDisplay];
@@ -189,6 +202,10 @@ export class SchedulingComponent implements OnInit {
   }
 
   canAdvance(): boolean {
+    if (this.scheduleClosed) {
+      return false;
+    }
+
     switch (this.currentStep) {
       case 0: return !!this.selectedService;
       case 1: return !!this.selectedProfessional || this.noPreferenceSelected;
@@ -201,6 +218,10 @@ export class SchedulingComponent implements OnInit {
   // ─── Step 0: Service selection ───
 
   onServiceSelected(service: ServiceOffered) {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     if (this.selectedService?.id === service.id) {
       this.selectedService = null;
     } else {
@@ -215,6 +236,10 @@ export class SchedulingComponent implements OnInit {
   // ─── Step 1: Professional selection ───
 
   onProfessionalSelected(professional: CompanyEmployee | null) {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     if (professional === null) {
       // "No preference" toggle
       if (this.noPreferenceSelected) {
@@ -240,6 +265,10 @@ export class SchedulingComponent implements OnInit {
   // ─── Step 2: Date & Time selection ───
 
   onDateTimeSelected(selection: DateTimeSelection) {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     this.selectedDate = selection.date;
     this.selectedTime = selection.time;
   }
@@ -247,6 +276,11 @@ export class SchedulingComponent implements OnInit {
   // ─── Step 3: Confirm ───
 
   onConfirmed() {
+    if (this.scheduleClosed) {
+      this.toastr.warning(this.translate.instant('SCHEDULING.CLOSED.MESSAGE'));
+      return;
+    }
+
     if (!this.isLoggedIn) {
       this.openLoginModal();
       return;
@@ -255,10 +289,18 @@ export class SchedulingComponent implements OnInit {
   }
 
   onLoginRequested() {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     this.openLoginModal();
   }
 
   onEditStep(step: number) {
+    if (this.scheduleClosed) {
+      return;
+    }
+
     this.currentStep = step;
   }
 
@@ -320,7 +362,7 @@ export class SchedulingComponent implements OnInit {
 
           this.company = result;
           this.companyId = result.id;
-          this.scheduleClosed = result.scheduleStatus === ScheduleStatus.CLOSED;
+          this.scheduleClosed = normalizeScheduleStatus(result.scheduleStatus) === ScheduleStatus.CLOSED;
           this.services = result.servicesOffered ?? [];
           this.professionals = result.employeers ?? [];
           this.openingHours = result.openingHours ?? [];
@@ -357,11 +399,45 @@ export class SchedulingComponent implements OnInit {
         ? undefined
         : this.selectedProfessional?.userId,
       date: this.selectedDate!,
-      time: this.selectedTime + ':00',
+      time: this.toApiTime(this.selectedTime!),
     };
 
-    this.schedulingService
-      .schedule(scheduling)
+    this.companyService
+      .getBySchedulingUrl(this.companySlug)
+      .pipe(
+        switchMap((company) => {
+          if (!company?.id) {
+            return throwError(() => ({ code: 'COMPANY_NOT_FOUND' }));
+          }
+
+          this.company = company;
+          this.scheduleClosed =
+            normalizeScheduleStatus(company.scheduleStatus) === ScheduleStatus.CLOSED;
+
+          if (this.scheduleClosed) {
+            return throwError(() => ({ code: 'SCHEDULE_CLOSED' }));
+          }
+
+          return this.schedulingService.getAvailableTimes(
+            scheduling.date,
+            scheduling.professionalId ?? '',
+            scheduling.companyId,
+            scheduling.serviceId,
+          );
+        }),
+        switchMap((availableTimes) => {
+          const normalizedSelectedTime = scheduling.time.substring(0, 5);
+          const slotStillAvailable = (availableTimes ?? []).some(
+            (time) => time.substring(0, 5) === normalizedSelectedTime,
+          );
+
+          if (!slotStillAvailable) {
+            return throwError(() => ({ code: 'SLOT_UNAVAILABLE' }));
+          }
+
+          return this.schedulingService.schedule(scheduling);
+        }),
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -377,9 +453,7 @@ export class SchedulingComponent implements OnInit {
         error: (err) => {
           this.isSubmitting = false;
           this.cdr.markForCheck();
-          const msg = err?.error
-            ?? this.translate.instant('SCHEDULING.ERRORS.BOOKING_FAILED');
-          this.toastr.error(msg);
+          this.showBookingError(err);
         },
         complete: () => {
           this.isSubmitting = false;
@@ -410,6 +484,30 @@ export class SchedulingComponent implements OnInit {
     }
 
     this.buildStepMap();
+  }
+
+  private showBookingError(err: any): void {
+    if (err?.code === 'SCHEDULE_CLOSED') {
+      this.toastr.warning(this.translate.instant('SCHEDULING.CLOSED.MESSAGE'));
+      return;
+    }
+
+    if (err?.code === 'SLOT_UNAVAILABLE') {
+      this.selectedTime = null;
+      this.cdr.markForCheck();
+      this.toastr.warning(this.translate.instant('ERROR.CODES.SLOT_UNAVAILABLE'));
+      return;
+    }
+
+    const msg =
+      err?.error ??
+      err?.message ??
+      this.translate.instant('SCHEDULING.ERRORS.BOOKING_FAILED');
+    this.toastr.error(msg);
+  }
+
+  private toApiTime(time: string): string {
+    return time.length === 5 ? `${time}:00` : time;
   }
 
   // ─── Login modal ───

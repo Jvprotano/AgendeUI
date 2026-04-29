@@ -9,4 +9,4 @@ import { RouterModule } from "@angular/router";
     providers: []
 })
 
-export class NavegationModule { }
+export class NavigationModule { }

@@ -14,11 +14,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { environment } from '../../../../../environments/environment';
 
 export const TIMEZONE_OPTIONS = [
-  { label: 'BrasAlia (SAo Paulo)', value: 'America/Sao_Paulo' },
+  { label: 'Brasília (São Paulo)', value: 'America/Sao_Paulo' },
   { label: 'Fortaleza', value: 'America/Fortaleza' },
   { label: 'Manaus', value: 'America/Manaus' },
-  { label: 'CuiabA', value: 'America/Cuiaba' },
-  { label: 'BelAm', value: 'America/Belem' },
+  { label: 'Cuiabá', value: 'America/Cuiaba' },
+  { label: 'Belém', value: 'America/Belem' },
   { label: 'Recife', value: 'America/Recife' },
 ];
 
@@ -113,9 +113,9 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
     this.companyService.checkUrlIsValid(url, this.companyId).subscribe({
       next: (result: boolean) => {
         if (result) {
-          this.urlSuccessMessage = 'URL disponivel para uso';
+          this.urlSuccessMessage = 'URL disponível para uso';
         } else {
-          this.urlErrorMessage = 'URL ja esta sendo utilizada';
+          this.urlErrorMessage = 'URL já está sendo utilizada';
         }
         this.isCheckingUrl = false;
       },

@@ -86,9 +86,8 @@
     "BUTTONS": {
       "CONTINUE": "Continuar",
       "BACK": "Volver",
-      "REGISTER": "Registrarse"
-    ,
-    "LOGIN": "¿Ya tienes una cuenta? Iniciar sesión"
+      "REGISTER": "Registrarse",
+      "LOGIN": "¿Ya tienes una cuenta? Iniciar sesión"
     },
     "ERRORS": {
       "TITLE": "¡Ops! Algo salió mal:",
@@ -98,9 +97,8 @@
     "SUCCESS": {
       "TITLE": "¡Bienvenido!",
       "MESSAGE": "¡Registro completado con éxito!"
-    }
-  ,
-  "HAVE_ACCOUNT": "¿Ya tienes una cuenta?"
+    },
+    "HAVE_ACCOUNT": "¿Ya tienes una cuenta?"
   },
   "LOGIN": {
     "TITLE": "Iniciar sesión",
@@ -125,7 +123,7 @@
     "GUEST_LOGIN": "Continuar como invitado",
     "NO_ACCOUNT": "¿No tienes una cuenta?",
     "REMEMBER_ME": "Recuérdame",
-  "OR": "o",
+    "OR": "o",
     "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
     "SIGN_IN": "Ingresar",
     "REGISTER": "Crear una cuenta",
@@ -152,18 +150,45 @@
       "SIMPLE_DESC": "Tus clientes no quieren perder tiempo con información excesiva. Ofréceles una plataforma simple y directa que también te proporciona una gestión completa de tu negocio."
     },
     "PRICING": {
-      "TITLE": "Planes",
-      "PER_MONTH": "por mes",
-      "FEATURES": {
-        "BOOKING_LINK": "Enlace único de reserva",
-        "NOTIFICATIONS": "Envía notificaciones a tus clientes",
-        "REPORTS": "Informes de reservas",
-        "FINANCIAL": "Informe financiero incluyendo ganancias, gastos y previsiones",
-        "UNLIMITED": "Reservas ilimitadas",
-        "RECURRING": "Citas recurrentes"
+      "EYEBROW": "Precio especial de lanzamiento",
+      "TITLE": "Planes simples para empezar y crecer",
+      "SUBTITLE": "Empieza sacando las reservas de WhatsApp y evoluciona hacia gestión con informes, dashboard y recordatorios.",
+      "PER_MONTH": "/mes",
+      "LAUNCH_BADGE": "Clientes fundadores",
+      "LAUNCH_PRICE": "Precio de lanzamiento",
+      "FUTURE_PRICE": "{{price}}/mes",
+      "START_TRIAL": "Empezar 14 días gratis",
+      "TRIAL_TITLE": "14 días gratis, sin tarjeta",
+      "TRIAL_TEXT": "Prueba Agende antes de elegir un plan.",
+      "ESSENTIAL": {
+        "NAME": "Esencial",
+        "DESCRIPTION": "Para pequeños negocios que quieren dejar de agendar todo manualmente.",
+        "LAUNCH_PRICE": "R$29,90",
+        "FUTURE_PRICE": "R$39,90",
+        "FEATURE_1": "1 empresa",
+        "FEATURE_2": "Hasta 2 profesionales",
+        "FEATURE_3": "Página pública de reservas",
+        "FEATURE_4": "Servicios y horarios de atención",
+        "FEATURE_5": "Agenda básica con cancelaciones",
+        "FEATURE_6": "Hasta 500 reservas por mes"
       },
-      "SIGN_UP": "Regístrate ahora",
-      "FREE_TRIAL": "7 días de prueba gratis sin necesidad de tarjeta de crédito"
+      "PROFESSIONAL": {
+        "NAME": "Profesional",
+        "BADGE": "Más recomendado",
+        "DESCRIPTION": "Para negocios que quieren gestión, visibilidad financiera y una operación más organizada.",
+        "LAUNCH_PRICE": "R$59,90",
+        "FUTURE_PRICE": "R$79,90",
+        "FEATURE_1": "Todo lo del Esencial",
+        "FEATURE_2": "Reservas ilimitadas",
+        "FEATURE_3": "Dashboard de gestión",
+        "FEATURE_4": "Informes financieros",
+        "FEATURE_5": "Informes por servicio y profesional",
+        "FEATURE_6": "Notificaciones por email y recordatorios básicos"
+      },
+      "WHATSAPP": {
+        "TITLE": "WhatsApp",
+        "DESCRIPTION": "En el plan Profesional, las notificaciones por email están incluidas. Por R$19,90/mes adicionales, también puedes notificar automáticamente a tus clientes por WhatsApp."
+      }
     },
     "GET_STARTED": "Comenzar",
     "VIEW_PLANS": "Ver planes",
@@ -184,6 +209,7 @@
     "POWERED_BY": "Desarrollado por Agende",
     "BACK": "Volver",
     "CONTINUE": "Continuar",
+    "PROGRESS_STEP": "Paso {{current}} de {{total}}",
     "STEPPER": {
       "SERVICE": "Servicio",
       "PROFESSIONAL": "Profesional",
@@ -236,6 +262,17 @@
     "CLOSED": {
       "TITLE": "Agenda cerrada",
       "MESSAGE": "Esta empresa no está aceptando citas en este momento. Por favor, inténtelo de nuevo más tarde."
+    },
+    "SUMMARY": {
+      "TITLE": "Resumen de la cita",
+      "SERVICE": "Servicio",
+      "SELECT_SERVICE": "Selecciona un servicio",
+      "PROFESSIONAL": "Profesional",
+      "SELECT_PROFESSIONAL": "Selecciona un profesional",
+      "DATE": "Fecha",
+      "TIME": "Hora",
+      "DURATION": "Duración estimada",
+      "NOTE": "Tu horario se confirmará al finalizar los pasos."
     },
     "NO_TIMES_AVAILABLE": "No hay horarios disponibles para la fecha seleccionada.",
     "LOADING": "Buscando horarios disponibles...",

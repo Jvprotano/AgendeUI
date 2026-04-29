@@ -21,7 +21,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CompanyService } from '../../../company/services/company.service';
-import { take } from 'rxjs';
+import { of, switchMap, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { DaySchedule } from '../../../company/models/business-hours';
 import { ToastrService } from 'ngx-toastr';
@@ -125,11 +125,23 @@ export class CreateComponent implements OnInit {
 
     this.companyService
       .create(request)
-      .pipe(take(1))
+      .pipe(
+        switchMap((result) => {
+          if (result?.id) {
+            return of(result);
+          }
+          return this.companyService.getBySchedulingUrl(request.schedulingUrl);
+        }),
+        take(1),
+      )
       .subscribe({
         next: (result) => {
           this.modalService.dismissAll();
-          this.router.navigate(['/company', result.id, 'schedule']);
+          if (result?.id) {
+            this.router.navigate(['/company', result.id, 'schedule']);
+            return;
+          }
+          this.router.navigate(['/user/companies']);
         },
         error: () => {
           this.toastr.error('Erro ao criar empresa.');
