@@ -1,0 +1,14 @@
+<a
+  class="whatsapp-support"
+  [class.whatsapp-support--floating]="variant === 'floating'"
+  [class.whatsapp-support--nav]="variant === 'nav'"
+  [class.whatsapp-support--sidebar]="variant === 'sidebar'"
+  [href]="whatsappUrl"
+  target="_blank"
+  rel="noopener noreferrer"
+  [attr.aria-label]="ariaLabel"
+  [title]="ariaLabel"
+>
+  <i class="bi bi-whatsapp"></i>
+  <span>{{ label }}</span>
+</a>

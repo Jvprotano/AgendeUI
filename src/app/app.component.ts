@@ -4,6 +4,7 @@ import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { HomeComponent } from './navegation/home/home.component';
 import { MenuComponent } from './navegation/menu/menu.component';
 import { FooterComponent } from './navegation/footer/footer.component';
+import { WhatsappSupportComponent } from './shared/components/whatsapp-support/whatsapp-support.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalStorageUtils } from './utils/localstorage';
 import { filter } from 'rxjs/operators';
@@ -11,13 +12,14 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MenuComponent, FooterComponent, TranslateModule],
+  imports: [CommonModule, RouterOutlet, MenuComponent, FooterComponent, TranslateModule, WhatsappSupportComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'Agende';
   showChrome = true;
+  showHomeSupport = false;
 
   constructor(
     private translate: TranslateService,
@@ -33,7 +35,9 @@ export class AppComponent {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(event => {
-        this.showChrome = !event.urlAfterRedirects.startsWith('/scheduling/');
+        const currentPath = event.urlAfterRedirects.split('?')[0].split('#')[0];
+        this.showChrome = !currentPath.startsWith('/scheduling/');
+        this.showHomeSupport = currentPath === '/home';
       });
   }
 }

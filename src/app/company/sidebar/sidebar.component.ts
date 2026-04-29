@@ -2,11 +2,12 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { RouterModule } from '@angular/router';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { WhatsappSupportComponent } from '../../shared/components/whatsapp-support/whatsapp-support.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterModule, NgbTooltipModule],
+  imports: [RouterModule, NgbTooltipModule, WhatsappSupportComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })

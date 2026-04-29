@@ -1,4 +1,7 @@
 <ul class="navbar-nav auth-menu" *ngIf="isLoggedIn$ | async">
+  <li class="nav-item" *ngIf="showSupportLink">
+    <app-whatsapp-support variant="nav" label="Suporte"></app-whatsapp-support>
+  </li>
   <li class="nav-item">
     <a class="btn-auth btn-auth-primary" routerLink="/user/companies">
       <i class="bi bi-building"></i>

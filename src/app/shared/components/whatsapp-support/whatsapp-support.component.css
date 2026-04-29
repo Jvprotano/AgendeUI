@@ -1,0 +1,125 @@
+:host {
+  display: contents;
+}
+
+.whatsapp-support {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  border: 1px solid rgba(34, 197, 94, 0.34);
+  background: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+  font-weight: 700;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.whatsapp-support:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.55);
+  color: #bbf7d0;
+}
+
+.whatsapp-support i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.whatsapp-support--floating {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  min-height: 54px;
+  padding: 0 1.05rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border-color: rgba(187, 247, 208, 0.5);
+  color: #fff;
+  box-shadow: 0 16px 34px rgba(22, 163, 74, 0.34);
+  z-index: calc(var(--z-sticky) + 5);
+}
+
+.whatsapp-support--floating:hover {
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 20px 42px rgba(22, 163, 74, 0.42);
+}
+
+.whatsapp-support--floating i {
+  font-size: 1.3rem;
+}
+
+.whatsapp-support--nav {
+  height: 38px;
+  padding: 0 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.whatsapp-support--sidebar {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 13px;
+  justify-content: flex-start;
+  padding: 0 0.75rem;
+  color: #86efac;
+}
+
+.whatsapp-support--sidebar i {
+  width: 18px;
+  text-align: center;
+}
+
+.whatsapp-support--sidebar span {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 991.98px) {
+  .whatsapp-support--floating {
+    right: 14px;
+    bottom: 14px;
+    min-height: 50px;
+    width: 50px;
+    padding: 0;
+  }
+
+  .whatsapp-support--floating span {
+    display: none;
+  }
+
+  .whatsapp-support--sidebar {
+    width: 42px;
+    min-height: 42px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 12px;
+  }
+
+  .whatsapp-support--sidebar span {
+    display: none;
+  }
+
+  .whatsapp-support--sidebar i {
+    width: auto;
+    font-size: 1.08rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .whatsapp-support--nav {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+  }
+
+  .whatsapp-support--nav span {
+    display: none;
+  }
+}
