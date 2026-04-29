@@ -5,11 +5,11 @@
     <section class="financial-header">
       <div>
         <h2>Financeiro - {{ companyName }}</h2>
-        <p>Painel financeiro ficticio para acompanhar entradas, saidas e previsao de caixa.</p>
+        <p>Painel financeiro integrado para acompanhar entradas, saidas e previsao de caixa.</p>
       </div>
       <div class="period-chip">
         <i class="bi bi-calendar3"></i>
-        Junho/2026
+        {{ isLoading ? 'Atualizando...' : periodLabel }}
       </div>
     </section>
 
@@ -22,7 +22,7 @@
           <small>{{ item.label }}</small>
           <h3>{{ item.value }}</h3>
           <span class="kpi-delta" [class.kpi-delta--negative]="!item.positive">
-            {{ item.delta }} vs. mes anterior
+            {{ item.delta }}
           </span>
         </div>
       </article>
@@ -61,12 +61,12 @@
           <div class="expense-list">
             <div class="expense-item" *ngFor="let item of expenseCategories; trackBy: trackByCategory">
               <div class="expense-label">
-                <span class="dot" [style.background]="item.color"></span>
+                <span class="dot" [style.background]="getCategoryColor(item.name)"></span>
                 <span>{{ item.name }}</span>
               </div>
               <div class="expense-values">
-                <strong>{{ item.percent }}%</strong>
-                <small>{{ item.amount }}</small>
+                <strong>{{ item.percent | number:'1.0-1' }}%</strong>
+                <small>{{ formatCurrency(item.amount) }}</small>
               </div>
             </div>
           </div>
@@ -89,10 +89,10 @@
           </div>
 
           <div class="tx-row" *ngFor="let item of recentTransactions; trackBy: trackByTx">
-            <span>{{ item.date }}</span>
+            <span>{{ formatDate(item.date) }}</span>
             <span>{{ item.description }}</span>
             <span>{{ item.category }}</span>
-            <span [class.tx-out]="item.type === 'out'" [class.tx-in]="item.type === 'in'">{{ item.amount }}</span>
+            <span [class.tx-out]="item.type === 'out'" [class.tx-in]="item.type === 'in'">{{ formatCurrency(item.amount) }}</span>
             <span class="status-pill" [class.status-pill--pending]="item.status === 'Pendente'">{{ item.status }}</span>
           </div>
         </div>
@@ -108,10 +108,10 @@
           <div class="due-item" *ngFor="let item of dueItems; trackBy: trackByDue">
             <div>
               <strong>{{ item.title }}</strong>
-              <small>Vencimento: {{ item.dueDate }}</small>
+              <small>Vencimento: {{ formatDate(item.dueDate) }}</small>
             </div>
             <div class="due-amount" [class.due-amount--payable]="item.type === 'payable'">
-              {{ item.amount }}
+              {{ formatCurrency(item.amount) }}
             </div>
           </div>
         </div>
@@ -124,10 +124,10 @@
         </div>
 
         <div class="projection-list">
-          <div class="projection-item" *ngFor="let item of projection">
+          <div class="projection-item" *ngFor="let item of projection; trackBy: trackByProjection">
             <span>{{ item.label }}</span>
-            <strong>{{ item.balance }}</strong>
-            <small>{{ item.trend }}</small>
+            <strong>{{ formatCurrency(item.balance) }}</strong>
+            <small>{{ formatTrend(item.trendPercent) }}</small>
           </div>
         </div>
       </article>

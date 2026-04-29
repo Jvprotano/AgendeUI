@@ -5,11 +5,11 @@
     <section class="dashboard-header">
       <div>
         <h2>Dashboard - {{ companyName }}</h2>
-        <p>Painel operacional com dados ficticios para acompanhar a performance diaria da empresa.</p>
+        <p>Painel operacional integrado com os dados reais da API para acompanhar a performance da empresa.</p>
       </div>
       <div class="header-badge">
         <i class="bi bi-clock-history"></i>
-        Atualizado agora
+        {{ isLoading ? 'Atualizando...' : ('Referencia: ' + referenceDate) }}
       </div>
     </section>
 
@@ -21,8 +21,8 @@
         <div class="kpi-card__body">
           <small>{{ item.label }}</small>
           <h3>{{ item.value }}</h3>
-          <span class="kpi-card__delta" [class.negative]="!item.trendUp">
-            {{ item.delta }} vs. semana anterior
+          <span class="kpi-card__delta">
+            {{ item.helper }}
           </span>
         </div>
       </article>
@@ -61,7 +61,7 @@
             <div class="service-share-item__bar">
               <div class="service-share-item__fill" [style.width.%]="item.value" [style.background]="item.color"></div>
             </div>
-            <span class="service-share-item__value">{{ item.value }}%</span>
+            <span class="service-share-item__value">{{ item.value | number:'1.0-1' }}%</span>
           </div>
         </div>
       </article>
@@ -79,7 +79,13 @@
               <h6>{{ item.customer }}</h6>
               <p>{{ item.service }} - {{ item.professional }}</p>
             </div>
-            <span class="status-pill" [class.pending]="item.status === 'Pendente'">{{ item.status }}</span>
+            <span
+              class="status-pill"
+              [class.pending]="item.statusType === 'pending'"
+              [class.cancelled]="item.statusType === 'cancelled'"
+              [class.completed]="item.statusType === 'completed'">
+              {{ item.status }}
+            </span>
           </div>
         </div>
       </article>
@@ -96,10 +102,7 @@
               <strong>{{ item.professional }}</strong>
               <small>{{ item.completed }} atendimentos</small>
             </div>
-            <div class="rating-badge">
-              <i class="bi bi-star-fill"></i>
-              {{ item.rating | number:'1.1-1' }}
-            </div>
+            <div class="rating-badge">{{ item.completed }} agend.</div>
           </div>
         </div>
       </article>
@@ -111,7 +114,7 @@
         </div>
 
         <div class="hourly-list">
-          <div class="hourly-item" *ngFor="let item of occupancyByHour">
+          <div class="hourly-item" *ngFor="let item of occupancyByHour; trackBy: trackByHour">
             <span class="hourly-item__hour">{{ item.hour }}</span>
             <div class="hourly-item__bar">
               <div class="hourly-item__fill" [style.width.%]="item.occupancy"></div>

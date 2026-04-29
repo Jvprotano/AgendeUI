@@ -1,27 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { forkJoin, take } from 'rxjs';
+
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { CompanyService } from '../services/company.service';
-import { take } from 'rxjs';
+import { DashboardService } from '../services/dashboard.service';
+import {
+  DashboardInsights,
+  DashboardOverview,
+  DashboardPerformance,
+} from '../models/dashboard';
 
 interface KpiCard {
   label: string;
   value: string;
-  delta: string;
-  trendUp: boolean;
+  helper: string;
   icon: string;
 }
 
 interface WeekPoint {
   day: string;
   bookings: number;
+  date: string;
 }
 
 interface ServiceShare {
   name: string;
   value: number;
+  total: number;
   color: string;
 }
 
@@ -30,13 +37,18 @@ interface UpcomingItem {
   customer: string;
   service: string;
   professional: string;
-  status: 'Confirmado' | 'Pendente';
+  status: string;
+  statusType: 'confirmed' | 'pending' | 'cancelled' | 'completed' | 'other';
 }
 
 interface TeamHighlight {
   professional: string;
   completed: number;
-  rating: number;
+}
+
+interface OccupancyPoint {
+  hour: string;
+  occupancy: number;
 }
 
 @Component({
@@ -49,62 +61,70 @@ interface TeamHighlight {
 export class DashboardComponent implements OnInit {
   companyId = '';
   companyName = 'Minha Empresa';
+  isLoading = true;
+  referenceDate = '';
 
-  readonly kpis: KpiCard[] = [
-    { label: 'Agendamentos da Semana', value: '126', delta: '+14%', trendUp: true, icon: 'bi-calendar2-check' },
-    { label: 'Faturamento Estimado', value: 'R$ 7.840', delta: '+9%', trendUp: true, icon: 'bi-cash-stack' },
-    { label: 'Taxa de OcupaAAo', value: '78%', delta: '+5 pts', trendUp: true, icon: 'bi-speedometer2' },
-    { label: 'Cancelamentos', value: '6', delta: '-2', trendUp: true, icon: 'bi-x-circle' },
-  ];
+  overview: DashboardOverview = {
+    weekSchedule: 0,
+    estimatedInvoicing: 0,
+    ocupation: 0,
+    cancellations: 0,
+  };
 
-  readonly weekPerformance: WeekPoint[] = [
-    { day: 'Seg', bookings: 12 },
-    { day: 'Ter', bookings: 18 },
-    { day: 'Qua', bookings: 22 },
-    { day: 'Qui', bookings: 20 },
-    { day: 'Sex', bookings: 24 },
-    { day: 'SAb', bookings: 19 },
-    { day: 'Dom', bookings: 11 },
-  ];
+  weekPerformance: WeekPoint[] = [];
+  serviceShare: ServiceShare[] = [];
+  upcomingAppointments: UpcomingItem[] = [];
+  teamHighlights: TeamHighlight[] = [];
+  occupancyByHour: OccupancyPoint[] = [];
 
-  readonly serviceShare: ServiceShare[] = [
-    { name: 'Corte', value: 42, color: '#14b8a6' },
-    { name: 'Barba', value: 24, color: '#0ea5e9' },
-    { name: 'HidrataAAo', value: 19, color: '#f59e0b' },
-    { name: 'Sobrancelha', value: 15, color: '#a855f7' },
-  ];
-
-  readonly upcomingAppointments: UpcomingItem[] = [
-    { time: '09:30', customer: 'JoAo Lucas', service: 'Corte + Barba', professional: 'Rafael', status: 'Confirmado' },
-    { time: '10:10', customer: 'Carlos Souza', service: 'Corte', professional: 'Marcos', status: 'Pendente' },
-    { time: '11:00', customer: 'Bruno Dias', service: 'HidrataAAo', professional: 'Rafael', status: 'Confirmado' },
-    { time: '14:20', customer: 'Pedro Melo', service: 'Corte', professional: 'Ana', status: 'Confirmado' },
-    { time: '15:40', customer: 'Thiago Alves', service: 'Barba', professional: 'Marcos', status: 'Pendente' },
-  ];
-
-  readonly teamHighlights: TeamHighlight[] = [
-    { professional: 'Rafael', completed: 34, rating: 4.9 },
-    { professional: 'Marcos', completed: 29, rating: 4.8 },
-    { professional: 'Ana', completed: 21, rating: 4.7 },
-  ];
-
-  readonly occupancyByHour = [
-    { hour: '08h', occupancy: 45 },
-    { hour: '10h', occupancy: 88 },
-    { hour: '12h', occupancy: 62 },
-    { hour: '14h', occupancy: 91 },
-    { hour: '16h', occupancy: 74 },
-    { hour: '18h', occupancy: 52 },
+  private readonly serviceColors = [
+    '#14b8a6',
+    '#0ea5e9',
+    '#f59e0b',
+    '#a855f7',
+    '#22c55e',
+    '#ef4444',
   ];
 
   constructor(
     private route: ActivatedRoute,
     private companyService: CompanyService,
+    private dashboardService: DashboardService,
   ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.params['id'];
-    this.loadCompanyName();
+    this.referenceDate = this.getLocalIsoDate(new Date());
+    this.loadDashboardData();
+  }
+
+  get kpis(): KpiCard[] {
+    return [
+      {
+        label: 'Agendamentos da Semana',
+        value: String(this.overview.weekSchedule ?? 0),
+        helper: `Semana de referencia: ${this.referenceDate}`,
+        icon: 'bi-calendar2-check',
+      },
+      {
+        label: 'Faturamento Estimado',
+        value: this.formatCurrency(this.overview.estimatedInvoicing ?? 0),
+        helper: 'Soma dos servicos agendados na semana',
+        icon: 'bi-cash-stack',
+      },
+      {
+        label: 'Taxa de Ocupacao',
+        value: `${this.formatNumber(this.overview.ocupation ?? 0)}%`,
+        helper: 'Minutos agendados x minutos disponiveis',
+        icon: 'bi-speedometer2',
+      },
+      {
+        label: 'Cancelamentos',
+        value: String(this.overview.cancellations ?? 0),
+        helper: 'Cancelamentos na semana de referencia',
+        icon: 'bi-x-circle',
+      },
+    ];
   }
 
   get maxWeekBookings(): number {
@@ -112,12 +132,14 @@ export class DashboardComponent implements OnInit {
   }
 
   get statusSummary(): string {
-    const confirmed = this.upcomingAppointments.filter((item) => item.status === 'Confirmado').length;
-    return `${confirmed} confirmados de ${this.upcomingAppointments.length} prAximos atendimentos`;
+    const confirmed = this.upcomingAppointments.filter(
+      (item) => item.statusType === 'confirmed',
+    ).length;
+    return `${confirmed} confirmados de ${this.upcomingAppointments.length} proximos atendimentos`;
   }
 
   trackByDay(_: number, item: WeekPoint): string {
-    return item.day;
+    return `${item.date}-${item.day}`;
   }
 
   trackByService(_: number, item: ServiceShare): string {
@@ -132,14 +154,163 @@ export class DashboardComponent implements OnInit {
     return item.professional;
   }
 
-  private loadCompanyName(): void {
-    this.companyService
-      .getById(this.companyId)
+  trackByHour(_: number, item: OccupancyPoint): string {
+    return item.hour;
+  }
+
+  private loadDashboardData(): void {
+    if (!this.companyId) {
+      this.isLoading = false;
+      return;
+    }
+
+    this.isLoading = true;
+
+    forkJoin({
+      company: this.companyService.getById(this.companyId),
+      overview: this.dashboardService.getOverview(this.companyId, this.referenceDate),
+      insights: this.dashboardService.getInsights(this.companyId, this.referenceDate),
+      performance: this.dashboardService.getPerformance(this.companyId, this.referenceDate, 60),
+    })
       .pipe(take(1))
       .subscribe({
-        next: (company) => {
+        next: ({ company, overview, insights, performance }) => {
           this.companyName = company?.name || 'Minha Empresa';
+          this.applyOverview(overview);
+          this.applyInsights(insights);
+          this.applyPerformance(performance);
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
         },
       });
+  }
+
+  private applyOverview(overview: DashboardOverview | null | undefined): void {
+    if (!overview) {
+      return;
+    }
+
+    this.overview = {
+      weekSchedule: overview.weekSchedule ?? 0,
+      estimatedInvoicing: overview.estimatedInvoicing ?? 0,
+      ocupation: overview.ocupation ?? 0,
+      cancellations: overview.cancellations ?? 0,
+    };
+  }
+
+  private applyInsights(insights: DashboardInsights | null | undefined): void {
+    const scheduleByDays = insights?.scheduleByDays ?? [];
+    const services = insights?.services ?? [];
+    const nextSchedules = insights?.nextSchedules ?? [];
+
+    this.weekPerformance = scheduleByDays.map((item) => ({
+      day: item.day,
+      date: item.date,
+      bookings: item.total,
+    }));
+
+    this.serviceShare = services.map((item, index) => ({
+      name: item.name,
+      total: item.total,
+      value: this.clampPercent(item.percentage),
+      color: this.serviceColors[index % this.serviceColors.length],
+    }));
+
+    this.upcomingAppointments = nextSchedules.map((item) => {
+      const statusType = this.mapStatusType(item.status);
+
+      return {
+        time: item.time,
+        customer: item.clientName,
+        service: item.serviceName,
+        professional: item.employeeName,
+        status: this.mapStatusLabel(statusType, item.status),
+        statusType,
+      };
+    });
+  }
+
+  private applyPerformance(performance: DashboardPerformance | null | undefined): void {
+    const teamRanking = performance?.teamRanking ?? [];
+    const timeOcupation = performance?.timeOcupation ?? [];
+
+    this.teamHighlights = teamRanking.map((item) => ({
+      professional: item.employeeName,
+      completed: item.appointments,
+    }));
+
+    this.occupancyByHour = timeOcupation.map((item) => ({
+      hour: item.time,
+      occupancy: this.clampPercent(item.ocupation),
+    }));
+  }
+
+  private mapStatusType(status: string): UpcomingItem['statusType'] {
+    const normalized = (status || '').toLowerCase();
+
+    if (normalized === 'active' || normalized === 'confirmed') {
+      return 'confirmed';
+    }
+    if (normalized === 'pending') {
+      return 'pending';
+    }
+    if (normalized === 'cancelled' || normalized === 'canceled') {
+      return 'cancelled';
+    }
+    if (normalized === 'completed' || normalized === 'done') {
+      return 'completed';
+    }
+
+    return 'other';
+  }
+
+  private mapStatusLabel(
+    statusType: UpcomingItem['statusType'],
+    fallback: string,
+  ): string {
+    switch (statusType) {
+      case 'confirmed':
+        return 'Confirmado';
+      case 'pending':
+        return 'Pendente';
+      case 'cancelled':
+        return 'Cancelado';
+      case 'completed':
+        return 'Concluido';
+      default:
+        return fallback || '-';
+    }
+  }
+
+  private clampPercent(value: number): number {
+    if (Number.isNaN(value)) {
+      return 0;
+    }
+
+    return Math.max(0, Math.min(100, value));
+  }
+
+  private formatCurrency(value: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
+
+  private formatNumber(value: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }).format(value);
+  }
+
+  private getLocalIsoDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

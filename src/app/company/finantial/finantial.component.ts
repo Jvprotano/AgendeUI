@@ -1,45 +1,26 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { take } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
+
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { CompanyService } from '../services/company.service';
+import { FinancialService } from '../services/financial.service';
+import {
+  FinancialDueItem,
+  FinancialExpenseCategoryItem,
+  FinancialMonthlyFlowItem,
+  FinancialOverviewData,
+  FinancialProjectionItem,
+  FinancialRecentTransactionItem,
+} from '../models/financial';
 
-interface FinancialKpi {
+interface FinancialKpiView {
   label: string;
   value: string;
   delta: string;
   positive: boolean;
   icon: string;
-}
-
-interface MonthlyFlow {
-  month: string;
-  income: number;
-  expense: number;
-}
-
-interface ExpenseCategory {
-  name: string;
-  percent: number;
-  amount: string;
-  color: string;
-}
-
-interface TransactionItem {
-  date: string;
-  description: string;
-  category: string;
-  amount: string;
-  type: 'in' | 'out';
-  status: 'Pago' | 'Pendente' | 'Recebido';
-}
-
-interface DueItem {
-  title: string;
-  dueDate: string;
-  amount: string;
-  type: 'receivable' | 'payable';
 }
 
 @Component({
@@ -52,60 +33,32 @@ interface DueItem {
 export class FinantialComponent implements OnInit {
   companyId = '';
   companyName = 'Minha Empresa';
+  periodLabel = '-';
+  isLoading = true;
 
-  readonly kpis: FinancialKpi[] = [
-    { label: 'Receita do mes', value: 'R$ 24.860', delta: '+12%', positive: true, icon: 'bi-graph-up-arrow' },
-    { label: 'Despesas do mes', value: 'R$ 9.740', delta: '-4%', positive: true, icon: 'bi-wallet2' },
-    { label: 'Lucro operacional', value: 'R$ 15.120', delta: '+16%', positive: true, icon: 'bi-piggy-bank' },
-    { label: 'Ticket medio', value: 'R$ 98,30', delta: '+5%', positive: true, icon: 'bi-receipt' },
-  ];
+  referenceDate = '';
+  months = 6;
+  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Sao_Paulo';
 
-  readonly monthlyFlow: MonthlyFlow[] = [
-    { month: 'Jan', income: 18600, expense: 9100 },
-    { month: 'Fev', income: 19800, expense: 9600 },
-    { month: 'Mar', income: 20500, expense: 9300 },
-    { month: 'Abr', income: 22100, expense: 9800 },
-    { month: 'Mai', income: 23800, expense: 10150 },
-    { month: 'Jun', income: 24860, expense: 9740 },
-  ];
+  kpis: FinancialKpiView[] = [];
+  monthlyFlow: FinancialMonthlyFlowItem[] = [];
+  expenseCategories: FinancialExpenseCategoryItem[] = [];
+  recentTransactions: FinancialRecentTransactionItem[] = [];
+  dueItems: FinancialDueItem[] = [];
+  projection: FinancialProjectionItem[] = [];
 
-  readonly expenseCategories: ExpenseCategory[] = [
-    { name: 'Folha de pagamento', percent: 41, amount: 'R$ 3.993', color: '#14b8a6' },
-    { name: 'Aluguel e condominio', percent: 24, amount: 'R$ 2.338', color: '#0ea5e9' },
-    { name: 'Produtos e insumos', percent: 19, amount: 'R$ 1.851', color: '#f59e0b' },
-    { name: 'Marketing', percent: 9, amount: 'R$ 876', color: '#a855f7' },
-    { name: 'Outros', percent: 7, amount: 'R$ 682', color: '#64748b' },
-  ];
-
-  readonly recentTransactions: TransactionItem[] = [
-    { date: '28/04', description: 'Pacote premium - Joao Lima', category: 'Servico', amount: 'R$ 180,00', type: 'in', status: 'Recebido' },
-    { date: '27/04', description: 'Compra de produtos capilares', category: 'Insumos', amount: 'R$ 520,00', type: 'out', status: 'Pago' },
-    { date: '27/04', description: 'Servico de barba - Diego', category: 'Servico', amount: 'R$ 65,00', type: 'in', status: 'Recebido' },
-    { date: '26/04', description: 'Campanha anuncios locais', category: 'Marketing', amount: 'R$ 280,00', type: 'out', status: 'Pago' },
-    { date: '26/04', description: 'Assinatura sistema', category: 'Software', amount: 'R$ 99,00', type: 'out', status: 'Pendente' },
-  ];
-
-  readonly dueItems: DueItem[] = [
-    { title: 'Repasse mensal de convenio', dueDate: '30/04', amount: 'R$ 1.340,00', type: 'receivable' },
-    { title: 'Pagamento fornecedor hair care', dueDate: '02/05', amount: 'R$ 780,00', type: 'payable' },
-    { title: 'Fatura internet e energia', dueDate: '04/05', amount: 'R$ 460,00', type: 'payable' },
-    { title: 'Plano corporativo anual', dueDate: '06/05', amount: 'R$ 920,00', type: 'receivable' },
-  ];
-
-  readonly projection = [
-    { label: 'Proximos 7 dias', balance: 'R$ 14.920', trend: '+2.1%' },
-    { label: 'Proximos 15 dias', balance: 'R$ 16.100', trend: '+6.0%' },
-    { label: 'Proximos 30 dias', balance: 'R$ 18.450', trend: '+11.8%' },
-  ];
+  readonly expenseColors = ['#14b8a6', '#0ea5e9', '#f59e0b', '#a855f7', '#64748b', '#22c55e', '#ef4444'];
 
   constructor(
     private route: ActivatedRoute,
     private companyService: CompanyService,
+    private financialService: FinancialService,
   ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.params['id'];
-    this.loadCompanyName();
+    this.referenceDate = this.getLocalIsoDate(new Date());
+    this.loadFinancialData();
   }
 
   get maxFlowValue(): number {
@@ -116,39 +69,172 @@ export class FinantialComponent implements OnInit {
   get donutStyle(): string {
     let start = 0;
     const parts = this.expenseCategories.map((item) => {
-      const end = start + item.percent;
-      const chunk = `${item.color} ${start}% ${end}%`;
+      const percent = this.clampPercent(item.percent);
+      const end = start + percent;
+      const color = this.getCategoryColor(item.name);
+      const chunk = `${color} ${start}% ${end}%`;
       start = end;
       return chunk;
     });
 
-    return `conic-gradient(${parts.join(', ')})`;
+    return parts.length ? `conic-gradient(${parts.join(', ')})` : 'conic-gradient(#64748b 0% 100%)';
   }
 
-  trackByMonth(_: number, item: MonthlyFlow): string {
+  trackByMonth(_: number, item: FinancialMonthlyFlowItem): string {
     return item.month;
   }
 
-  trackByCategory(_: number, item: ExpenseCategory): string {
+  trackByCategory(_: number, item: FinancialExpenseCategoryItem): string {
     return item.name;
   }
 
-  trackByTx(_: number, item: TransactionItem): string {
+  trackByTx(_: number, item: FinancialRecentTransactionItem): string {
     return `${item.date}-${item.description}`;
   }
 
-  trackByDue(_: number, item: DueItem): string {
+  trackByDue(_: number, item: FinancialDueItem): string {
     return `${item.title}-${item.dueDate}`;
   }
 
-  private loadCompanyName(): void {
-    this.companyService
-      .getById(this.companyId)
+  trackByProjection(_: number, item: FinancialProjectionItem): string {
+    return item.label;
+  }
+
+  getCategoryColor(name: string): string {
+    const index = this.expenseCategories.findIndex((item) => item.name === name);
+    return this.expenseColors[(index >= 0 ? index : 0) % this.expenseColors.length];
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      maximumFractionDigits: 2,
+    }).format(value ?? 0);
+  }
+
+  formatDate(dateIso: string): string {
+    if (!dateIso) {
+      return '-';
+    }
+
+    const [year, month, day] = dateIso.split('-');
+    if (!year || !month || !day) {
+      return dateIso;
+    }
+
+    return `${day}/${month}`;
+  }
+
+  formatTrend(trendPercent: number): string {
+    const sign = trendPercent >= 0 ? '+' : '';
+    return `${sign}${this.formatPercent(trendPercent)}%`;
+  }
+
+  private loadFinancialData(): void {
+    if (!this.companyId) {
+      this.isLoading = false;
+      return;
+    }
+
+    this.isLoading = true;
+
+    forkJoin({
+      company: this.companyService.getById(this.companyId),
+      overview: this.financialService.getOverview(
+        this.companyId,
+        this.referenceDate,
+        this.months,
+        this.timezone,
+      ),
+    })
       .pipe(take(1))
       .subscribe({
-        next: (company) => {
+        next: ({ company, overview }) => {
           this.companyName = company?.name || 'Minha Empresa';
+          this.applyOverview(overview);
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
         },
       });
+  }
+
+  private applyOverview(overview: FinancialOverviewData | null | undefined): void {
+    if (!overview) {
+      return;
+    }
+
+    this.periodLabel = overview.periodLabel || '-';
+    this.monthlyFlow = overview.monthlyFlow ?? [];
+    this.expenseCategories = overview.expenseCategories ?? [];
+    this.recentTransactions = overview.recentTransactions ?? [];
+    this.dueItems = overview.dueItems ?? [];
+    this.projection = overview.projection ?? [];
+    this.kpis = this.mapKpis(overview);
+  }
+
+  private mapKpis(overview: FinancialOverviewData): FinancialKpiView[] {
+    const source = overview.kpis;
+
+    return [
+      {
+        label: 'Receita do mes',
+        value: this.formatCurrency(source?.monthRevenue ?? 0),
+        delta: `${this.formatSignedPercent(source?.monthRevenueDeltaPercent ?? 0)} vs. mes anterior`,
+        positive: (source?.monthRevenueDeltaPercent ?? 0) >= 0,
+        icon: 'bi-graph-up-arrow',
+      },
+      {
+        label: 'Despesas do mes',
+        value: this.formatCurrency(source?.monthExpense ?? 0),
+        delta: `${this.formatSignedPercent(source?.monthExpenseDeltaPercent ?? 0)} vs. mes anterior`,
+        positive: (source?.monthExpenseDeltaPercent ?? 0) <= 0,
+        icon: 'bi-wallet2',
+      },
+      {
+        label: 'Lucro operacional',
+        value: this.formatCurrency(source?.operationalProfit ?? 0),
+        delta: `${this.formatSignedPercent(source?.operationalProfitDeltaPercent ?? 0)} vs. mes anterior`,
+        positive: (source?.operationalProfitDeltaPercent ?? 0) >= 0,
+        icon: 'bi-piggy-bank',
+      },
+      {
+        label: 'Ticket medio',
+        value: this.formatCurrency(source?.averageTicket ?? 0),
+        delta: `${this.formatSignedPercent(source?.averageTicketDeltaPercent ?? 0)} vs. mes anterior`,
+        positive: (source?.averageTicketDeltaPercent ?? 0) >= 0,
+        icon: 'bi-receipt',
+      },
+    ];
+  }
+
+  private formatSignedPercent(value: number): string {
+    const safeValue = Number.isFinite(value) ? value : 0;
+    const sign = safeValue > 0 ? '+' : '';
+    return `${sign}${this.formatPercent(safeValue)}%`;
+  }
+
+  private formatPercent(value: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 1,
+    }).format(value);
+  }
+
+  private clampPercent(value: number): number {
+    if (!Number.isFinite(value)) {
+      return 0;
+    }
+
+    return Math.max(0, Math.min(100, value));
+  }
+
+  private getLocalIsoDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

@@ -288,6 +288,16 @@
   color: #fde68a;
 }
 
+.status-pill.cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+}
+
+.status-pill.completed {
+  background: rgba(59, 130, 246, 0.2);
+  color: #bfdbfe;
+}
+
 .team-item {
   border: 1px solid rgba(193, 174, 255, 0.18);
   border-radius: 12px;
