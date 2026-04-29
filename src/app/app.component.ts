@@ -8,6 +8,7 @@ import { WhatsappSupportComponent } from './shared/components/whatsapp-support/w
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalStorageUtils } from './utils/localstorage';
 import { filter } from 'rxjs/operators';
+import { AnalyticsService } from './shared/services/analytics.service';
 
 @Component({
   selector: 'app-root',
@@ -24,12 +25,14 @@ export class AppComponent {
   constructor(
     private translate: TranslateService,
     private localStorage: LocalStorageUtils,
-    private router: Router
+    private router: Router,
+    analyticsService: AnalyticsService,
   ) {
     // Initialize translation with saved language
     const savedLang = this.localStorage.getLanguage();
     translate.setFallbackLang(savedLang);
     translate.use(savedLang);
+    analyticsService.start();
 
     // Hide header/footer on scheduling pages (public customer-facing)
     this.router.events
