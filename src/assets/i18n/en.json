@@ -310,7 +310,7 @@
       "NO_RESULTS": "No professionals found for this search.",
       "CREATE_TITLE": "New Professional",
       "EDIT_TITLE": "Assign Services",
-      "EMAIL_HELPER": "If the email already exists in Agende, the backend reuses that account and only links the professional to the company.",
+      "EMAIL_HELPER": "If the email already exists in Agende, the account will be linked to the company.",
       "EMAIL": "Email",
       "EMAIL_REQUIRED": "Email is required",
       "EMAIL_INVALID": "Enter a valid email",

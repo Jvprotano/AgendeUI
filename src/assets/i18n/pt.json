@@ -312,7 +312,7 @@
       "NO_RESULTS": "Nenhum profissional encontrado para esta busca.",
       "CREATE_TITLE": "Novo Profissional",
       "EDIT_TITLE": "Vincular Serviços",
-      "EMAIL_HELPER": "Se o e-mail já existir no Agende, o backend reutiliza esse cadastro e apenas vincula o profissional à empresa.",
+      "EMAIL_HELPER": "Se o e-mail já existir no Agende, o cadastro será vinculado à empresa.",
       "EMAIL": "E-mail",
       "EMAIL_REQUIRED": "E-mail é obrigatório",
       "EMAIL_INVALID": "Informe um e-mail válido",

@@ -310,7 +310,7 @@
       "NO_RESULTS": "No se encontraron profesionales para esta búsqueda.",
       "CREATE_TITLE": "Nuevo profesional",
       "EDIT_TITLE": "Asignar servicios",
-      "EMAIL_HELPER": "Si el correo ya existe en Agende, el backend reutiliza ese registro y solo vincula el profesional a la empresa.",
+      "EMAIL_HELPER": "Si el correo ya existe en Agende, el registro se vinculará a la empresa.",
       "EMAIL": "Correo electrónico",
       "EMAIL_REQUIRED": "El correo electrónico es obligatorio",
       "EMAIL_INVALID": "Ingresa un correo electrónico válido",
